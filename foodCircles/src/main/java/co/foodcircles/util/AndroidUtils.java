@@ -1,10 +1,6 @@
 package co.foodcircles.util;
 
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -13,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -21,8 +16,11 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class AndroidUtils {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+public class AndroidUtils {
 	public static void showAlertOk(Context context,String message){
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setMessage(message)
@@ -67,6 +65,13 @@ public class AndroidUtils {
 	public interface ConfirmListener{
 		void onOk(String text);
 		void onCancel();
+	}
+
+	public interface GetLocations{
+		Location getLocationNet();
+		Location getLocationGPS();
+		void setLocationNet();
+		void setLocationGPS();
 	}
 	
 	private static ProgressDialog pd;
@@ -113,10 +118,7 @@ public class AndroidUtils {
 		e.remove(fieldName).commit();
 	}
 	
-	public static Location getLastBestLocation(Context me) {
-		LocationManager mLocationManager = (LocationManager) me.getSystemService(Context.LOCATION_SERVICE);
-	    Location locationGPS = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-	    Location locationNet = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+	public static Location getLastBestLocation(Location locationGPS, Location locationNet) {
 	    long GPSLocationTime = 0;
 	    if (null != locationGPS) { GPSLocationTime = locationGPS.getTime(); }
 	    long NetLocationTime = 0;

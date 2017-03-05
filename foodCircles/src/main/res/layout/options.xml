@@ -141,7 +141,7 @@
                         android:tag="rob"
                         android:text="Facebook" />
 
-                    <android.support.v7.widget.Space
+                    <android.support.v4.widget.Space
                         android:id="@+id/space1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -165,7 +165,7 @@
                         android:tag="rob"
                         android:text="Twitter" />
 
-                    <android.support.v7.widget.Space
+                    <android.support.v4.widget.Space
                         android:id="@+id/space1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -201,7 +201,7 @@
                     android:adjustViewBounds="true"
                     android:src="@drawable/facebook" />
 
-                <android.support.v7.widget.Space
+                <android.support.v4.widget.Space
                     android:id="@+id/space1"
                     android:layout_width="10dp"
                     android:layout_height="wrap_content" />
@@ -213,7 +213,7 @@
                     android:adjustViewBounds="true"
                     android:src="@drawable/twitter" />
 
-                <android.support.v7.widget.Space
+                <android.support.v4.widget.Space
                     android:id="@+id/space1"
                     android:layout_width="10dp"
                     android:layout_height="wrap_content" />

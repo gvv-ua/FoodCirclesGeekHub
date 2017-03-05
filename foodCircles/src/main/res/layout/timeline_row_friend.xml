@@ -113,7 +113,7 @@
                     android:textColor="@color/secondary_text"
                     android:textSize="@dimen/timeline_friend_name" />
 
-                <android.support.v7.widget.Space
+                <android.support.v4.widget.Space
                     android:id="@+id/space1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

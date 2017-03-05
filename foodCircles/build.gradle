@@ -1,13 +1,17 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+apply from: "$project.rootDir/tools/versions.gradle"
 
 android {
-    compileSdkVersion 'Google Inc.:Google APIs:19'
-    buildToolsVersion "20.0.0"
+    //compileSdkVersion 'Google Inc.:Google APIs:19'
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId "co.foodcircles"
-        minSdkVersion 9
-        targetSdkVersion 20
+        minSdkVersion 19
+        targetSdkVersion 25
+        multiDexEnabled true
     }
 
     signingConfigs {
@@ -25,18 +29,32 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+
+    useLibrary 'org.apache.http.legacy'
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 dependencies {
     compile project(':facebookSDK')
     compile project(':library')
     compile project(':simpleFacebook')
-    compile 'com.android.support:gridlayout-v7:19.1.0'
+    compile "com.android.support:gridlayout-v7:$supportLibraryVersion"
     compile 'com.google.android.gms:play-services:+'
     compile files('libs/MixpanelAPI.jar')
     compile files('libs/PayPalAndroidSDK.jar')
-    compile files('libs/crashlytics.jar')
+//    compile files('libs/crashlytics.jar')
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
+        transitive = true;
+    }
     compile files('libs/maps.jar')
     compile files('libs/twitter4j-core-4.0.0.jar')
     compile files('libs/universal-image-loader-1.8.4.jar')
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile 'com.android.support:multidex:1.0.1'
+
 }

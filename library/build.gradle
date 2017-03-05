@@ -1,13 +1,14 @@
 apply plugin: 'com.android.library'
+apply from: "$project.rootDir/tools/versions.gradle"
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "20.0.0"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         //applicationId "com.viewpagerindicator"
-        minSdkVersion 4
-        targetSdkVersion 4
+        minSdkVersion 19
+        targetSdkVersion 25
     }
 
     buildTypes {
@@ -19,5 +20,5 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:19.1.0'
+    compile "com.android.support:support-v4:$supportLibraryVersion"
 }

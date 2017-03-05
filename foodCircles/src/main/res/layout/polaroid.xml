@@ -146,7 +146,7 @@
             android:gravity="center"
             android:orientation="vertical" >
 
-            <android.support.v7.widget.Space
+            <android.support.v4.widget.Space
                 android:id="@+id/space1"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
@@ -157,7 +157,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="200" >
 
-                <android.support.v7.widget.Space
+                <android.support.v4.widget.Space
                     android:id="@+id/space1"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
@@ -199,7 +199,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <android.support.v7.widget.Space
+            <android.support.v4.widget.Space
                 android:id="@+id/space1"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"

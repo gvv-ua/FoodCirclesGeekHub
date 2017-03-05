@@ -117,7 +117,7 @@
                 android:gravity="center_vertical"
                 android:padding="10dp" >
 
-                <android.support.v7.widget.Space
+                <android.support.v4.widget.Space
                     android:id="@+id/space1"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
@@ -142,7 +142,7 @@
                     android:textColor="@color/dark_font"
                     android:textSize="@dimen/receipt_small_text" />
 
-                <android.support.v7.widget.Space
+                <android.support.v4.widget.Space
                     android:id="@+id/space1"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
@@ -156,7 +156,7 @@
                     android:adjustViewBounds="true"
                     android:src="@drawable/facebook" />
 
-                <android.support.v7.widget.Space
+                <android.support.v4.widget.Space
                     android:id="@+id/space1"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
@@ -170,7 +170,7 @@
                     android:adjustViewBounds="true"
                     android:src="@drawable/twitter" />
 
-                <android.support.v7.widget.Space
+                <android.support.v4.widget.Space
                     android:id="@+id/space1"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"

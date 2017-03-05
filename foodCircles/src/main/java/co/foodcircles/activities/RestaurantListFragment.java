@@ -32,8 +32,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import co.foodcircles.R;
 import co.foodcircles.json.Charity;
 import co.foodcircles.json.Venue;
@@ -44,16 +44,16 @@ import co.foodcircles.util.FoodCirclesApplication;
 import co.foodcircles.util.SortListByDistance;
 
 public class RestaurantListFragment extends Fragment {
-    @InjectView(R.id.gridView)
+    @BindView(R.id.gridView)
     GridView gridView;
 
-    @InjectView(R.id.pb_weekly_goal)
+    @BindView(R.id.pb_weekly_goal)
     ProgressBar mPbWeeklyGoal;
 
-    @InjectView(R.id.tv_amount_kids_aided)
+    @BindView(R.id.tv_amount_kids_aided)
     TextView mTvKidsAidedAmount;
 
-    @InjectView(R.id.tv_meals_weekly_goal)
+    @BindView(R.id.tv_meals_weekly_goal)
     TextView mTvMealsWeeklyGoal;
 
     private VenueAdapter adapter;
@@ -64,6 +64,7 @@ public class RestaurantListFragment extends Fragment {
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private FoodCirclesApplication app;
     MixpanelAPI mixpanel;
+    private AndroidUtils.GetLocations getLocations;
 
     @Override
     public void onStart() {
@@ -80,7 +81,7 @@ public class RestaurantListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = getActivity().getLayoutInflater().inflate(R.layout.polaroid_grid, null);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         FontSetter.overrideFonts(getActivity(), view);
         app = (FoodCirclesApplication) getActivity().getApplicationContext();
         options = new DisplayImageOptions.Builder().cacheInMemory().cacheOnDisc().showStubImage(R.drawable.transparent_box).showImageForEmptyUri(R.drawable.transparent_box)
@@ -92,10 +93,14 @@ public class RestaurantListFragment extends Fragment {
         if (app.venues == null) {
             app.venues = new ArrayList<Venue>();
             progressDialog = ProgressDialog.show(getActivity(), "Please wait", "Loading venues...");
+            getLocations = (AndroidUtils.GetLocations)RestaurantListFragment.this.getActivity();
+            getLocations.setLocationGPS();
+            getLocations.setLocationNet();
+
             new AsyncTask<Object, Void, Boolean>() {
                 protected Boolean doInBackground(Object... param) {
                     try {
-                        Location location = AndroidUtils.getLastBestLocation(RestaurantListFragment.this.getActivity());
+                        Location location = AndroidUtils.getLastBestLocation(getLocations.getLocationGPS(), getLocations.getLocationNet());
                         if (location == null) {
                             app.venues.addAll(Net.getVenues(-85.632823, 42.955202, null));
                         } else {

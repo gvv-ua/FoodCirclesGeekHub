@@ -2,6 +2,8 @@ package co.foodcircles.util;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
@@ -74,5 +76,11 @@ public class FoodCirclesApplication extends Application
 
 	public void setTotalKidsFed(int totalKidsFed) {
 		this.totalKidsFed = totalKidsFed;
+	}
+
+	@Override
+	protected void attachBaseContext(Context base) {
+		super.attachBaseContext(base);
+		MultiDex.install(this);
 	}
 }

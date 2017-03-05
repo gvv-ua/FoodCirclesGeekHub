@@ -23,6 +23,7 @@ import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -43,7 +44,7 @@ import co.foodcircles.net.Net;
 import co.foodcircles.util.FontSetter;
 import co.foodcircles.util.FoodCirclesApplication;
 
-public class VenueProfileFragment extends Fragment implements OnMarkerClickListener, OnMapClickListener, OnInfoWindowClickListener
+public class VenueProfileFragment extends Fragment implements OnMarkerClickListener, OnMapClickListener, OnInfoWindowClickListener, OnMapReadyCallback
 {
 	ImageView itemImageSmall;
 	FoodCirclesApplication app;
@@ -162,27 +163,7 @@ public class VenueProfileFragment extends Fragment implements OnMarkerClickListe
 //		{
 			FragmentManager myFragmentManager = getActivity().getSupportFragmentManager();
 			//SupportMapFragment mySupportMapFragment = (SupportMapFragment) myFragmentManager.findFragmentById(R.id.map);
-			map = getMapFragment().getMap();
-			MapsInitializer.initialize(getActivity());
-			LatLng destinationLatLng = new LatLng(venue.getLatitude(), venue.getLongitude());
-			destinationMarker = new MarkerOptions();
-			destinationMarker = destinationMarker.position(destinationLatLng);
-			destinationMarker = destinationMarker.title(venue.getName());
-			map.addMarker(destinationMarker).showInfoWindow();
-			map.setOnMarkerClickListener(this);
-			map.setOnMapClickListener(this);
-			map.setOnInfoWindowClickListener(this);
-			UiSettings settings = map.getUiSettings();
-			map.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(destinationLatLng, 13.5f, 30f, 112.5f)), 1, null); // bearing
-			map.setTrafficEnabled(false);
-			settings.setAllGesturesEnabled(false);
-			settings.setCompassEnabled(false);
-			settings.setMyLocationButtonEnabled(false);
-			settings.setRotateGesturesEnabled(false);
-			settings.setScrollGesturesEnabled(false);
-			settings.setTiltGesturesEnabled(false);
-			settings.setZoomControlsEnabled(false);
-			settings.setZoomGesturesEnabled(false);
+			getMapFragment().getMapAsync(this);
 //		}
 //		catch (GooglePlayServicesNotAvailableException e)
 //		{
@@ -223,6 +204,32 @@ public class VenueProfileFragment extends Fragment implements OnMarkerClickListe
 		intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
 		startActivity(intent);
 		return true;
+	}
+
+	@Override
+	public void onMapReady(GoogleMap googleMap) {
+		map = googleMap;
+		MapsInitializer.initialize(getActivity());
+		LatLng destinationLatLng = new LatLng(venue.getLatitude(), venue.getLongitude());
+		destinationMarker = new MarkerOptions();
+		destinationMarker = destinationMarker.position(destinationLatLng);
+		destinationMarker = destinationMarker.title(venue.getName());
+		map.addMarker(destinationMarker).showInfoWindow();
+		map.setOnMarkerClickListener(this);
+		map.setOnMapClickListener(this);
+		map.setOnInfoWindowClickListener(this);
+		UiSettings settings = map.getUiSettings();
+		map.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(destinationLatLng, 13.5f, 30f, 112.5f)), 1, null); // bearing
+		map.setTrafficEnabled(false);
+		settings.setAllGesturesEnabled(false);
+		settings.setCompassEnabled(false);
+		settings.setMyLocationButtonEnabled(false);
+		settings.setRotateGesturesEnabled(false);
+		settings.setScrollGesturesEnabled(false);
+		settings.setTiltGesturesEnabled(false);
+		settings.setZoomControlsEnabled(false);
+		settings.setZoomGesturesEnabled(false);
+
 	}
 
 	public class DownloadImagesTask extends AsyncTask<ImageView, Void, Bitmap> {

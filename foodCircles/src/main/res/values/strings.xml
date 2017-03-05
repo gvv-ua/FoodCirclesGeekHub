@@ -26,4 +26,9 @@
     <string name="dish_reserved">Dish reserved!</string>
     <string name="continue_browsing">Continue browsing</string>
     <string name="does_not_reserve_table_at_hop_cat">This does not reserve a table at </string>
+
+    <!-- Permission -->
+    <string name="need_gps_permission">Need GPS Permission!</string>
+    <string name="need_location_permission">Need Location Permission!</string>
+    <string name="go_to_settings">Go to Settings</string>
 </resources>

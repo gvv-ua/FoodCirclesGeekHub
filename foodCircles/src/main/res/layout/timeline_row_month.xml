@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <android.support.v7.widget.Space
+        <android.support.v4.widget.Space
             android:id="@+id/space2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -33,7 +33,7 @@
             android:background="@android:color/white" >
         </View>
 
-        <android.support.v7.widget.Space
+        <android.support.v4.widget.Space
             android:id="@+id/space2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -81,7 +81,7 @@
                     android:textColor="@color/timeline_used_text"
                     android:textSize="@dimen/timeline_date" />
 
-                <android.support.v7.widget.Space
+                <android.support.v4.widget.Space
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="20" />

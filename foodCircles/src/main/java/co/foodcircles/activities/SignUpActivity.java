@@ -157,7 +157,7 @@ public class SignUpActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				if (mSimpleFacebook.isLogin()) {
-					mSimpleFacebook.getProfile(mProfileListener); 
+					mSimpleFacebook.getProfile(mProfileListener);
 				} else {
 					mSimpleFacebook.login(mOnLoginListener);
 				}
@@ -326,7 +326,7 @@ public class SignUpActivity extends Activity {
 
 		@Override
 		public void onLogin() {
-			mSimpleFacebook.getProfile(mProfileListener); 
+			mSimpleFacebook.getProfile(mProfileListener);
 		}
 
 		@Override

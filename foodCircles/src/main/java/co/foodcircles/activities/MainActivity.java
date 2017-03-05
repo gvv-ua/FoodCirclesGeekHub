@@ -1,28 +1,51 @@
 package co.foodcircles.activities;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.app.AlertDialog;
 import android.view.Window;
-import co.foodcircles.R;
-import co.foodcircles.util.FontSetter;
-import co.foodcircles.util.FoodCirclesApplication;
+import android.widget.Toast;
 
 import com.sromku.simple.fb.SimpleFacebook;
 import com.viewpagerindicator.TabPageIndicator;
 
-public class MainActivity extends FragmentActivity
+import co.foodcircles.R;
+import co.foodcircles.util.AndroidUtils;
+import co.foodcircles.util.FontSetter;
+import co.foodcircles.util.FoodCirclesApplication;
+
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
+public class MainActivity extends FragmentActivity implements AndroidUtils.GetLocations
 {
+	public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10;
+	public static final int PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 11;
+
 	private static final String[] CONTENT = new String[] { "NEWS", "FOOD", "YOU" };
 	ViewPager pager;
 	FoodCirclesApplication app;
 	public static Activity mActivity;
 	SimpleFacebook mSimpleFacebook;
+	android.location.Location locationGPS = null;
+	android.location.Location locationNet = null;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -101,4 +124,91 @@ public class MainActivity extends FragmentActivity
 		SimpleFacebook.getInstance(this).onActivityResult(this, requestCode, resultCode, data);
 	}
 
+	public void setLocationGPS() {
+		if (ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
+			LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+			locationGPS = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		} else {
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)) {
+				showExplanationDialog(getString(R.string.need_gps_permission), new String[]{ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+			} else {
+				ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+			}
+		}
+	}
+
+	public void setLocationNet() {
+		if (ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED) {
+			LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+			locationNet = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		} else {
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_COARSE_LOCATION)) {
+				showExplanationDialog(getString(R.string.need_location_permission), new String[]{ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+			} else {
+				ActivityCompat.requestPermissions(this, new String[]{ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+			}
+		}
+	}
+
+	private void showExplanationDialog(final String title, final String[] permissions, final int requestCode) {
+		new AlertDialog.Builder(this)
+				.setMessage(title)
+				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						ActivityCompat.requestPermissions(MainActivity.this, permissions, requestCode);
+					}
+				})
+				.setNegativeButton(R.string.go_to_settings, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						openPermissionSettings();
+					}
+				})
+				.create()
+				.show();
+	}
+
+	private void openPermissionSettings() {
+		final Intent intent = new Intent();
+		intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+		intent.addCategory(Intent.CATEGORY_DEFAULT);
+		intent.setData(Uri.parse("package:" + getPackageName()));
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+		intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+		startActivity(intent);
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+		switch (requestCode) {
+			case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+				if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+					LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+					locationGPS = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+				} else {
+					Toast.makeText(this, R.string.need_gps_permission, Toast.LENGTH_SHORT).show();
+				}
+			}
+			case PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION: {
+				if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+					LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+					locationNet = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+				} else {
+					Toast.makeText(this, R.string.need_location_permission, Toast.LENGTH_SHORT).show();
+				}
+			}
+		}
+	}
+
+	public Location getLocationGPS() {
+		return locationGPS;
+	}
+
+	public Location getLocationNet() {
+		return locationNet;
+	}
 }

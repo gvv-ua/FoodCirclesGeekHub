@@ -54,7 +54,7 @@ public class Net {
     private static final String TAG = Net.class.getSimpleName();
 
 	//public static final String HOST = "http://staging.foodcircles.net";
-    public static final String HOST = "https://joinfoodcircles.org";
+    public static final String HOST = "http://joinfoodcircles.org";
 	private static final String API_URL = "/api";
 	private static final String GET_VENUES = "/venues/%f/%f";
 	private static final String GET_RESERVATION = "/reservations/[reservationId]";
@@ -64,7 +64,7 @@ public class Net {
 	private static final String GET_TIMELINE="/timeline?auth_token=%s";
     private static final String VENUES_SUBSCRIBE = "/venues/%s/subscribe";
 	//public static String logo="http://staging.foodcircles.net/media/BAhbBlsHOgZmSSIkMjAxMy8wOC8yMC8xNl81Nl8xMV84MzNfRkFRLnBuZwY6BkVU";
-    public static String logo="https://joinfoodcircles.org/media/BAhbBlsHOgZmSSIkMjAxMy8wOC8yMC8xNl81Nl8xMV84MzNfRkFRLnBuZwY6BkVU";
+    public static String logo="https://foodcircles.org/media/BAhbBlsHOgZmSSIkMjAxMy8wOC8yMC8xNl81Nl8xMV84MzNfRkFRLnBuZwY6BkVU";
 	
 	private static String post(String path, List<BasicNameValuePair> postValues) {
 		HttpContext httpContext = new BasicHttpContext();

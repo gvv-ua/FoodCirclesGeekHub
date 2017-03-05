@@ -18,6 +18,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import co.foodcircles.R;
 import co.foodcircles.activities.MP;
@@ -30,6 +31,9 @@ import co.foodcircles.util.AndroidUtils;
 import co.foodcircles.util.SortListByDistance;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class AlarmReceiver extends BroadcastReceiver
 {
@@ -65,8 +69,18 @@ public class AlarmReceiver extends BroadcastReceiver
 						{
 							try
 							{
-								//Checks for venues near the user's location 
-								Location location = AndroidUtils.getLastBestLocation(context);
+
+								//Checks for venues near the user's location
+								LocationManager mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+								Location locationGPS = null;
+								if (ActivityCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
+									locationGPS = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+								}
+								Location locationNet = null;
+								if (ActivityCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
+									locationNet = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+								}
+								Location location = AndroidUtils.getLastBestLocation(locationGPS, locationNet);
 								
 								
 								if(location==null){

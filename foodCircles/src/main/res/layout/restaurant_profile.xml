@@ -74,7 +74,7 @@
                     android:layout_weight="2"
                     android:gravity="center" >
 
-                    <android.support.v7.widget.Space
+                    <android.support.v4.widget.Space
                         android:id="@+id/space1"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -87,7 +87,7 @@
                         android:layout_weight="2"
                         android:src="@drawable/facebook" />
 
-                    <android.support.v7.widget.Space
+                    <android.support.v4.widget.Space
                         android:id="@+id/space1"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -100,7 +100,7 @@
                         android:layout_weight="2"
                         android:src="@drawable/twitter" />
 
-                    <android.support.v7.widget.Space
+                    <android.support.v4.widget.Space
                         android:id="@+id/space1"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -113,7 +113,7 @@
                         android:layout_weight="2"
                         android:src="@drawable/yelp" />
 
-                    <android.support.v7.widget.Space
+                    <android.support.v4.widget.Space
                         android:id="@+id/space1"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"

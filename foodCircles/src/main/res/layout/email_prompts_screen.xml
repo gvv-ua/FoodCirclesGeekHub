@@ -36,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
 
-                    <android.support.v7.widget.Space
+                    <android.support.v4.widget.Space
                         android:id="@+id/space3"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -60,7 +60,7 @@
             android:textSize="@dimen/splash_size"
             android:textStyle="bold" />
 
-                    <android.support.v7.widget.Space
+                    <android.support.v4.widget.Space
                         android:id="@+id/space3"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -111,7 +111,7 @@
             android:layout_gravity="center"
             android:orientation="horizontal" >
 
-            <android.support.v7.widget.Space
+            <android.support.v4.widget.Space
                 android:id="@+id/space2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -224,13 +224,13 @@
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/standard_button_text" />
 
-                <android.support.v7.widget.Space
+                <android.support.v4.widget.Space
                     android:id="@+id/space3"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/loginButtonsPadding" />
             </LinearLayout>
 
-            <android.support.v7.widget.Space
+            <android.support.v4.widget.Space
                 android:id="@+id/space1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
