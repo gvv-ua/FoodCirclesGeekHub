@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">FoodCircles</string>
+    <string name="mixpanel_token">a7f79aaa98013376271cb811ec95ff99</string>
+    <string name="preferences">pref</string>
+    <string name="last_notification">notification</string>
+    <string name="title_activity_facbook">FacbookActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <!-- <string name="app_id">526839707387980</string> -->
+    <string name="app_id">1508523846087006</string>
+    <string name="forgotpass"><a href="http://www.joinfoodcircles.org/users/password/new">Forgot Password?</a></string>
+    <string name="venue_profile_btn_keep_me_posted">Keep me posted</string>
+    <string name="venue_profile_btn_nevermind">Never mind, don\'t notify me</string>
+    <string name="venue_profile_btn_i_want_this">I want this</string>
+    <string name="venue_dish_is_gone_text_above">WELP! This dish is gone for the week</string>
+    <string name="venue_dish_is_gone_text_below">Tap below to get first dibs when it\'s back</string>
+    <string name="venue_days_left">%1$d\nDAYS</string>
+    <string name="title_activity_reserved">ReservedActivity</string>
+    <string name="this_week_mission">THIS WEEK\'S MISSION</string>
+    <string name="number_meals">%1$d MEALS</string>
+    <string name="kids_aided">KIDS AIDED</string>
+
+    <!-- Reservation -->
+    <string name="dish_reserved">Dish reserved!</string>
+    <string name="continue_browsing">Continue browsing</string>
+    <string name="does_not_reserve_table_at_hop_cat">This does not reserve a table at </string>
+</resources>

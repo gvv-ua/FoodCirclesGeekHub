@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@color/transparent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textViewItemName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:tag="neu"
+                android:singleLine="false"
+                android:ellipsize="end"
+                android:text="2 free appetizers"
+                android:textColor="@color/dark_font"
+                android:textSize="@dimen/receipt_large_text"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textAlignment="center" />
+            <TextView
+                android:id="@+id/textViewLeft"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/yellow_circle"
+                android:gravity="center"
+                android:padding="10dp"
+                android:shadowColor="@color/show_server_shadow_color"
+                android:shadowDx="0"
+                android:shadowDy="-1"
+                android:shadowRadius="1"
+                android:tag="neu"
+                android:text="Show your server!"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/receipt_large_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:tag="rob"
+                android:text="Your code is:"
+                android:textColor="@color/dark_font"
+                android:textSize="@dimen/receipt_small_text" />
+
+            <TextView
+                android:id="@+id/textViewCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:tag="rob"
+                android:text="4J2S3"
+                android:textColor="@color/dark_red"
+                android:textSize="@dimen/receipt_code_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewVenue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:tag="rob"
+                android:text="Stella&apos;s Lounge"
+                android:textColor="@color/dark_font"
+                android:textSize="@dimen/receipt_medium_text"
+                android:textStyle="bold" />
+
+            <co.foodcircles.customviews.FontFitTextView
+                android:id="@+id/textViewMinGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:tag="rob"
+                android:singleLine="true"
+                android:text="-"
+                android:textColor="@color/dark_font"
+                android:textSize="@dimen/receipt_small_text" />
+
+            <Button
+                android:id="@+id/buttonMarkAsUsed"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/receipt_button_height"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/button_selector"
+                android:tag="rob"
+                android:text="Mark as used"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/receipt_button_text" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:padding="10dp" >
+
+                <android.support.v7.widget.Space
+                    android:id="@+id/space1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3" />
+
+                <TextView
+                    android:id="@+id/textViewDonated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="rob"
+                    android:text="$2 donated"
+                    android:textColor="@color/dark_font"
+                    android:textSize="@dimen/receipt_small_text"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewChildrenFed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="rob"
+                    android:text=" (2 kids fed)"
+                    android:textColor="@color/dark_font"
+                    android:textSize="@dimen/receipt_small_text" />
+
+                <android.support.v7.widget.Space
+                    android:id="@+id/space1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="2" />
+
+                <ImageView
+                    android:id="@+id/imageViewFacebook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/receipt_social_height"
+                    android:layout_margin="5dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/facebook" />
+
+                <android.support.v7.widget.Space
+                    android:id="@+id/space1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/imageViewTwitter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/receipt_social_height"
+                    android:layout_margin="5dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/twitter" />
+
+                <android.support.v7.widget.Space
+                    android:id="@+id/space1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@android:color/transparent" >
+
+            <View
+                android:id="@+id/viewTiledTeeth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tiled_receipt_tooth" >
+            </View>
+        </FrameLayout>
+    </LinearLayout>
+
+</FrameLayout>

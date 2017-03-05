@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="16dp"
+    android:shape="rectangle" >
+
+    <corners android:radius="1dp" />
+
+    <gradient
+        android:angle="315"
+        android:endColor="@color/pol_grey_icon_dark"
+        android:startColor="@color/pol_grey_icon_light" />
+
+    <stroke 
+        android:width="1dp"
+        android:color="@color/pol_grey_icon_light"/>
+</shape>

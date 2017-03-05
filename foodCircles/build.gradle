@@ -1,0 +1,42 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 'Google Inc.:Google APIs:19'
+    buildToolsVersion "20.0.0"
+
+    defaultConfig {
+        applicationId "co.foodcircles"
+        minSdkVersion 9
+        targetSdkVersion 20
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("keystore")
+            storePassword "jfkdls;a"
+            keyAlias "fcdistkey"
+            keyPassword "jfkdls;a"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+
+dependencies {
+    compile project(':facebookSDK')
+    compile project(':library')
+    compile project(':simpleFacebook')
+    compile 'com.android.support:gridlayout-v7:19.1.0'
+    compile 'com.google.android.gms:play-services:+'
+    compile files('libs/MixpanelAPI.jar')
+    compile files('libs/PayPalAndroidSDK.jar')
+    compile files('libs/crashlytics.jar')
+    compile files('libs/maps.jar')
+    compile files('libs/twitter4j-core-4.0.0.jar')
+    compile files('libs/universal-image-loader-1.8.4.jar')
+}

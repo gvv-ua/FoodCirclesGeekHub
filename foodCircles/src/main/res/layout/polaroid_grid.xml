@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background" >
+
+    <include layout="@layout/background_shine_strip"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_progress"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:paddingBottom="15dp"
+        android:background="@drawable/sunrise_bg"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:text=""
+            android:id="@+id/tv_amount_kids_aided"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:paddingBottom="10dp" />
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/kids_aided"
+            android:id="@+id/text_kids_aided"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:layout_below="@+id/pb_weekly_goal"
+            android:layout_alignLeft="@+id/tv_amount_kids_aided"
+            android:layout_alignStart="@+id/tv_amount_kids_aided"
+            android:layout_marginTop="5dp" />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:max="100"
+            android:progress="25"
+            android:id="@+id/pb_weekly_goal"
+            android:progressDrawable="@drawable/custom_progressbar"
+            android:layout_alignBottom="@+id/tv_amount_kids_aided"
+            android:layout_toRightOf="@+id/text_kids_aided"
+            android:layout_toEndOf="@+id/text_kids_aided"
+            android:layout_marginRight="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:textColor="@android:color/white"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:text="@string/this_week_mission"
+            android:id="@+id/text_this_week_mission"
+            android:layout_above="@+id/pb_weekly_goal"
+            android:layout_toRightOf="@+id/tv_amount_kids_aided"
+            android:layout_toEndOf="@+id/tv_amount_kids_aided"
+            android:layout_marginBottom="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"
+            android:text="50 MEALS"
+            android:id="@+id/tv_meals_weekly_goal"
+            android:layout_above="@+id/pb_weekly_goal"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="10dp" />
+
+    </RelativeLayout>
+
+    <GridView
+        android:id="@+id/gridView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_progress"
+        android:horizontalSpacing="6dp"
+        android:numColumns="2"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:verticalSpacing="6dp"
+        tools:listitem="@layout/polaroid" />
+
+</RelativeLayout>

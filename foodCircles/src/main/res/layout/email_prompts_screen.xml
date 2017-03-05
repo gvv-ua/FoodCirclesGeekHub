@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background" >
+
+    <include layout="@layout/background_shine_strip" />
+
+    <LinearLayout
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/fuzzy_cheer" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <android.support.v7.widget.Space
+                        android:id="@+id/space3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <!-- <ImageView
+                        android:id="@+id/imageView3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:src="@drawable/foodcircles_type_white_shadow" /> -->
+                        <TextView
+            android:id="@+id/textView1"
+            android:layout_marginTop="15dip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:tag="neu"
+            android:text="Buy One, Feed One."
+            android:textColor="#ffffff"
+            android:textSize="@dimen/splash_size"
+            android:textStyle="bold" />
+
+                    <android.support.v7.widget.Space
+                        android:id="@+id/space3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textViewCopy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:lineSpacingMultiplier="1.2"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:shadowColor="@android:color/black"
+                    android:shadowDx="1.0"
+                    android:shadowDy="1.0"
+                    android:shadowRadius="3.0"
+                    android:tag="neu"
+                    android:text="Buy one appetizer or dessert for $1 or more, feed one child in need."
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/signup_small_text"
+                    android:textStyle="italic" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/buttonSignIn"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/standard_button_height"
+                android:layout_gravity="top|right"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:shadowColor="@android:color/black"
+                android:shadowDx="1.0"
+                android:shadowDy="1.0"
+                android:shadowRadius="2"
+                android:tag="rob"
+                android:text="Sign In >"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/standard_button_text" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal" >
+
+            <android.support.v7.widget.Space
+                android:id="@+id/space2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="8"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/signup_message_height"
+                    android:gravity="center"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/textViewCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="5dp"
+                        android:tag="rob"                       
+                        android:textSize="@dimen/signup_powerful_text" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/standard_button_height"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center" >
+                            
+                            
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/standard_button_height"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center" >
+                        </LinearLayout>
+                    </FrameLayout>
+                </LinearLayout>
+                
+                <TextView
+                        android:id="@+id/textViewsuccess"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:tag="rob"
+                       
+                        android:textSize="@dimen/signup_powerful_text" />
+                
+
+                <EditText
+                    android:id="@+id/editTextEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="new email"
+                    android:inputType="textEmailAddress"
+                    android:tag="rob"
+                    android:textColorHint="@color/secondary_text" >
+
+                    <requestFocus android:layout_width="wrap_content" />
+                </EditText>
+                
+                <TextView
+                        android:id="@+id/textViewCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:tag="rob"
+                        android:text="(Sweet. Now you don&apos;t have to \nremember yet another password.)"
+                        android:textSize="@dimen/signup_powerful_text" />
+
+                <Button
+                    android:id="@+id/buttonfinishSignUp"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/standard_button_height"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/button_selector"
+                    android:tag="rob"
+                    android:text="Finish Signing Up"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/standard_button_text" />
+
+                <android.support.v7.widget.Space
+                    android:id="@+id/space3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/loginButtonsPadding" />
+            </LinearLayout>
+
+            <android.support.v7.widget.Space
+                android:id="@+id/space1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

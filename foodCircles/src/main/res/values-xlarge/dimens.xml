@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- XLARGE -->
+    <dimen name="timeline_date">12sp</dimen>
+    <dimen name="timeline_bottom_left">10sp</dimen>
+    <dimen name="timeline_bottom_middle">12sp</dimen>
+    <dimen name="timeline_children_fed">12sp</dimen>
+    <dimen name="timeline_friend_name">12sp</dimen>
+    
+    <dimen name="buy_options_text">18dp</dimen>
+    <dimen name="buy_options_spinner">12dp</dimen>
+    <dimen name="buy_options_text_large">25dp</dimen>
+    
+    <dimen name="polaroidIconH">48dp</dimen>
+    <dimen name="polaroidIconW">42dp</dimen>
+    <dimen name="polaroidIconTopMargin">30dp</dimen>
+    
+    <dimen name="loginButtonsPadding">20dp</dimen>
+    <dimen name="loginBuyOneFeedOne">40sp</dimen>
+    <dimen name="logoHeight">450dp</dimen>
+    <dimen name="loginTopSpace">150dp</dimen>
+    
+    <dimen name="venue_item_small_price">30sp</dimen>
+    <dimen name="venue_item_large_price">60sp</dimen>
+    <dimen name="venue_item_slash">30sp</dimen>
+    <dimen name="venue_item_image_height">450dp</dimen>
+    <dimen name="venue_item_name_text_size">50sp</dimen>
+    <dimen name="venue_flavor_text_size">35sp</dimen>
+    <dimen name="venue_small_text_size">25sp</dimen>
+    <dimen name="venue_heart_height">25dp</dimen>
+    <dimen name="venue_button_padding">16dp</dimen>
+    
+    
+    <dimen name="receipt_code_text">140sp</dimen>
+    <dimen name="receipt_large_text">80sp</dimen>
+    <dimen name="receipt_medium_text">50sp</dimen>
+    <dimen name="receipt_small_text">40sp</dimen>
+    <dimen name="receipt_social_height">60dp</dimen>
+    <dimen name="receipt_button_height">100dp</dimen>
+    <dimen name="receipt_button_text">30sp</dimen>
+    
+    <dimen name="landing_large_text">55sp</dimen>
+    <dimen name="landing_small_text">40sp</dimen>
+    
+    <dimen name="signup_large_text">55sp</dimen>
+    <dimen name="signup_powerful_text">30sp</dimen>
+    <dimen name="signup_small_text">40sp</dimen>
+    <dimen name="signup_smaller_text">30sp</dimen>
+    <dimen name="signup_message_height">90dp</dimen>
+    
+    <dimen name="profile_large_text">40sp</dimen>
+    <dimen name="profile_small_text">30sp</dimen>
+    <dimen name="profile_hours_text">20sp</dimen>
+    <dimen name="profile_button_height">70dp</dimen>
+    <dimen name="profile_upper_height">280dp</dimen>
+    
+    <dimen name="splash_size">50sp</dimen>
+    
+    <dimen name="standard_button_height">90dp</dimen>
+    <dimen name="standard_button_text">26sp</dimen>
+    
+    <dimen name="wantthis_button_height">110dp</dimen>
+    <dimen name="wantthis_button_text">30sp</dimen>
+</resources>

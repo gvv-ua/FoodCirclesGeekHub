@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="horizontal" >
+
+    <FrameLayout
+        android:layout_width="45dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp" >
+
+        <ImageView
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/gear" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="26dp"
+        android:layout_height="match_parent" >
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:scaleType="matrix"
+            android:src="@drawable/timeline_stripe" />
+    </FrameLayout>
+
+    <android.support.v7.widget.Space
+        android:id="@+id/space1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:tag="rob"
+        android:text="You"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/dark_font"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textViewMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:text="12"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/blue_text"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:tag="rob"
+        android:text=" Friends"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/dark_font"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textViewFriends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:text="31"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/yellow_circle"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:tag="rob"
+        android:text="Kids Fed"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/dark_font" />
+
+    <TextView
+        android:id="@+id/textViewKidsFed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:text="0"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/blue_text"
+        android:textStyle="bold" />
+
+</LinearLayout>

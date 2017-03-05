@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/background">
+
+    <include layout="@layout/background_shine_strip"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="210dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"/>
+
+                    <LinearLayout
+                        android:id="@+id/ll_venue_days_left"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:orientation="horizontal"
+
+                        android:weightSum="2">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.8"
+                            android:background="@color/pol_green_days_left_dark"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:gravity="center|bottom"
+                                android:text="@string/venue_dish_is_gone_text_above"
+                                android:textColor="@android:color/white"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:gravity="center|top"
+                                android:text="@string/venue_dish_is_gone_text_below"
+                                android:textColor="@android:color/white"/>
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="2px"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/white"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.2"
+                            android:background="@color/pol_green_days_left_light"
+                            android:orientation="vertical"
+                            android:paddingTop="2dp">
+
+                            <TextView
+                                android:id="@+id/tv_venue_days_left"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:gravity="center|bottom"
+                                android:text="@string/venue_days_left"
+                                android:textColor="@android:color/white"
+                                android:textStyle="bold"/>
+
+                            <LinearLayout
+                                android:id="@+id/ll_days_left_dots"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center|top"
+                                android:minHeight="20dp"
+                                android:orientation="horizontal">
+
+                                <View
+                                    android:layout_width="5dp"
+                                    android:layout_height="5dp"
+                                    android:layout_margin="2dp"
+                                    android:background="@drawable/days_left_filled"
+                                    android:gravity="center"/>
+
+                                <View
+                                    android:layout_width="5dp"
+                                    android:layout_height="5dp"
+                                    android:layout_margin="2dp"
+                                    android:background="@drawable/days_left_filled"
+                                    android:gravity="center"/>
+
+                                <View
+                                    android:layout_width="5dp"
+                                    android:layout_height="5dp"
+                                    android:layout_margin="2dp"
+                                    android:background="@drawable/days_left_filled"
+                                    android:gravity="center"/>
+
+                                <View
+                                    android:layout_width="5dp"
+                                    android:layout_height="5dp"
+                                    android:layout_margin="2dp"
+                                    android:background="@drawable/days_left_filled"
+                                    android:gravity="center"/>
+
+                                <View
+                                    android:layout_width="5dp"
+                                    android:layout_height="5dp"
+                                    android:layout_margin="2dp"
+                                    android:background="@drawable/days_left_filled"
+                                    android:gravity="center"/>
+
+                                <View
+                                    android:layout_width="5dp"
+                                    android:layout_height="5dp"
+                                    android:layout_margin="2dp"
+                                    android:background="@drawable/days_left_filled"
+                                    android:gravity="center"/>
+
+                                <View
+                                    android:layout_width="5dp"
+                                    android:layout_height="5dp"
+                                    android:layout_margin="2dp"
+                                    android:background="@drawable/days_left_filled"
+                                    android:gravity="center"/>
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textViewPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:includeFontPadding="false"
+                        android:tag="neu"
+                        android:text="$4"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/venue_item_small_price"/>
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="@dimen/venue_item_slash"
+                        android:layout_height="match_parent"
+                        android:layout_alignBottom="@+id/textViewPrice"
+                        android:layout_alignLeft="@+id/textViewPrice"
+                        android:layout_alignRight="@+id/textViewPrice"
+                        android:layout_alignTop="@+id/textViewPrice"
+                        android:adjustViewBounds="true"
+                        android:paddingTop="5dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/slash"/>
+
+                    <TextView
+                        android:id="@+id/textViewDiscountPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_toLeftOf="@+id/textViewPrice"
+                        android:tag="neu"
+                        android:text="$1"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/venue_item_large_price"/>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.Space
+                        android:id="@+id/space1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="8"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textViewItemName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:tag="neu"
+                                android:text="Loaded Crack Fries"
+                                android:textColor="@color/dark_font"
+                                android:textSize="@dimen/venue_item_name_text_size"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:id="@+id/textViewItemFlavorText"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:tag="rob"
+                                android:text="They&apos;re really that addictive. House blend seasoned beer battered fries with the addition of our house soft cheese sauce, pepper-jack cheese, onion, jalepenos, &amp; bacon."
+                                android:textColor="@color/secondary_text"
+                                android:textSize="@dimen/venue_flavor_text_size"/>
+                        </LinearLayout>
+
+                        <Button
+                            android:id="@+id/button"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/wantthis_button_height"
+                            android:layout_marginBottom="20dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/button_selector"
+                            android:padding="@dimen/venue_button_padding"
+                            android:paddingBottom="5dp"
+                            android:paddingTop="5dp"
+                            android:tag="rob"
+                            android:text="@string/venue_profile_btn_i_want_this"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/wantthis_button_text"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/textView4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:tag="rob"
+                                android:text="Make Someone&apos;s Day "
+                                android:textColor="#701a1a"
+                                android:textSize="@dimen/venue_small_text_size"
+                                android:textStyle="bold"/>
+
+                            <ImageView
+                                android:id="@+id/imageView1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/venue_heart_height"
+                                android:adjustViewBounds="true"
+                                android:src="@drawable/heart"/>
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/textView4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:tag="rob"
+                            android:text="Don&apos;t need your dish? Ask your server to give it to a nearby table, or a person that comes in after you."
+                            android:textColor="@color/secondary_text"
+                            android:textSize="@dimen/venue_small_text_size"/>
+                    </LinearLayout>
+
+                    <android.support.v7.widget.Space
+                        android:id="@+id/space1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

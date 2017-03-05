@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <color name="timeline_expiring">#be1e2d</color>
+    <color name="timeline_date_pin">#CFC6BC</color>
+    <color name="timeline_used_pinhead">#F9F9F9</color>
+    <color name="timeline_used_text">#BFBAB4</color>
+	<color name="timeline_embed_shadow">#EFE8DD</color>
+	<color name="timeline_rule">#D8D0C7</color>
+	<color name="timeline_date_text">#BFBAB4</color>
+	
+	<color name="background_gradient_solid">#EFE8DD</color>
+    <color name="grey">#E6E6E6</color>
+    <color name="dark_grey">#666666</color>
+    <color name="fc_text">#76320A</color>
+    <color name="transparent">#00000000</color>
+    <color name="background">#F0E9DE</color>
+    <color name="header_text">#4E3E34</color>
+    <color name="copy_text">#4E3E34</color>
+    <color name="secondary_text">#8A857F</color>
+    <color name="reverse_text">#000000</color>
+    <color name="button_shadow">#461212</color>
+    
+    <color name="contact_button_dark">#7C766F</color>
+    <color name="contact_button_light">#9F9B96</color>
+    
+    <color name="num_meals">#1c75bc</color>
+    
+    <color name="dark_font">#4E3E34</color>
+    
+    <color name="show_server_shadow_color">#A57807</color>
+    
+    <color name="transparent_lighter_grey">#44999999</color>
+    <color name="transparent_grey">#DD222222</color>
+    <color name="transparent_light_grey">#DD666666</color>
+    
+    <color name="links_inactive">#A34A4B</color>
+    <color name="links_hover">#701A1A</color>
+    <color name="button_shadow_red">#701A1A</color>
+    <color name="text_field">#999999</color>
+
+    <color name="blue_text">#3AABEF</color>
+    
+    <color name="dark_red">#6E1414</color>
+    <color name="yellow_circle">#D09A00</color>
+    <color name="timeline_date_circle_inside">#EFE8DD</color>
+    <color name="timeline_date_circle_outside">#D8D0C7</color>
+    
+    <color name="facebook">#3b5998</color>
+    <color name="facebook_dark">#274584</color>
+    <color name="twitter">#00acee</color>
+    <color name="twitter_dark">#0098DA</color>
+    <color name="google_plus">#db4a39</color>
+    <color name="yelp">#c41200</color>
+    
+    <color name="pol_blue_icon_light">#3583B5</color>
+    <color name="pol_blue_icon_dark">#1B4D7A</color>
+    
+    <color name="pol_green_icon_light">#54BD78</color>
+    <color name="pol_green_icon_dark">#3B8948</color>
+    
+    <color name="pol_yellow_icon_light">#DEBC42</color>
+    <color name="pol_yellow_icon_dark">#C58134</color>
+
+    <color name="pol_green_days_left_light">#97cc7e</color>
+    <color name="pol_green_days_left_dark">#81be60</color>
+    
+    <color name="pol_grey_icon_light">#B7B7B7</color>
+    <color name="pol_grey_icon_dark">#7A7A7A</color>
+    
+    <color name="venue_profile_gradient_dark">#11000000</color>
+    
+    <color name="button_grey_light">#AEAEAE</color>
+    <color name="button_grey_dark">#707070</color>
+    
+    <color name="price_background_grey">#D9D9D9</color>
+    
+</resources>

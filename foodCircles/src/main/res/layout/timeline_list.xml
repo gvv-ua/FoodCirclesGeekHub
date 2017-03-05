@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/background" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:orientation="horizontal" >
+
+        <FrameLayout
+            android:layout_width="45dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp" >
+
+            <ImageView
+                android:id="@+id/settingButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/gear" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="26dp"
+            android:layout_height="match_parent" >
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:scaleType="matrix"
+                android:src="@drawable/timeline_stripe" />
+        </FrameLayout>
+
+        <android.support.v7.widget.Space
+            android:id="@+id/space1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:tag="rob"
+            android:text="You"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/dark_font"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textViewMe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:text="12"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/blue_text"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:tag="rob"
+            android:text=" Friends"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/dark_font"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textViewFriends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:text="31"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/yellow_circle"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/TextView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:tag="rob"
+            android:text="Kids Fed"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/dark_font" />
+
+        <TextView
+            android:id="@+id/textViewKidFed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/blue_text"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/background" >
+
+        <include layout="@layout/background_shine_strip" />
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:cacheColorHint="#00000000"
+            android:paddingBottom="50dp"
+            android:clipToPadding="false"
+            android:divider="@null"
+            tools:listfooter="@layout/timeline_row_month"
+            tools:listheader="@layout/timeline_top_row"
+            tools:listitem="@layout/timeline_row" >
+        </ListView>
+
+        <TextView
+            android:id="@+id/noPurchases"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:text="You haven&apos;t made any purchases yet! \n  Let’s get started on our journey to end hunger. \n \n  Swipe Left to View Restaurants."
+            android:textSize="20dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/inviteFriendsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/timeline_bottom_gradient"
+            android:clickable="true" >
+
+            <android.support.v7.widget.Space
+                android:id="@+id/space2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="You can feed a child"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/timeline_bottom_left" />
+
+                <TextView
+                    android:id="@+id/textViewLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="Your community can feed a classroom"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/timeline_bottom_left" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewInviteOrImport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Invite Friends"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/timeline_bottom_middle"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="9dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="3dp"
+                android:layout_marginTop="9dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/add_contact" />
+
+            <android.support.v7.widget.Space
+                android:id="@+id/space2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/call"
+    android:insetLeft="10dip"
+    android:insetRight="10dip"
+    android:insetTop="10dip"
+    android:insetBottom="10dip" />
