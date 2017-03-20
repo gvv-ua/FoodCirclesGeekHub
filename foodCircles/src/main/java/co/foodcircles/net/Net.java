@@ -48,6 +48,11 @@ import co.foodcircles.json.Reservation;
 import co.foodcircles.json.Venue;
 import co.foodcircles.json.Voucher;
 import co.foodcircles.util.MySSLSocketFactory;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 public class Net {
@@ -65,7 +70,9 @@ public class Net {
     private static final String VENUES_SUBSCRIBE = "/venues/%s/subscribe";
 	//public static String logo="http://staging.foodcircles.net/media/BAhbBlsHOgZmSSIkMjAxMy8wOC8yMC8xNl81Nl8xMV84MzNfRkFRLnBuZwY6BkVU";
     public static String logo="https://foodcircles.org/media/BAhbBlsHOgZmSSIkMjAxMy8wOC8yMC8xNl81Nl8xMV84MzNfRkFRLnBuZwY6BkVU";
-	
+
+    private static final OkHttpClient client = new OkHttpClient();
+
 	private static String post(String path, List<BasicNameValuePair> postValues) {
 		HttpContext httpContext = new BasicHttpContext();
 		HttpClient httpclient = createHttpClient();
@@ -83,6 +90,21 @@ public class Net {
 		}
         Log.d(TAG, "get response = " + response);
 		return response;
+	}
+
+	private static String postOk(String path, RequestBody params) {
+		Log.d(TAG, "post request url = " + HOST + path);
+		Request request = new Request.Builder()
+				.url(HOST + path)
+				.post(params)
+				.build();
+        try {
+            Response response = client.newCall(request).execute();
+            return response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
 	}
 
 	private static String postRedeemed(String id) {
@@ -130,6 +152,20 @@ public class Net {
         String response = builder.toString();
         return response;
     }
+
+	private static String getOk(String path) {
+		Log.d(TAG, "get request url = " + HOST + path);
+		Request request = new Request.Builder()
+				.url(HOST + path)
+				.build();
+		try {
+			Response response = client.newCall(request).execute();
+			return response.body().string();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
 
     private static String put(String path, List<BasicNameValuePair> urlParams) {
 		HttpContext httpContext = new BasicHttpContext();
@@ -179,7 +215,8 @@ public class Net {
 			throws NetException {
 		try {
 			String url=String.format(GET_VENUES,latitude,longitude);
-			String response = get(API_URL + url, filters);
+			//String response = get(API_URL + url, filters);
+			String response = getOk(API_URL + url);
 			return Venue.parseVenues(response);
 		} catch (JSONException j) {
 			throw new NetException();
@@ -189,7 +226,8 @@ public class Net {
 	public static List<Reservation> getReservationsList(String token) throws NetException {
 		try {
 			String url=String.format(GET_TIMELINE,token);
-			String response = get(API_URL + url, null);
+			//String response = get(API_URL + url, null);
+			String response = getOk(API_URL + url);
 			return Reservation.parseReservations(response);
 		} catch (JSONException j) {
 			throw new NetException();
@@ -225,10 +263,16 @@ public class Net {
 
 	public static String signUp(String userEmail, String userPassword)
 			throws NetException2 {
-		List<BasicNameValuePair> postValues = new ArrayList<BasicNameValuePair>();
-		postValues.add(new BasicNameValuePair("user_email", userEmail));
-		postValues.add(new BasicNameValuePair("user_password", userPassword));
-		String html = post(API_URL + "/sessions/sign_up", postValues);
+        RequestBody requestBody = new FormBody.Builder()
+                .add("user_email", userEmail)
+                .add("user_password", userPassword)
+                .build();
+
+//		List<BasicNameValuePair> postValues = new ArrayList<BasicNameValuePair>();
+//		postValues.add(new BasicNameValuePair("user_email", userEmail));
+//		postValues.add(new BasicNameValuePair("user_password", userPassword));
+		//String html = post(API_URL + "/sessions/sign_up", postValues);
+        String html = postOk(API_URL + "/sessions/sign_up", requestBody);
 		NetException2 n = new NetException2();
 		try {
 			JSONObject json = new JSONObject(html);
@@ -304,12 +348,18 @@ public class Net {
 
 	public static String facebookSignUp(String userID,String emailid)
 			throws NetException2 {
-		List<BasicNameValuePair> postValues = new ArrayList<BasicNameValuePair>();
+//		List<BasicNameValuePair> postValues = new ArrayList<BasicNameValuePair>();
 		Log.i("ID",userID);
 		Log.i("Email",emailid);
-		postValues.add(new BasicNameValuePair("uid", userID));
-		postValues.add(new BasicNameValuePair("user_email", emailid));
-		String html = post(API_URL + "/sessions/sign_up", postValues);
+//		postValues.add(new BasicNameValuePair("uid", userID));
+//		postValues.add(new BasicNameValuePair("user_email", emailid));
+//		String html = post(API_URL + "/sessions/sign_up", postValues);
+		RequestBody requestBody = new FormBody.Builder()
+				.add("uid", userID)
+				.add("user_email", emailid)
+				.build();
+		String html = postOk(API_URL + "/sessions/sign_up", requestBody);
+
 		NetException2 n = new NetException2();
 		try {
 			JSONObject json = new JSONObject(html);
@@ -329,10 +379,15 @@ public class Net {
 	
 	public static String signIn(String userEmail, String userPassword)
 			throws NetException2 {
-		List<BasicNameValuePair> postValues = new ArrayList<BasicNameValuePair>();
-		postValues.add(new BasicNameValuePair("user_email", userEmail));
-		postValues.add(new BasicNameValuePair("user_password", userPassword));
-		String html = post(API_URL + "/sessions/sign_in", postValues);
+		RequestBody requestBody = new FormBody.Builder()
+				.add("user_email", userEmail)
+				.add("user_password", userPassword)
+				.build();
+//		List<BasicNameValuePair> postValues = new ArrayList<BasicNameValuePair>();
+//		postValues.add(new BasicNameValuePair("user_email", userEmail));
+//		postValues.add(new BasicNameValuePair("user_password", userPassword));
+//		String html = post(API_URL + "/sessions/sign_in", postValues);
+		String html = postOk(API_URL + "/sessions/sign_in", requestBody);
 		JSONObject json;
 		NetException2 n = new NetException2();
 		try {

@@ -30,10 +30,12 @@
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:largeHeap="true"
+        >
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/app_id" />
+            android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCullo0MN2QmHhYPZ0-TfYTVoRZ3RVN6FE" />
@@ -86,25 +88,25 @@
             android:theme="@style/StyledIndicators"
             android:windowSoftInputMode="adjustPan" >
         </activity>
-        <activity
-            android:name=".activities.VouchersActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/StyledIndicators"
-            android:windowSoftInputMode="adjustPan" >
-        </activity>
-        <activity
-            android:name=".activities.ViewVoucherActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" >
-        </activity>
-        <activity
-            android:name=".activities.UpgradePurchasedActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" >
-        </activity>
+        <!--<activity-->
+            <!--android:name=".activities.VouchersActivity"-->
+            <!--android:configChanges="orientation|keyboardHidden"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:theme="@style/StyledIndicators"-->
+            <!--android:windowSoftInputMode="adjustPan" >-->
+        <!--</activity>-->
+        <!--<activity-->
+            <!--android:name=".activities.ViewVoucherActivity"-->
+            <!--android:configChanges="orientation|keyboardHidden"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:windowSoftInputMode="adjustPan" >-->
+        <!--</activity>-->
+        <!--<activity-->
+            <!--android:name=".activities.UpgradePurchasedActivity"-->
+            <!--android:configChanges="orientation|keyboardHidden"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:windowSoftInputMode="adjustPan" >-->
+        <!--</activity>-->
         <activity
             android:name=".activities.BuyOptionsActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -123,12 +125,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" >
         </activity>
-        <activity
-            android:name=".activities.TwitterWebviewActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" >
-        </activity>
+        <!--<activity-->
+            <!--android:name=".activities.TwitterWebviewActivity"-->
+            <!--android:configChanges="orientation|keyboardHidden"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:windowSoftInputMode="adjustPan" >-->
+        <!--</activity>-->
 
         <receiver
             android:name=".services.AlarmReceiver"
@@ -153,7 +155,7 @@
         <activity android:name="com.paypal.android.sdk.payments.LoginActivity" />
         <activity android:name="com.paypal.android.sdk.payments.PaymentMethodActivity" />
         <activity android:name="com.paypal.android.sdk.payments.PaymentConfirmActivity" />
-        <activity android:name="com.paypal.android.sdk.payments.PaymentCompletedActivity" />
+        <!--<activity android:name="com.paypal.android.sdk.payments.PaymentCompletedActivity" />-->
         <activity
             android:name="io.card.payment.CardIOActivity"
             android:configChanges="keyboardHidden|orientation" />
@@ -161,11 +163,8 @@
             android:name="io.card.payment.DataEntryActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" />
-        <activity android:name="com.facebook.LoginActivity" />
+        <!--<activity android:name="com.facebook.LoginActivity" />-->
 
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/app_id" />
         <meta-data
             android:name="com.crashlytics.ApiKey"
             android:value="22535ca9de8554d530b74b9a578747941edd9284" />
@@ -175,6 +174,9 @@
             android:label="@string/title_activity_reserved"
             android:theme="@android:style/Theme.Translucent">
         </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="0b7ee0e4b95644bb97d4368696b2d96904d4f785" />
     </application>
 
 </manifest>

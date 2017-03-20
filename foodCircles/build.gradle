@@ -39,14 +39,14 @@ repositories {
 }
 
 dependencies {
-    compile project(':facebookSDK')
+    //compile project(':facebookSDK')
     compile project(':library')
-    compile project(':simpleFacebook')
+    //compile project(':simpleFacebook')
+    compile 'com.facebook.android:facebook-android-sdk:4.+'
     compile "com.android.support:gridlayout-v7:$supportLibraryVersion"
     compile 'com.google.android.gms:play-services:+'
     compile files('libs/MixpanelAPI.jar')
     compile files('libs/PayPalAndroidSDK.jar')
-//    compile files('libs/crashlytics.jar')
     compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
         transitive = true;
     }
@@ -56,5 +56,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+
 
 }

@@ -21,7 +21,7 @@ import android.app.AlertDialog;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.sromku.simple.fb.SimpleFacebook;
+//import com.sromku.simple.fb.SimpleFacebook;
 import com.viewpagerindicator.TabPageIndicator;
 
 import co.foodcircles.R;
@@ -42,7 +42,7 @@ public class MainActivity extends FragmentActivity implements AndroidUtils.GetLo
 	ViewPager pager;
 	FoodCirclesApplication app;
 	public static Activity mActivity;
-	SimpleFacebook mSimpleFacebook;
+//	SimpleFacebook mSimpleFacebook;
 	android.location.Location locationGPS = null;
 	android.location.Location locationNet = null;
 
@@ -52,6 +52,7 @@ public class MainActivity extends FragmentActivity implements AndroidUtils.GetLo
 	{
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+
 		setContentView(R.layout.simple_tabs);
 		mActivity=this;
 		app = (FoodCirclesApplication) getApplicationContext();
@@ -121,7 +122,7 @@ public class MainActivity extends FragmentActivity implements AndroidUtils.GetLo
 	}
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		SimpleFacebook.getInstance(this).onActivityResult(this, requestCode, resultCode, data);
+		//SimpleFacebook.getInstance(this).onActivityResult(this, requestCode, resultCode, data);
 	}
 
 	public void setLocationGPS() {

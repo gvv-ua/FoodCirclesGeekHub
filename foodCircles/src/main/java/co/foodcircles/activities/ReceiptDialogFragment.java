@@ -21,13 +21,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.sromku.simple.fb.Permission;
-import com.sromku.simple.fb.SimpleFacebook;
-import com.sromku.simple.fb.entities.Feed;
-import com.sromku.simple.fb.listeners.OnLoginListener;
-import com.sromku.simple.fb.listeners.OnPublishListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,14 +31,20 @@ import co.foodcircles.net.Net;
 import co.foodcircles.util.FontSetter;
 import co.foodcircles.util.FoodCirclesApplication;
 
+//import com.sromku.simple.fb.Permission;
+//import com.sromku.simple.fb.SimpleFacebook;
+//import com.sromku.simple.fb.entities.Feed;
+//import com.sromku.simple.fb.listeners.OnLoginListener;
+//import com.sromku.simple.fb.listeners.OnPublishListener;
+
 public class ReceiptDialogFragment extends DialogFragment {
 	private Button markAsUsedButton;
 	private FoodCirclesApplication app;
 	private TextView textViewVenue;
 	private TextView textViewItemName;
 	private TextView textViewCode;
-	private SimpleFacebook mSimpleFacebook;
-	private Feed feed;
+//	private SimpleFacebook mSimpleFacebook;
+//	private Feed feed;
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -197,21 +196,21 @@ public class ReceiptDialogFragment extends DialogFragment {
 
 			@Override
 			public void onClick(View v) {
-				String child="child";
-				if(app.currentReservation.getKidsFed()>1)
-					child="children";
-				String shareText=" I've fed "+app.currentReservation.getKidsFed()+" hungry "+child+" simply by eating at "+app.currentReservation.getVenue().getName();
-				feed = new Feed.Builder()
-				.setMessage("Try FoodCircles!")
-				.setName("Savings with a Conscience!")
-				.setCaption(shareText)
-				.setDescription("#bofo: http://www.joinfoodcircles.org� @foodcircles ")
-				.setPicture(Net.logo).setLink("http://www.joinfoodcircles.org").build();
-				if (mSimpleFacebook.isLogin()){
-					mSimpleFacebook.publish(feed, true, onPublishListener);
-				} else {
-					mSimpleFacebook.login(mOnLoginListener);
-				}
+//				String child="child";
+//				if(app.currentReservation.getKidsFed()>1)
+//					child="children";
+//				String shareText=" I've fed "+app.currentReservation.getKidsFed()+" hungry "+child+" simply by eating at "+app.currentReservation.getVenue().getName();
+//				feed = new Feed.Builder()
+//				.setMessage("Try FoodCircles!")
+//				.setName("Savings with a Conscience!")
+//				.setCaption(shareText)
+//				.setDescription("#bofo: http://www.joinfoodcircles.org� @foodcircles ")
+//				.setPicture(Net.logo).setLink("http://www.joinfoodcircles.org").build();
+//				if (mSimpleFacebook.isLogin()){
+//					mSimpleFacebook.publish(feed, true, onPublishListener);
+//				} else {
+//					mSimpleFacebook.login(mOnLoginListener);
+//				}
 			}
 		});
 		ImageView twitter = (ImageView) v.findViewById(R.id.imageViewTwitter);
@@ -260,53 +259,53 @@ public class ReceiptDialogFragment extends DialogFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		mSimpleFacebook = SimpleFacebook.getInstance(getActivity());
+		//mSimpleFacebook = SimpleFacebook.getInstance(getActivity());
 	}
 
-	private OnLoginListener mOnLoginListener = new OnLoginListener() {
-		@Override
-		public void onFail(String reason) {
-			Toast.makeText(getActivity().getBaseContext(), "Facebook Login Failed:" + reason, Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void onException(Throwable throwable) {
-			Toast.makeText(getActivity().getBaseContext(), "Whoops- we've encountered a problem!", Toast.LENGTH_SHORT).show();
-			throwable.printStackTrace();
-		}
-
-		@Override
-		public void onThinking() {
-			// Place here if we want to show progress bar while login is occurring
-		}
-
-		@Override
-		public void onLogin() {
-			mSimpleFacebook.publish(feed, true, onPublishListener);
-		}
-
-		@Override
-		public void onNotAcceptingPermissions(Permission.Type type) {
-			Toast.makeText(getActivity().getBaseContext(),"Facebook permissions cancelled!", Toast.LENGTH_SHORT).show();
-		}
-	};
-
-	private OnPublishListener onPublishListener = new OnPublishListener() {
-		@Override
-		public void onFail(String reason) {
-			Toast.makeText(getActivity().getBaseContext(),"Whoops! The post didn't go through!", Toast.LENGTH_SHORT).show();
-		}
-		@Override
-		public void onException(Throwable throwable) {
-			Toast.makeText(getActivity().getBaseContext(),"Whoops! The post didn't go through!", Toast.LENGTH_SHORT).show();
-		}
-		@Override
-		public void onThinking() {
-		}
-
-		@Override
-		public void onComplete(String postId) {
-			Toast.makeText(getActivity().getBaseContext(),"Thanks for sharing the word!", Toast.LENGTH_SHORT).show();
-		}
-	};
+//	private OnLoginListener mOnLoginListener = new OnLoginListener() {
+//		@Override
+//		public void onFail(String reason) {
+//			Toast.makeText(getActivity().getBaseContext(), "Facebook Login Failed:" + reason, Toast.LENGTH_SHORT).show();
+//		}
+//
+//		@Override
+//		public void onException(Throwable throwable) {
+//			Toast.makeText(getActivity().getBaseContext(), "Whoops- we've encountered a problem!", Toast.LENGTH_SHORT).show();
+//			throwable.printStackTrace();
+//		}
+//
+//		@Override
+//		public void onThinking() {
+//			// Place here if we want to show progress bar while login is occurring
+//		}
+//
+//		@Override
+//		public void onLogin() {
+//			mSimpleFacebook.publish(feed, true, onPublishListener);
+//		}
+//
+//		@Override
+//		public void onNotAcceptingPermissions(Permission.Type type) {
+//			Toast.makeText(getActivity().getBaseContext(),"Facebook permissions cancelled!", Toast.LENGTH_SHORT).show();
+//		}
+//	};
+//
+//	private OnPublishListener onPublishListener = new OnPublishListener() {
+//		@Override
+//		public void onFail(String reason) {
+//			Toast.makeText(getActivity().getBaseContext(),"Whoops! The post didn't go through!", Toast.LENGTH_SHORT).show();
+//		}
+//		@Override
+//		public void onException(Throwable throwable) {
+//			Toast.makeText(getActivity().getBaseContext(),"Whoops! The post didn't go through!", Toast.LENGTH_SHORT).show();
+//		}
+//		@Override
+//		public void onThinking() {
+//		}
+//
+//		@Override
+//		public void onComplete(String postId) {
+//			Toast.makeText(getActivity().getBaseContext(),"Thanks for sharing the word!", Toast.LENGTH_SHORT).show();
+//		}
+//	};
 }

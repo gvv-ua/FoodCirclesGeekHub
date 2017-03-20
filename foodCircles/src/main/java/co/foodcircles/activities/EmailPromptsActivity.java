@@ -19,7 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
-import com.sromku.simple.fb.SimpleFacebook;
+//import com.sromku.simple.fb.SimpleFacebook;
 
 import co.foodcircles.R;
 import co.foodcircles.exception.NetException2;
@@ -188,7 +188,7 @@ public class EmailPromptsActivity extends Activity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		SimpleFacebook.getInstance().onActivityResult(this, requestCode, resultCode, data);
+		//SimpleFacebook.getInstance().onActivityResult(this, requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 

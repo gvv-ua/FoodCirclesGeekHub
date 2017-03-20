@@ -5,11 +5,8 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
-import com.sromku.simple.fb.Permission;
-import com.sromku.simple.fb.SimpleFacebook;
-import com.sromku.simple.fb.SimpleFacebookConfiguration;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import co.foodcircles.json.Charity;
@@ -36,22 +33,18 @@ public class FoodCirclesApplication extends Application
 	public boolean needsRestart = false;
 	private int totalKidsFed;
 
-	Permission[] permissions = new Permission[] {
-		    
-		    Permission.EMAIL,
-		    Permission.BASIC_INFO
-		};
+	private List permissions = Arrays.asList("email", "public_profile");
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		SimpleFacebookConfiguration configuration = new SimpleFacebookConfiguration.Builder()
-		   //.setAppId("526839707387980")
-           .setAppId("1508523846087006")
-		   .setNamespace("foodcirclesapp")
-		   .setPermissions(permissions)
-		   .build();
-		SimpleFacebook.setConfiguration(configuration);
+//		SimpleFacebookConfiguration configuration = new SimpleFacebookConfiguration.Builder()
+//		   //.setAppId("526839707387980")
+//           .setAppId(getString(R.string.facebook_app_id))
+//		   .setNamespace("foodcirclesapp")
+//		   .setPermissions(permissions)
+//		   .build();
+//		SimpleFacebook.setConfiguration(configuration);
 	}
 	public void addPoppableActivity(Activity activity) {
 		if(activities == null) activities = new ArrayList<Activity>();
@@ -82,5 +75,9 @@ public class FoodCirclesApplication extends Application
 	protected void attachBaseContext(Context base) {
 		super.attachBaseContext(base);
 		MultiDex.install(this);
+	}
+
+	public List getPermissions() {
+		return permissions;
 	}
 }

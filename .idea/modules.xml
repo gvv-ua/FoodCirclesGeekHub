@@ -3,10 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FoodCirclesGeekHub.iml" filepath="$PROJECT_DIR$/FoodCirclesGeekHub.iml" />
-      <module fileurl="file://$PROJECT_DIR$/facebookSDK/facebookSDK.iml" filepath="$PROJECT_DIR$/facebookSDK/facebookSDK.iml" />
       <module fileurl="file://$PROJECT_DIR$/foodCircles/foodCircles.iml" filepath="$PROJECT_DIR$/foodCircles/foodCircles.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
-      <module fileurl="file://$PROJECT_DIR$/simpleFacebook/simpleFacebook.iml" filepath="$PROJECT_DIR$/simpleFacebook/simpleFacebook.iml" />
     </modules>
   </component>
 </project>

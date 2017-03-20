@@ -9,7 +9,8 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <!-- <string name="app_id">526839707387980</string> -->
-    <string name="app_id">1508523846087006</string>
+    <!--<string name="facebook_app_id">1508523846087006</string>-->
+    <string name="facebook_app_id">1286395788108805</string>
     <string name="forgotpass"><a href="http://www.joinfoodcircles.org/users/password/new">Forgot Password?</a></string>
     <string name="venue_profile_btn_keep_me_posted">Keep me posted</string>
     <string name="venue_profile_btn_nevermind">Never mind, don\'t notify me</string>

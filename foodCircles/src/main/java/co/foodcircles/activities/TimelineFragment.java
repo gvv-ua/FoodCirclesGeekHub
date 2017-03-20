@@ -16,14 +16,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
-import com.sromku.simple.fb.Permission;
-import com.sromku.simple.fb.SimpleFacebook;
-import com.sromku.simple.fb.entities.Feed;
-import com.sromku.simple.fb.listeners.OnLoginListener;
-import com.sromku.simple.fb.listeners.OnPublishListener;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,12 +30,18 @@ import co.foodcircles.util.FontSetter;
 import co.foodcircles.util.FoodCirclesApplication;
 import co.foodcircles.util.FoodCirclesUtils;
 
+//import com.sromku.simple.fb.Permission;
+//import com.sromku.simple.fb.SimpleFacebook;
+//import com.sromku.simple.fb.entities.Feed;
+//import com.sromku.simple.fb.listeners.OnLoginListener;
+//import com.sromku.simple.fb.listeners.OnPublishListener;
+
 public class TimelineFragment extends ListFragment {
 	private ReservationAdapter adapter;
 	private FoodCirclesApplication app;
 	private MixpanelAPI mixpanel;
-	private SimpleFacebook mSimpleFacebook;
-	private Feed feed;
+//	private SimpleFacebook mSimpleFacebook;
+//	private Feed feed;
 
 
 	@Override
@@ -65,7 +65,6 @@ public class TimelineFragment extends ListFragment {
 		FontSetter.overrideFonts(getActivity(), view);
 		final String token = FoodCirclesUtils.getToken(getActivity());
 		app.reservations = new ArrayList<Reservation>();
-		app.reservations = new ArrayList<Reservation>();
 		new AsyncTask<Object, Void, Boolean>() {
 			protected Boolean doInBackground(Object... param) {
 				try {
@@ -81,7 +80,7 @@ public class TimelineFragment extends ListFragment {
 				adapter.notifyDataSetChanged();
 				if (!success) {
 					MP.track(mixpanel, "Restaurant List","Failed to load venues");
-					//this means the list is empty!  If you'd like to display 
+					//this means the list is empty!  If you'd like to display
 					//any sort of indicator, here would be the place to do it.
 				}
 				if (app.reservations.size() == 0) {
@@ -90,7 +89,7 @@ public class TimelineFragment extends ListFragment {
 				int totalKidsFed = 0;
 
 				for (int i=0; i<app.reservations.size(); i++) {
-					totalKidsFed += app.reservations.get(i).getKidsFed();	
+					totalKidsFed += app.reservations.get(i).getKidsFed();
 				}
 				try {
 					TextView tvKidsFed = (TextView) getActivity().findViewById(R.id.textViewKidFed);
@@ -105,7 +104,7 @@ public class TimelineFragment extends ListFragment {
 		this.setListAdapter(adapter);
 		TextView inviteOrImportFriends = (TextView) view.findViewById(R.id.textViewInviteOrImport);
 
-		if (FoodCirclesUtils.isConnectedToSocialAccounts(TimelineFragment.this.getActivity())) 
+		if (FoodCirclesUtils.isConnectedToSocialAccounts(TimelineFragment.this.getActivity()))
 		{ inviteOrImportFriends.setText("Invite Friends"); }
 
 		ImageView settingsButton = (ImageView) view.findViewById(R.id.settingButton);
@@ -122,17 +121,17 @@ public class TimelineFragment extends ListFragment {
 		inviteFriends.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				feed = new Feed.Builder()
-				.setMessage("Try FoodCircles!")
-				.setName("Savings with a Conscience!")
-				.setCaption("Local restaurants, a $1 dish, and $1 donated to feed a hungry child.")
-				.setDescription("#bofo: http://www.joinfoodcircles.org @foodcircles ")
-				.setPicture(Net.logo).setLink("http://www.joinfoodcircles.org").build();
-				if (mSimpleFacebook.isLogin()){
-					mSimpleFacebook.publish(feed, true, onPublishListener);
-				} else {
-					mSimpleFacebook.login(mOnLoginListener);
-				}
+//				feed = new Feed.Builder()
+//				.setMessage("Try FoodCircles!")
+//				.setName("Savings with a Conscience!")
+//				.setCaption("Local restaurants, a $1 dish, and $1 donated to feed a hungry child.")
+//				.setDescription("#bofo: http://www.joinfoodcircles.org @foodcircles ")
+//				.setPicture(Net.logo).setLink("http://www.joinfoodcircles.org").build();
+//				if (mSimpleFacebook.isLogin()){
+//					mSimpleFacebook.publish(feed, true, onPublishListener);
+//				} else {
+//					mSimpleFacebook.login(mOnLoginListener);
+//				}
 			}
 		});
 		return view;
@@ -141,7 +140,7 @@ public class TimelineFragment extends ListFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		mSimpleFacebook = SimpleFacebook.getInstance(getActivity());
+		//mSimpleFacebook = SimpleFacebook.getInstance(getActivity());
 	}
 	
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -364,49 +363,49 @@ public class TimelineFragment extends ListFragment {
 		}
 	}
 	
-	private OnLoginListener mOnLoginListener = new OnLoginListener() {
-		@Override
-		public void onFail(String reason) {
-			Toast.makeText(getActivity().getBaseContext(), "Facebook Login Failed:" + reason, Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void onException(Throwable throwable) {
-			Toast.makeText(getActivity().getBaseContext(), "Whoops- we've encountered a problem!", Toast.LENGTH_SHORT).show();
-			throwable.printStackTrace();
-		}
-
-		@Override
-		public void onThinking() {
-		}
-
-		@Override
-		public void onLogin() {
-			mSimpleFacebook.publish(feed, true, onPublishListener);
-		}
-
-		@Override
-		public void onNotAcceptingPermissions(Permission.Type type) {
-			Toast.makeText(getActivity().getBaseContext(),"Facebook permissions cancelled!", Toast.LENGTH_SHORT).show();
-		}
-	};
-
-	private OnPublishListener onPublishListener = new OnPublishListener() {
-		@Override
-		public void onFail(String reason) {
-			Toast.makeText(getActivity().getBaseContext(),"Whoops! The post didn't go through!", Toast.LENGTH_SHORT).show();
-		}
-		@Override
-		public void onException(Throwable throwable) {
-			Toast.makeText(getActivity().getBaseContext(),"Whoops! The post didn't go through!", Toast.LENGTH_SHORT).show();
-		}
-		@Override
-		public void onThinking() {
-		}
-
-		@Override
-		public void onComplete(String postId) {
-			Toast.makeText(getActivity().getBaseContext(),"Thanks for sharing the word!", Toast.LENGTH_SHORT).show();
-		}
-	};
+//	private OnLoginListener mOnLoginListener = new OnLoginListener() {
+//		@Override
+//		public void onFail(String reason) {
+//			Toast.makeText(getActivity().getBaseContext(), "Facebook Login Failed:" + reason, Toast.LENGTH_SHORT).show();
+//		}
+//
+//		@Override
+//		public void onException(Throwable throwable) {
+//			Toast.makeText(getActivity().getBaseContext(), "Whoops- we've encountered a problem!", Toast.LENGTH_SHORT).show();
+//			throwable.printStackTrace();
+//		}
+//
+//		@Override
+//		public void onThinking() {
+//		}
+//
+//		@Override
+//		public void onLogin() {
+//			mSimpleFacebook.publish(feed, true, onPublishListener);
+//		}
+//
+//		@Override
+//		public void onNotAcceptingPermissions(Permission.Type type) {
+//			Toast.makeText(getActivity().getBaseContext(),"Facebook permissions cancelled!", Toast.LENGTH_SHORT).show();
+//		}
+//	};
+//
+//	private OnPublishListener onPublishListener = new OnPublishListener() {
+//		@Override
+//		public void onFail(String reason) {
+//			Toast.makeText(getActivity().getBaseContext(),"Whoops! The post didn't go through!", Toast.LENGTH_SHORT).show();
+//		}
+//		@Override
+//		public void onException(Throwable throwable) {
+//			Toast.makeText(getActivity().getBaseContext(),"Whoops! The post didn't go through!", Toast.LENGTH_SHORT).show();
+//		}
+//		@Override
+//		public void onThinking() {
+//		}
+//
+//		@Override
+//		public void onComplete(String postId) {
+//			Toast.makeText(getActivity().getBaseContext(),"Thanks for sharing the word!", Toast.LENGTH_SHORT).show();
+//		}
+//	};
 }

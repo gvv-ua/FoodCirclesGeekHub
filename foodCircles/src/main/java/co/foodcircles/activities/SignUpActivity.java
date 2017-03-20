@@ -1,6 +1,5 @@
 package co.foodcircles.activities;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -17,14 +16,10 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
-import com.sromku.simple.fb.Permission;
-import com.sromku.simple.fb.SimpleFacebook;
-import com.sromku.simple.fb.entities.Profile;
-import com.sromku.simple.fb.listeners.OnLoginListener;
-import com.sromku.simple.fb.listeners.OnProfileListener;
 
 import java.util.Calendar;
 
@@ -39,11 +34,11 @@ import co.foodcircles.util.FoodCirclesUtils;
 import co.foodcircles.util.TwitterLogin;
 
 
-public class SignUpActivity extends Activity {
+public class SignUpActivity extends FacebookLoginActivity {
 	EditText email;
 	EditText password;
 	Button signUpButton;
-	Button buttonFacebook;
+    Button buttonFacebook;
 	Button buttonTwitter;
 	TextView signInButton;
 	String tempkey;
@@ -51,7 +46,6 @@ public class SignUpActivity extends Activity {
 	Bundle savedInstanceState;
 	boolean signedIn=false;
 	Context mContext;
-	SimpleFacebook mSimpleFacebook;
 
 	@Override
 	public void onStart() {
@@ -70,11 +64,11 @@ public class SignUpActivity extends Activity {
 		this.savedInstanceState=savedInstanceState;
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.signup);
-		
+
 		mContext = this;
 		FontSetter.overrideFonts(this, findViewById(R.id.root));
 
-		FoodCirclesApplication app = (FoodCirclesApplication) getApplicationContext();
+		final FoodCirclesApplication app = (FoodCirclesApplication) getApplicationContext();
 		app.addPoppableActivity(this);
 
 //		TextView copyText = (TextView) findViewById(R.id.textViewCopy);
@@ -152,16 +146,17 @@ public class SignUpActivity extends Activity {
 			}
 		});
 
-		buttonFacebook = (Button) findViewById(R.id.buttonFacebookU);
+        buttonFacebook = (Button) findViewById(R.id.buttonFacebookU);
 		buttonFacebook.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				if (mSimpleFacebook.isLogin()) {
-					mSimpleFacebook.getProfile(mProfileListener);
+				AccessToken accessToken = AccessToken.getCurrentAccessToken();
+				if (accessToken == null) {
+					LoginManager.getInstance().logInWithReadPermissions(SignUpActivity.this, app.getPermissions());
 				} else {
-					mSimpleFacebook.login(mOnLoginListener);
+                    getFacebookInfo(accessToken);
 				}
-			}
+		    }
 		});
 
 		buttonTwitter = (Button) findViewById(R.id.buttonTwitterU);
@@ -172,37 +167,6 @@ public class SignUpActivity extends Activity {
 			}
 		});
 		startupNotifications();
-	}
-
-	private void fbSignUp(final String userID,final String emailid) {
-		AndroidUtils.showProgress(this);
-		new Thread() {
-			public void run() {
-				try {
-					final String token = Net.facebookSignUp(userID,emailid);
-					SignUpActivity.this.runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							AndroidUtils.dismissProgress();
-							FoodCirclesUtils.saveToken(SignUpActivity.this,
-									token);
-							FoodCirclesUtils.saveEmail(SignUpActivity.this, emailid);
-							gotoSignedInPage();
-							SignUpActivity.this.finish();
-						}
-					});
-				} catch (final NetException2 e) {
-					SignUpActivity.this.runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							AndroidUtils.showAlertOk(SignUpActivity.this,
-									"Sign-up Failed - " + e.getMessage());
-							AndroidUtils.dismissProgress();
-						}
-					});
-				}
-			};
-		}.start();
 	}
 
 	private void signUp(final String email, final String password) {
@@ -236,13 +200,6 @@ public class SignUpActivity extends Activity {
 				}
 			};
 		}.start();
-	}
-
-	private void gotoSignedInPage() {
-		Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-		intent.putExtra("tab", 1);
-		startActivity(intent);
-		SignUpActivity.this.finish();
 	}
 
 	private void startupNotifications() {
@@ -304,52 +261,12 @@ public class SignUpActivity extends Activity {
 	@Override
 	protected void onResume() {
 	 	super.onResume();
-	 	mSimpleFacebook = SimpleFacebook.getInstance(this);
 	 }
-
-	private OnLoginListener mOnLoginListener = new OnLoginListener() {
-		@Override
-		public void onFail(String reason) {
-			Toast.makeText(mContext, "Facebook Login Failed:" + reason, Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void onException(Throwable throwable) {
-			Toast.makeText(mContext, "Whoops- we've encountered a problem!", Toast.LENGTH_SHORT).show();
-			throwable.printStackTrace();
-		}
-
-		@Override
-		public void onThinking() {
-			// Place here if we want to show progress bar while login is occurring
-		}
-
-		@Override
-		public void onLogin() {
-			mSimpleFacebook.getProfile(mProfileListener);
-		}
-
-		@Override
-		public void onNotAcceptingPermissions(Permission.Type type) {
-			Toast.makeText(mContext,"Facebook permissions cancelled!", Toast.LENGTH_SHORT).show();
-		}
-	};
-	private OnProfileListener mProfileListener = new OnProfileListener() {
-		@Override
-		public void onComplete(Profile profile) {
-			final String email = profile.getEmail();
-			final String id = profile.getId();
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() { fbSignUp(id , email); }
-			});
-		}
-	};
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		mSimpleFacebook.onActivityResult(this, requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);
+        fbCallbackManager.onActivityResult(requestCode, resultCode, data);
 	}
 
 }
