@@ -75,7 +75,7 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHol
 
         @Override
         public void onClick(View v) {
-            clickListener.onItemClick(item, itemView);
+            clickListener.onItemClick(item);
         }
 
         void bind(Venue item) {
@@ -90,6 +90,6 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHol
     }
 
     public interface ItemClickListener {
-        void onItemClick(Venue item, View child);
+        void onItemClick(Venue item);
     }
 }

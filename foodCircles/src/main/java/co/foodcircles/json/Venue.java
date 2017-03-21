@@ -274,13 +274,8 @@ public class Venue implements Parcelable {
 		this.phone = phone;
 	}
 
-	public int checkEmpty() 
-	{
-		if (this.vouchersAvailable > 0) {
-			return View.GONE;
-		} else {
-			return View.VISIBLE;
-		}
+	public int checkEmpty() {
+		return (this.vouchersAvailable > 0) ? View.GONE : View.VISIBLE;
 	}
 
 	public String getWeb()

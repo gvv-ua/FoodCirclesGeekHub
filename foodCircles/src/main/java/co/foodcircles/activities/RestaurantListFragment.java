@@ -143,7 +143,7 @@ public class RestaurantListFragment extends Fragment {
         gridView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         adapter = new VenueAdapter(getActivity(), app.venues, new VenueAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(Venue item, View child) {
+            public void onItemClick(Venue item) {
                 if (item.getVouchersAvailable() == 0) {
                     Intent intent = new Intent(RestaurantListFragment.this.getActivity(), RestaurantActivity.class);
                     intent.putExtra(RestaurantActivity.IS_VENUE_ON_RESERVE_KEY, true);
