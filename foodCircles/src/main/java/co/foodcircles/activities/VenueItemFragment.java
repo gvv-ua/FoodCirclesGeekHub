@@ -44,6 +44,7 @@ public class VenueItemFragment extends Fragment
 	Button button;
 
     private boolean mIsVenueNeedToReserve;
+    private Venue venue;
 
     private boolean mIsSubscribed;
 
@@ -53,10 +54,11 @@ public class VenueItemFragment extends Fragment
 
     private boolean mContinueBrowsing;
 
-    public static VenueItemFragment newInstance(boolean isVenueOnReserve) {
+    public static VenueItemFragment newInstance(boolean isVenueOnReserve, Venue venue) {
         VenueItemFragment fragment = new VenueItemFragment();
         Bundle args = new Bundle();
         args.putSerializable(RestaurantActivity.IS_VENUE_ON_RESERVE_KEY, isVenueOnReserve);
+        args.putParcelable(RestaurantActivity.SELECTED_VENUE_KEY, venue);
         fragment.setArguments(args);
         return fragment;
     }
@@ -71,6 +73,7 @@ public class VenueItemFragment extends Fragment
         if (getArguments() != null) {
             mIsVenueNeedToReserve
                     = getArguments().getBoolean(RestaurantActivity.IS_VENUE_ON_RESERVE_KEY);
+            venue = getArguments().getParcelable(RestaurantActivity.SELECTED_VENUE_KEY);
         }
     }
 	
@@ -94,7 +97,6 @@ public class VenueItemFragment extends Fragment
         }
 
 		final FoodCirclesApplication app = (FoodCirclesApplication) getActivity().getApplicationContext();
-		final Venue venue = app.selectedVenue;
         mVenueName = venue.getName();
 
         if (venue.getVouchersAvailable() == 0) {

@@ -38,13 +38,6 @@ public class FoodCirclesApplication extends Application
 	@Override
 	public void onCreate() {
 		super.onCreate();
-//		SimpleFacebookConfiguration configuration = new SimpleFacebookConfiguration.Builder()
-//		   //.setAppId("526839707387980")
-//           .setAppId(getString(R.string.facebook_app_id))
-//		   .setNamespace("foodcirclesapp")
-//		   .setPermissions(permissions)
-//		   .build();
-//		SimpleFacebook.setConfiguration(configuration);
 	}
 	public void addPoppableActivity(Activity activity) {
 		if(activities == null) activities = new ArrayList<Activity>();

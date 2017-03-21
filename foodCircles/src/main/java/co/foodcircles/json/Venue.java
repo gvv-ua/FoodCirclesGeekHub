@@ -1,5 +1,7 @@
 package co.foodcircles.json;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.View;
 
 import org.json.JSONArray;
@@ -11,8 +13,7 @@ import java.util.List;
 
 import co.foodcircles.util.AndroidUtils;
 
-public class Venue
-{
+public class Venue implements Parcelable {
 	private String id;
 	private String name;
     private String slug;
@@ -402,4 +403,77 @@ public class Venue
     public void setWeeklyGoal(int weekly_goal) {
         this.weeklyGoal = weekly_goal;
     }
+
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(this.id);
+		dest.writeString(this.name);
+		dest.writeString(this.slug);
+		dest.writeString(this.address);
+		dest.writeString(this.city);
+		dest.writeString(this.state);
+		dest.writeString(this.zip);
+		dest.writeString(this.distance);
+		dest.writeDouble(this.latitude);
+		dest.writeDouble(this.longitude);
+		dest.writeString(this.description);
+		dest.writeString(this.phone);
+		dest.writeString(this.web);
+		dest.writeStringList(this.tags);
+		dest.writeList(this.socials);
+		dest.writeList(this.offers);
+		dest.writeString(this.openTimes);
+		dest.writeString(this.imageUrl);
+		dest.writeString(this.largeImageUrl);
+		dest.writeInt(this.vouchersAvailable);
+		dest.writeInt(this.totalPeopleAided);
+		dest.writeInt(this.peopleAided);
+		dest.writeInt(this.weeklyGoal);
+	}
+
+	protected Venue(Parcel in) {
+		this.id = in.readString();
+		this.name = in.readString();
+		this.slug = in.readString();
+		this.address = in.readString();
+		this.city = in.readString();
+		this.state = in.readString();
+		this.zip = in.readString();
+		this.distance = in.readString();
+		this.latitude = in.readDouble();
+		this.longitude = in.readDouble();
+		this.description = in.readString();
+		this.phone = in.readString();
+		this.web = in.readString();
+		this.tags = in.createStringArrayList();
+		this.socials = new ArrayList<Social>();
+		in.readList(this.socials, Social.class.getClassLoader());
+		this.offers = new ArrayList<Offer>();
+		in.readList(this.offers, Offer.class.getClassLoader());
+		this.openTimes = in.readString();
+		this.imageUrl = in.readString();
+		this.largeImageUrl = in.readString();
+		this.vouchersAvailable = in.readInt();
+		this.totalPeopleAided = in.readInt();
+		this.peopleAided = in.readInt();
+		this.weeklyGoal = in.readInt();
+	}
+
+	public static final Parcelable.Creator<Venue> CREATOR = new Parcelable.Creator<Venue>() {
+		@Override
+		public Venue createFromParcel(Parcel source) {
+			return new Venue(source);
+		}
+
+		@Override
+		public Venue[] newArray(int size) {
+			return new Venue[size];
+		}
+	};
 }

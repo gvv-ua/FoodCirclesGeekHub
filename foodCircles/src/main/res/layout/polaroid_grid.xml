@@ -87,16 +87,17 @@
 
     </RelativeLayout>
 
-    <GridView
-        android:id="@+id/gridView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvVenues"
         android:layout_below="@+id/ll_progress"
-        android:horizontalSpacing="6dp"
-        android:numColumns="2"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
-        android:verticalSpacing="6dp"
-        tools:listitem="@layout/polaroid" />
+        tools:listitem="@layout/polaroid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+    </android.support.v7.widget.RecyclerView>
+
 
 </RelativeLayout>

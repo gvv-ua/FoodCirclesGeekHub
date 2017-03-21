@@ -17,14 +17,15 @@ import java.util.Locale;
 import co.foodcircles.R;
 import co.foodcircles.json.Venue;
 import co.foodcircles.util.FontSetter;
-import co.foodcircles.util.FoodCirclesApplication;
 
 public class RestaurantActivity extends FragmentActivity {
     public static final String IS_VENUE_ON_RESERVE_KEY = "on_reserved_key";
+    public static final String SELECTED_VENUE_KEY = "selected_venue_key";
 
     private static String[] CONTENT = new String[] { "OFFER", "INFO" };
 
     private boolean mIsVenueOnReserve;
+    private Venue selectedVenue = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +33,14 @@ public class RestaurantActivity extends FragmentActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.simple_tabs);
 
+
         Intent intent = getIntent();
         if (intent != null) {
             boolean isReserve = intent.getBooleanExtra(IS_VENUE_ON_RESERVE_KEY, false);
             mIsVenueOnReserve = isReserve;
+            selectedVenue = intent.getParcelableExtra(SELECTED_VENUE_KEY);
         }
 
-        FoodCirclesApplication app = (FoodCirclesApplication) getApplicationContext();
-        Venue selectedVenue = app.selectedVenue;
         CONTENT[0] = selectedVenue.getName().toUpperCase(Locale.getDefault());
         FragmentPagerAdapter adapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         ViewPager pager = (ViewPager)findViewById(R.id.pager);
@@ -62,8 +63,8 @@ public class RestaurantActivity extends FragmentActivity {
         public Fragment getItem(int position) {
         	switch(position)
         	{
-        		case 0: return VenueItemFragment.newInstance(mIsVenueOnReserve);
-        		case 1: return new VenueProfileFragment();
+        		case 0: return VenueItemFragment.newInstance(mIsVenueOnReserve, selectedVenue);
+        		case 1: return VenueProfileFragment.newInstance(selectedVenue);
         		default: return null;
         	}
         }

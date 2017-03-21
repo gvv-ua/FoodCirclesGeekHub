@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -53,6 +54,22 @@ public class VenueProfileFragment extends Fragment implements OnMarkerClickListe
 	MarkerOptions destinationMarker;
 	MixpanelAPI mixpanel;
 
+	public static VenueProfileFragment newInstance(Venue venue) {
+		VenueProfileFragment fragment = new VenueProfileFragment();
+		Bundle args = new Bundle();
+		args.putParcelable(RestaurantActivity.SELECTED_VENUE_KEY, venue);
+		fragment.setArguments(args);
+		return fragment;
+	}
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (getArguments() != null) {
+			venue = getArguments().getParcelable(RestaurantActivity.SELECTED_VENUE_KEY);
+		}
+	}
+
 	@Override
 	public void onStart()
 	{
@@ -72,8 +89,6 @@ public class VenueProfileFragment extends Fragment implements OnMarkerClickListe
 	{
 		View view = inflater.inflate(R.layout.restaurant_profile, null);
 		FontSetter.overrideFonts(getActivity(), view);
-		app = (FoodCirclesApplication) getActivity().getApplicationContext();
-		venue = app.selectedVenue;
 		((TextView) view.findViewById(R.id.textViewName)).setText(venue.getName());
 		((TextView) view.findViewById(R.id.textViewTags)).setText(venue.getTagsString());
 		((TextView) view.findViewById(R.id.textViewHours)).setText("Hours: " + venue.getOpenTimes());
