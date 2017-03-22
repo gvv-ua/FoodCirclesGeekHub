@@ -1,5 +1,12 @@
 package co.foodcircles.json;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -7,15 +14,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import co.foodcircles.util.AndroidUtils;
 import co.foodcircles.util.FoodCirclesUtils;
 import co.foodcircles.util.Utils;
 
-public class Reservation {
+public class Reservation implements Parcelable {
 	public static final int USED = 2;
 	public static final int ACTIVE = 1;
 	public static final int EXPIRED = 3;
@@ -221,4 +224,44 @@ public class Reservation {
 		this.amount = kidsFed;
 	}
 
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(this.id);
+		dest.writeString(this.user);
+		dest.writeString(this.code);
+		dest.writeParcelable(this.venue, flags);
+		dest.writeParcelable(this.offer, flags);
+		dest.writeLong(this.datePurchased);
+		dest.writeInt(this.state);
+		dest.writeInt(this.amount);
+	}
+
+	protected Reservation(Parcel in) {
+		this.id = in.readString();
+		this.user = in.readString();
+		this.code = in.readString();
+		this.venue = in.readParcelable(Venue.class.getClassLoader());
+		this.offer = in.readParcelable(Offer.class.getClassLoader());
+		this.datePurchased = in.readLong();
+		this.state = in.readInt();
+		this.amount = in.readInt();
+	}
+
+	public static final Parcelable.Creator<Reservation> CREATOR = new Parcelable.Creator<Reservation>() {
+		@Override
+		public Reservation createFromParcel(Parcel source) {
+			return new Reservation(source);
+		}
+
+		@Override
+		public Reservation[] newArray(int size) {
+			return new Reservation[size];
+		}
+	};
 }

@@ -11,7 +11,6 @@ import java.util.List;
 
 import co.foodcircles.json.Charity;
 import co.foodcircles.json.Offer;
-import co.foodcircles.json.Reservation;
 import co.foodcircles.json.Venue;
 import co.foodcircles.json.Voucher;
 
@@ -27,9 +26,7 @@ public class FoodCirclesApplication extends Application
 	public boolean purchasedVoucher = false;
 	public List<Venue> venues;
 	public List<Charity> charities;
-	public List<Reservation> reservations;
 	public List<Voucher> vouchers;
-	public Reservation currentReservation;
 	public boolean needsRestart = false;
 	private int totalKidsFed;
 

@@ -11,6 +11,7 @@ import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import co.foodcircles.R;
+import co.foodcircles.json.Reservation;
 import co.foodcircles.net.Net;
 import co.foodcircles.util.FontSetter;
 import co.foodcircles.util.FoodCirclesApplication;
@@ -38,14 +40,25 @@ import co.foodcircles.util.FoodCirclesApplication;
 //import com.sromku.simple.fb.listeners.OnPublishListener;
 
 public class ReceiptDialogFragment extends DialogFragment {
+	public static final String CURRENT_RESERVATION = "CURRENT_RESERVATION";
 	private Button markAsUsedButton;
 	private FoodCirclesApplication app;
 	private TextView textViewVenue;
 	private TextView textViewItemName;
 	private TextView textViewCode;
+	private Reservation reservation;
 //	private SimpleFacebook mSimpleFacebook;
 //	private Feed feed;
-	
+
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (getArguments() != null) {
+			reservation = getArguments().getParcelable(ReceiptDialogFragment.CURRENT_RESERVATION);
+		}
+	}
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,9 +84,10 @@ public class ReceiptDialogFragment extends DialogFragment {
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
         String formattedDate = formatter.format(date.getTime());
         String minGroupString = "";
-        if ( (app.currentReservation != null) && (app.currentReservation.getOffer().getMinDiners() > 0)) {
-            minGroupString = ("min. group " + app.currentReservation.getOffer() .getMinDiners() + ". ");
-        }
+		if ( (reservation != null) && (reservation.getOffer().getMinDiners() > 0)) {
+			minGroupString = ("min. group " + reservation.getOffer() .getMinDiners() + ". ");
+		}
+
         textViewSecondLine.setText(minGroupString + "use by "
                 + formattedDate);
 
@@ -106,32 +120,27 @@ public class ReceiptDialogFragment extends DialogFragment {
 		} else {
 			try {
 				try {
-					textViewCode.setText(app.currentReservation.getCode());
+					textViewCode.setText(reservation.getCode());
 				} catch (Exception e) { }
 				try {
-					textViewItemName.setText(app.currentReservation.getOffer().getName());
+					textViewItemName.setText(reservation.getOffer().getName());
 				} catch (Exception e) {}
 				try {
-					textViewVenue.setText(app.currentReservation.getVenue().getName());
+					textViewVenue.setText(reservation.getVenue().getName());
 				} catch (Exception e) {}
-				try {
-					app.selectedVenue = app.currentReservation.getVenue();
-				} catch (Exception e) {
-					Log.d("", " Something went wrong with the second line!");
-				}
 				textViewDonated.setText("$"
-						+ app.currentReservation.getKidsFed() + " donated");
-				if (app.currentReservation.getKidsFed() == 1) {
+						+ reservation.getKidsFed() + " donated");
+				if (reservation.getKidsFed() == 1) {
 					textViewChildrenFed.setText("("
-							+ app.currentReservation.getKidsFed()
+							+ reservation.getKidsFed()
 							+ " kids fed)");
 				} else {
 					textViewChildrenFed.setText("("
-							+ app.currentReservation.getKidsFed()
+							+ reservation.getKidsFed()
 							+ " kids fed)");
 				}
 				textViewChildrenFed.setText("("
-						+ app.currentReservation.getKidsFed() + " kids fed)");
+						+ reservation.getKidsFed() + " kids fed)");
 			} catch (Exception e) { }
 		}
 
@@ -140,17 +149,15 @@ public class ReceiptDialogFragment extends DialogFragment {
 						R.drawable.receipt_tooth));
 		teethDrawable.setTileModeX(TileMode.REPEAT);
 
-		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-			teeth.setBackgroundDrawable(teethDrawable);
-		} else {
-			teeth.setBackground(teethDrawable);
-		}
+		teeth.setBackground(teethDrawable);
+
 		textViewVenue.setPaintFlags(textViewVenue.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 		textViewVenue.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getActivity(),
 						VenueProfileActivity.class);
+                intent.putExtra(RestaurantActivity.SELECTED_VENUE_KEY, reservation.getVenue());
 				startActivity(intent);
 			}
 		});
@@ -167,7 +174,7 @@ public class ReceiptDialogFragment extends DialogFragment {
 						new AlertDialog.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
-								if (app.currentReservation == null) {
+								if (reservation == null) {
 									Net.markReservationAsUsed(textViewCode.getText().toString().trim());
 									app.needsRestart = true;
 									ReceiptDialogFragment.this.getActivity()
@@ -175,7 +182,7 @@ public class ReceiptDialogFragment extends DialogFragment {
 									startActivity(ReceiptDialogFragment.this
 											.getActivity().getIntent());
 								} else {
-									Net.markReservationAsUsed(app.currentReservation
+									Net.markReservationAsUsed(reservation
 											.getCode().trim());
 									app.needsRestart = true;
 									ReceiptDialogFragment.this.getActivity()
@@ -218,9 +225,9 @@ public class ReceiptDialogFragment extends DialogFragment {
 			@Override
 			public void onClick(View v) {
 				String child="child";
-				if(app.currentReservation.getKidsFed()>1)
+				if(reservation.getKidsFed()>1)
 					child="children";
-				String shareText="I've fed "+app.currentReservation.getKidsFed()+" hungry "+child+" simply by eating at "+app.currentReservation.getVenue().getName()+" #bofo. http://www.joinfoodcircles.org";
+				String shareText="I've fed "+reservation.getKidsFed()+" hungry "+child+" simply by eating at "+reservation.getVenue().getName()+" #bofo. http://www.joinfoodcircles.org";
 
 				Intent shareIntent = findTwitterClient(); 
                 shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);

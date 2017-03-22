@@ -120,19 +120,18 @@
 
         <include layout="@layout/background_shine_strip" />
 
-        <ListView
-            android:id="@android:id/list"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvList"
+            android:background="@android:color/transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:cacheColorHint="#00000000"
-            android:paddingBottom="50dp"
             android:clipToPadding="false"
             android:divider="@null"
+            android:paddingBottom="50dp"
             tools:listfooter="@layout/timeline_row_month"
             tools:listheader="@layout/timeline_top_row"
-            tools:listitem="@layout/timeline_row" >
-        </ListView>
+            tools:listitem="@layout/timeline_row"/>
 
         <TextView
             android:id="@+id/noPurchases"
