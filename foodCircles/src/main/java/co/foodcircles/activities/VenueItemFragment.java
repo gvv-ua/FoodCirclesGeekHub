@@ -2,10 +2,9 @@ package co.foodcircles.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,10 +16,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.bumptech.glide.Glide;
+
 import java.util.Calendar;
 
 import co.foodcircles.R;
@@ -82,13 +79,18 @@ public class VenueItemFragment extends Fragment
 	{
 		View view = getActivity().getLayoutInflater().inflate(R.layout.venue_profile, null);
 		FontSetter.overrideFonts(getActivity(), view);
+		return view;
+	}
 
-		itemImage = (ImageView) view.findViewById(R.id.imageView);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        itemImage = (ImageView) view.findViewById(R.id.imageView);
 
-		itemName = (TextView) view.findViewById(R.id.textViewItemName);
-		itemOriginalPrice = (TextView) view.findViewById(R.id.textViewPrice);
-		itemFlavorText = (TextView) view.findViewById(R.id.textViewItemFlavorText);
-		button = (Button) view.findViewById(R.id.button);
+        itemName = (TextView) view.findViewById(R.id.textViewItemName);
+        itemOriginalPrice = (TextView) view.findViewById(R.id.textViewPrice);
+        itemFlavorText = (TextView) view.findViewById(R.id.textViewItemFlavorText);
+        button = (Button) view.findViewById(R.id.button);
 
         if (mIsVenueNeedToReserve) {
             button.setText(getString(R.string.venue_profile_btn_keep_me_posted));
@@ -96,29 +98,30 @@ public class VenueItemFragment extends Fragment
             calculateDaysLeft(view);
         }
 
-		final FoodCirclesApplication app = (FoodCirclesApplication) getActivity().getApplicationContext();
+        final FoodCirclesApplication app = (FoodCirclesApplication) getActivity().getApplicationContext();
         mVenueName = venue.getName();
 
         if (venue.getVouchersAvailable() == 0) {
             isSubscribed(venue.getSlug());
         }
-		
-		Offer offer = venue.getOffers().get(0);
-		itemImage.setTag(Net.HOST + venue.getImageUrl());
-		new DownloadImagesTask().execute(itemImage);
-		itemName.setText(offer.getTitle());
-		itemFlavorText.setText(offer.getDetails());
-		try {
-		itemOriginalPrice.setText("" + offer.getFullPrice());
-		} catch (Exception e) {			
-			itemOriginalPrice.setText("9");
-		}
-		
-		button.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
+
+
+        Offer offer = venue.getOffers().get(0);
+        Glide.with(getActivity()).load(Net.HOST + venue.getImageUrl()).into(itemImage);
+
+        itemName.setText(offer.getTitle());
+        itemFlavorText.setText(offer.getDetails());
+        try {
+            itemOriginalPrice.setText("" + offer.getFullPrice());
+        } catch (Exception e) {
+            itemOriginalPrice.setText("9");
+        }
+
+        button.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
                 if (mIsVenueNeedToReserve) {
                     if (mIsSubscribed) {
                         unsubscribe(venue.getSlug());
@@ -128,11 +131,10 @@ public class VenueItemFragment extends Fragment
                 } else {
                     startBuyOptionsActivity(app);
                 }
-			}
-		});
+            }
+        });
 
-		return view;
-	}
+    }
 
     private void reserveVenue(final String slug) {
         progressDialog = ProgressDialog.show(getActivity(), "Please wait", "Reserving venues...");
@@ -226,35 +228,4 @@ public class VenueItemFragment extends Fragment
             dot.setBackground(getResources().getDrawable(R.drawable.days_left_white));
         }
     }
-
-
-    public class DownloadImagesTask extends AsyncTask<ImageView, Void, Bitmap> {
-		ImageView imageView = null;
-
-		@Override
-		protected Bitmap doInBackground(ImageView... imageViews) {
-		    this.imageView = imageViews[0];
-		    return download_Image((String)imageView.getTag());
-		}
-
-		@Override
-		protected void onPostExecute(Bitmap result) {
-		    imageView.setImageBitmap(result);
-		}
-
-		private Bitmap download_Image(String src) {
-	        try {
-	            URL url = new URL(src);
-	            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-	            connection.setDoInput(true);
-	            connection.connect();
-	            InputStream input = connection.getInputStream();
-	            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-	            return myBitmap;
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	            return null;
-	        }
-		}
-	}
 }

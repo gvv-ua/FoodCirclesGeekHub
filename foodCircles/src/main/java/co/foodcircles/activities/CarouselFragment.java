@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import co.foodcircles.R;
+import co.foodcircles.net.Net;
 import co.foodcircles.util.FontSetter;
 
 //import com.sromku.simple.fb.Permission;
@@ -46,7 +47,7 @@ public class CarouselFragment extends Fragment {
 		((ImageView) view.findViewById(R.id.imageViewTop)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.foodcircles.net"));
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Net.HOST));
 			startActivity(browserIntent);
 			}
 		});
