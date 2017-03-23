@@ -211,7 +211,9 @@ public class VenueItemFragment extends Fragment
     }
 
     private void startBuyOptionsActivity(FoodCirclesApplication app) {
-        getActivity().startActivity(new Intent(getActivity(), BuyOptionsActivity.class));
+        Intent intent = new Intent(getActivity(), BuyOptionsActivity.class);
+        intent.putExtra(RestaurantActivity.SELECTED_VENUE_KEY, venue);
+        startActivity(intent);
         app.addPoppableActivity(getActivity());
     }
 

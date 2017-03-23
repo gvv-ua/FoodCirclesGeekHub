@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Spannable;
@@ -44,6 +45,7 @@ import co.foodcircles.R;
 import co.foodcircles.exception.NetException2;
 import co.foodcircles.json.Charity;
 import co.foodcircles.json.Offer;
+import co.foodcircles.json.Venue;
 import co.foodcircles.json.Voucher;
 import co.foodcircles.net.Net;
 import co.foodcircles.util.FontSetter;
@@ -54,6 +56,7 @@ public class BuyFragment extends Fragment
 {
 	int CENTS_IN_DOLLAR = 100;
 	FoodCirclesApplication app;
+	private Venue venue;
 	private Offer selectedOffer;
 	private Charity selectedCharity;
 	private Spinner offerSpinner;
@@ -81,6 +84,14 @@ public class BuyFragment extends Fragment
 	{
 		mixpanel.flush();
 		super.onDestroy();
+	}
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (getArguments() != null) {
+			venue = getArguments().getParcelable(RestaurantActivity.SELECTED_VENUE_KEY);
+		}
 	}
 
 	@Override
@@ -115,7 +126,7 @@ public class BuyFragment extends Fragment
 				dialog.show();
 			}
 		}
-		final List<Offer> offers = app.selectedVenue.getOffers();
+		final List<Offer> offers = venue.getOffers();
 		selectedOffer = offers.get(0);
 		selectedCharity = app.charities.get(0);
 
@@ -246,7 +257,7 @@ public class BuyFragment extends Fragment
 					MP.track(mixpanel, "Buying Voucher", "Price", "Between Regular and Double Price");
 				else MP.track(mixpanel, "Buying Voucher", "Price", "Double Price");
 
-				String paypalOffer = (selectedOffer.getTitle() + " from " + app.selectedVenue.getName()).substring(0,22);
+				String paypalOffer = (selectedOffer.getTitle() + " from " + venue.getName()).substring(0,22);
 				paypalOffer = (paypalOffer + "...");
 				app.purchasedOffer = selectedOffer.getTitle();
 				app.purchasedCost = priceValue;
