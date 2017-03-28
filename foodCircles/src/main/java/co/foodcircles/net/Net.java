@@ -3,17 +3,11 @@ package co.foodcircles.net;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
-import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
@@ -25,19 +19,13 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +48,7 @@ public class Net {
 
 	//public static final String HOST = "http://staging.foodcircles.net";
     public static final String HOST = "http://joinfoodcircles.org";
+	//public static final String HOST = "https://foodcircles.gq";
 	private static final String API_URL = "/api";
 	private static final String GET_VENUES = "/venues/%f/%f";
 	private static final String GET_RESERVATION = "/reservations/[reservationId]";
@@ -72,25 +61,6 @@ public class Net {
     public static String logo="https://foodcircles.org/media/BAhbBlsHOgZmSSIkMjAxMy8wOC8yMC8xNl81Nl8xMV84MzNfRkFRLnBuZwY6BkVU";
 
     private static final OkHttpClient client = new OkHttpClient();
-
-	private static String post(String path, List<BasicNameValuePair> postValues) {
-		HttpContext httpContext = new BasicHttpContext();
-		HttpClient httpclient = createHttpClient();
-		HttpPost httppost = new HttpPost(HOST + path);
-		String response = "";
-        Log.d(TAG, "post request url = " + HOST + path);
-		try {
-            if (postValues != null)
-			    httppost.setEntity(new UrlEncodedFormEntity(postValues, HTTP.UTF_8));
-			httppost.setHeader("Content-Type", "application/x-www-form-urlencoded");
-			HttpResponse httpResp = httpclient.execute(httppost, httpContext);
-			response = EntityUtils.toString(httpResp.getEntity());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        Log.d(TAG, "get response = " + response);
-		return response;
-	}
 
 	private static String postOk(String path, RequestBody params) {
 		Log.d(TAG, "post request url = " + HOST + path);
@@ -126,33 +96,6 @@ public class Net {
 		return responseString;
 	}
 
-    private static String get(String path, List<BasicNameValuePair> urlParams) {
-        StringBuilder builder = new StringBuilder();
-        HttpClient httpclient = createHttpClient();
-        HttpGet httpGet = new HttpGet(HOST + path);
-        try {
-            HttpResponse response = httpclient.execute(httpGet);
-            StatusLine statusLine = response.getStatusLine();
-            int statusCode = statusLine.getStatusCode();
-            if (statusCode == 200) {
-                HttpEntity entity = response.getEntity();
-                InputStream content = entity.getContent();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    builder.append(line);
-                }
-            } else {
-            }
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String response = builder.toString();
-        return response;
-    }
-
 	private static String getOk(String path) {
 		Log.d(TAG, "get request url = " + HOST + path);
 		Request request = new Request.Builder()
@@ -167,24 +110,21 @@ public class Net {
 		}
 	}
 
-    private static String put(String path, List<BasicNameValuePair> urlParams) {
-		HttpContext httpContext = new BasicHttpContext();
-		HttpClient httpclient = createHttpClient();
-		HttpPut httpput = new HttpPut(HOST + API_URL + path);
-		String response = "";
-
-
-		try {
-			String paramString = URLEncodedUtils.format(urlParams, "utf-8");
-			path += paramString;
-			HttpResponse httpResp = httpclient.execute(httpput, httpContext);
-			response = EntityUtils.toString(httpResp.getEntity());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        Log.d(TAG, "post response = " + response);
-		return response;
-	}
+    private static String putOk(String path, RequestBody params) {
+        Log.d(TAG, "post request url = " + HOST + path);
+        Request request = new Request.Builder()
+                //.url(HOST + path)
+                .url(HOST + API_URL + path)
+                .put(params)
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            return response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 
     public static HttpClient createHttpClient() {
         try {
@@ -215,7 +155,6 @@ public class Net {
 			throws NetException {
 		try {
 			String url=String.format(GET_VENUES,latitude,longitude);
-			//String response = get(API_URL + url, filters);
 			String response = getOk(API_URL + url);
 			return Venue.parseVenues(response);
 		} catch (JSONException j) {
@@ -226,7 +165,6 @@ public class Net {
 	public static List<Reservation> getReservationsList(String token) throws NetException {
 		try {
 			String url=String.format(GET_TIMELINE,token);
-			//String response = get(API_URL + url, null);
 			String response = getOk(API_URL + url);
 			return Reservation.parseReservations(response);
 		} catch (JSONException j) {
@@ -237,9 +175,7 @@ public class Net {
 	public static Reservation getReservation(String reservationId)
 			throws NetException {
 		try {
-			String response = get(
-                    API_URL + GET_RESERVATION.replace("[reservationId]", reservationId),
-					null);
+			String response = getOk(API_URL + GET_RESERVATION.replace("[reservationId]", reservationId));
 			return new Reservation(response);
 		} catch (JSONException j) {
 			throw new NetException();
@@ -248,7 +184,7 @@ public class Net {
 
 	public static List<Charity> getCharities() throws NetException {
 		List<Charity> charities = new ArrayList<Charity>();
-		String response = get(API_URL + GET_CHARITY_1, null);
+		String response = getOk(API_URL + GET_CHARITY_1);
 		try {
 			JSONObject jsonObject=new JSONObject(response);
 			JSONArray jsonArray=jsonObject.getJSONArray("content");
@@ -268,10 +204,6 @@ public class Net {
                 .add("user_password", userPassword)
                 .build();
 
-//		List<BasicNameValuePair> postValues = new ArrayList<BasicNameValuePair>();
-//		postValues.add(new BasicNameValuePair("user_email", userEmail));
-//		postValues.add(new BasicNameValuePair("user_password", userPassword));
-		//String html = post(API_URL + "/sessions/sign_up", postValues);
         String html = postOk(API_URL + "/sessions/sign_up", requestBody);
 		NetException2 n = new NetException2();
 		try {
@@ -306,10 +238,11 @@ public class Net {
 
 	public static String twitterSignUp(String userEmail, String UID)
 			throws NetException2 {
-		List<BasicNameValuePair> postValues = new ArrayList<BasicNameValuePair>();
-		postValues.add(new BasicNameValuePair("user_email", userEmail));
-		postValues.add(new BasicNameValuePair("uid", UID));
-		String html = post(API_URL + "/sessions/sign_up", postValues);
+        RequestBody requestBody = new FormBody.Builder()
+                .add("user_email", userEmail)
+                .add("uid", UID)
+                .build();
+		String html = postOk(API_URL + "/sessions/sign_up", requestBody);
 		NetException2 n = new NetException2();
 		try {
 			JSONObject json = new JSONObject(html);
@@ -328,9 +261,10 @@ public class Net {
 	
 	public static String twittersignIn(String uid)
 			throws NetException2 {
-		List<BasicNameValuePair> postValues = new ArrayList<BasicNameValuePair>();
-		postValues.add(new BasicNameValuePair("uid", uid));
-		String html = post(API_URL + "/sessions/sign_in", postValues);
+        RequestBody requestBody = new FormBody.Builder()
+                .add("uid", uid)
+                .build();
+		String html = postOk(API_URL + "/sessions/sign_in", requestBody);
 		JSONObject json;
 		NetException2 n = new NetException2();
 		try {
@@ -348,12 +282,6 @@ public class Net {
 
 	public static String facebookSignUp(String userID,String emailid)
 			throws NetException2 {
-//		List<BasicNameValuePair> postValues = new ArrayList<BasicNameValuePair>();
-		Log.i("ID",userID);
-		Log.i("Email",emailid);
-//		postValues.add(new BasicNameValuePair("uid", userID));
-//		postValues.add(new BasicNameValuePair("user_email", emailid));
-//		String html = post(API_URL + "/sessions/sign_up", postValues);
 		RequestBody requestBody = new FormBody.Builder()
 				.add("uid", userID)
 				.add("user_email", emailid)
@@ -383,10 +311,6 @@ public class Net {
 				.add("user_email", userEmail)
 				.add("user_password", userPassword)
 				.build();
-//		List<BasicNameValuePair> postValues = new ArrayList<BasicNameValuePair>();
-//		postValues.add(new BasicNameValuePair("user_email", userEmail));
-//		postValues.add(new BasicNameValuePair("user_password", userPassword));
-//		String html = post(API_URL + "/sessions/sign_in", postValues);
 		String html = postOk(API_URL + "/sessions/sign_in", requestBody);
 		JSONObject json;
 		NetException2 n = new NetException2();
@@ -405,13 +329,13 @@ public class Net {
 
 	public static void updateUserInfo(String authToken,String userEmail, String userPassword,
 			String name, String phone) throws NetException2 {
-		List<BasicNameValuePair> postValues = new ArrayList<BasicNameValuePair>();
-		
-		postValues.add(new BasicNameValuePair("user_email", userEmail));
-		postValues.add(new BasicNameValuePair("user_password", userPassword));
-		postValues.add(new BasicNameValuePair("name", name));
-		postValues.add(new BasicNameValuePair("phone", phone));
-		String html = put("/sessions/update?auth_token="+authToken, postValues);
+        RequestBody requestBody = new FormBody.Builder()
+                .add("user_email", userEmail)
+                .add("user_password", userPassword)
+                .add("name", name)
+                .add("phone", phone)
+                .build();
+		String html = putOk("/sessions/update?auth_token="+authToken, requestBody);
 
 		NetException2 n = new NetException2();
 		JSONObject json;
@@ -428,8 +352,7 @@ public class Net {
 	}
 
 	public static void getNews() throws NetException2 {
-		List<BasicNameValuePair> getValues = new ArrayList<BasicNameValuePair>();
-		String html = get(API_URL + GET_NEWS, getValues);
+		String html = getOk(API_URL + GET_NEWS);
 		NetException2 n = new NetException2();
 		JSONObject json;
 		try {
@@ -445,8 +368,7 @@ public class Net {
 	}
 
 	public static void getTimeLine() throws NetException2 {
-		List<BasicNameValuePair> getValues = new ArrayList<BasicNameValuePair>();
-		String html = get(API_URL + "/timeline/", getValues);
+		String html = getOk(API_URL + "/timeline/");
 		NetException2 n = new NetException2();
 		try {
 			JSONObject json = new JSONObject(html);
@@ -462,8 +384,9 @@ public class Net {
 	}
 
 	public static void getTimeLineVoucher(int id) throws NetException2 {
-		List<BasicNameValuePair> postValues = new ArrayList<BasicNameValuePair>();
-		String html = post(API_URL + "/timeline/voucher/" + id, postValues);
+        RequestBody requestBody = new FormBody.Builder()
+                .build();
+		String html = postOk(API_URL + "/timeline/voucher/" + id, requestBody);
 		NetException2 n = new NetException2();
 		try {
 			JSONObject json = new JSONObject(html);
@@ -484,13 +407,15 @@ public class Net {
 
 	// Attempts to verify the payment, and if successful, returns the certificate information
 	public static Voucher verifyPayment(String token,int priceValue, String offerId, String payKey, int charity) throws NetException2 {
-		List<BasicNameValuePair> putValues = new ArrayList<BasicNameValuePair>();
-		putValues.add(new BasicNameValuePair("auth_token", token));
-		putValues.add(new BasicNameValuePair("payment[amount]", priceValue + ""));
-		putValues.add(new BasicNameValuePair("payment[offer_id]", offerId));
-		putValues.add(new BasicNameValuePair("payment[paypal_charge_token]", payKey));
-		putValues.add(new BasicNameValuePair("payment[charity_id]",""+ charity));
-		String html = post(API_URL + "/payments", putValues);
+        RequestBody requestBody = new FormBody.Builder()
+                .add("auth_token", token)
+                .add("payment[amount]", priceValue + "")
+                .add("payment[offer_id]", offerId)
+                .add("payment[paypal_charge_token]", payKey)
+                .add("payment[charity_id]", ""+ charity)
+                .build();
+
+		String html = postOk(API_URL + "/payments", requestBody);
 		NetException2 n = new NetException2();
 		try {
 			return Voucher.parseVoucher(html);
@@ -502,8 +427,7 @@ public class Net {
 	}
 
 	public static String getMailChimp() throws NetException2 {
-		List<BasicNameValuePair> postValues = new ArrayList<BasicNameValuePair>();
-		String html = get(API_URL + "/general/users", postValues);
+		String html = getOk(API_URL + "/general/users");
 		try {
 			JSONObject json = new JSONObject(html);
 			if (json.getBoolean("error") == true) {
@@ -516,18 +440,24 @@ public class Net {
 	}
 
     public static String subscribeVenue(String slug, String authToken) {
-        String html = post(String.format("/venues/%s/subscribe?auth_token=%s", slug, authToken), null);
-        return html;
+        //Without API in URL
+        //Server return javascript code (HTTP 406)
+        RequestBody requestBody = new FormBody.Builder()
+                .build();
+        return postOk(String.format("/venues/%s/subscribe?auth_token=%s", slug, authToken), requestBody);
     }
 
     public static String unsubscribeVenue(String slug, String authToken) {
-        String html = post(String.format("/venues/%s/unsubscribe?auth_token=%s", slug, authToken), null);
-        return html;
+        //Without API in URL
+        //Server return javascript code (HTTP 406)
+        RequestBody requestBody = new FormBody.Builder()
+                .build();
+        return postOk(String.format("/venues/%s/unsubscribe?auth_token=%s", slug, authToken), requestBody);
     }
 
     public static boolean isSubscribed(String slug, String authToken) {
-        String html = get(String.format("/venues/%s/subscribed.json?auth_token=%s", slug, authToken), null);
-        boolean isSubscribed = false;
+        String html = getOk(String.format("/venues/%s/subscribed.json?auth_token=%s", slug, authToken));
+        boolean isSubscribed;
         try {
             JSONObject jsonObject=new JSONObject(html);
             isSubscribed = jsonObject.optBoolean("subscribed", false);
