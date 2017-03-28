@@ -1,4 +1,4 @@
 include ':foodCircles'
 //include ':facebookSDK'
 //include ':simpleFacebook'
-include ':library'
+//include ':library'
