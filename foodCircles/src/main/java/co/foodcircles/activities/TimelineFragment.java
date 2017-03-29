@@ -35,7 +35,6 @@ import co.foodcircles.net.Net;
 import co.foodcircles.util.FontSetter;
 import co.foodcircles.util.FoodCirclesApplication;
 import co.foodcircles.util.FoodCirclesUtils;
-import co.foodcircles.util.TimelineHelper;
 
 //import com.sromku.simple.fb.Permission;
 //import com.sromku.simple.fb.SimpleFacebook;
@@ -117,7 +116,7 @@ public class TimelineFragment extends Fragment {
             }
         }.execute();
 
-        TimelineHelper.fillItems(items);
+        //TimelineHelper.fillItems(items);
         adapter = new TimelineAdapter(items, new TimelineAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Reservation item) {
