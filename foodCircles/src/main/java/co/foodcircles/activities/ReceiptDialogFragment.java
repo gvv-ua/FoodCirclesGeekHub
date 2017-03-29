@@ -91,11 +91,11 @@ public class ReceiptDialogFragment extends DialogFragment {
         textViewSecondLine.setText(minGroupString + "use by "
                 + formattedDate);
 
-		if (app.purchasedVoucher == true) {
+		if (app.purchasedVoucher) {
 			try {
 				textViewCode.setText(app.newVoucher.getCode());
 			} catch (Exception e) {
-				textViewCode.setText("Check timeline for code");
+				textViewCode.setText(R.string.check_timeline_for_code);
 			}
 			try {
 				Log.d("ReceiptDialogFramgnet","The first one: the textViewItemName is set to " + app.purchasedOffer);
@@ -263,12 +263,6 @@ public class ReceiptDialogFragment extends DialogFragment {
 	    return tweetIntent;
 	}
 	
-	@Override
-	public void onResume() {
-		super.onResume();
-		//mSimpleFacebook = SimpleFacebook.getInstance(getActivity());
-	}
-
 //	private OnLoginListener mOnLoginListener = new OnLoginListener() {
 //		@Override
 //		public void onFail(String reason) {

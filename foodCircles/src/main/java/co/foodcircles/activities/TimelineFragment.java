@@ -35,6 +35,7 @@ import co.foodcircles.net.Net;
 import co.foodcircles.util.FontSetter;
 import co.foodcircles.util.FoodCirclesApplication;
 import co.foodcircles.util.FoodCirclesUtils;
+import co.foodcircles.util.TimelineHelper;
 
 //import com.sromku.simple.fb.Permission;
 //import com.sromku.simple.fb.SimpleFacebook;
@@ -43,122 +44,118 @@ import co.foodcircles.util.FoodCirclesUtils;
 //import com.sromku.simple.fb.listeners.OnPublishListener;
 
 public class TimelineFragment extends Fragment {
-	private TimelineAdapter adapter;
-	private FoodCirclesApplication app;
-	private MixpanelAPI mixpanel;
-//	private SimpleFacebook mSimpleFacebook;
+    private TimelineAdapter adapter;
+    private FoodCirclesApplication app;
+    private MixpanelAPI mixpanel;
+    //	private SimpleFacebook mSimpleFacebook;
 //	private Feed feed;
-	List<Reservation> reservations = new ArrayList<>();
-	List<ViewItem> items = new ArrayList<>();
+    private List<Reservation> reservations = new ArrayList<>();
+    private List<ViewItem> items = new ArrayList<>();
 
-	private final int TIMELINE_YOU_AND_FRIENDS_TYPE = 5;
-	private final int TIMELINE_VOUCHER_TYPE = 0;
-	private final int TIMELINE_FRIEND_TYPE = 1;
-	private final int TIMELINE_MONTH_TYPE = 2;
-	private final int TIMELINE_USED_VOUCHER_TYPE = 3;
-	private final int TIMELINE_EXPIRING_VOUCHER_TYPE = 4;
+    private static final int TIMELINE_YOU_AND_FRIENDS_TYPE = 5;
+    private static final int TIMELINE_VOUCHER_TYPE = 0;
+    private static final int TIMELINE_FRIEND_TYPE = 1;
+    private static final int TIMELINE_MONTH_TYPE = 2;
+    private static final int TIMELINE_USED_VOUCHER_TYPE = 3;
+    private static final int TIMELINE_EXPIRING_VOUCHER_TYPE = 4;
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		mixpanel = MixpanelAPI.getInstance(getActivity(), getResources()
-				.getString(R.string.mixpanel_token));
-	}
+    @Override
+    public void onStart() {
+        super.onStart();
+        mixpanel = MixpanelAPI.getInstance(getActivity(), getResources()
+                .getString(R.string.mixpanel_token));
+    }
 
-	@Override
-	public void onDestroy() {
-		if (mixpanel != null)
-		mixpanel.flush();
-		super.onDestroy();
-	}
+    @Override
+    public void onDestroy() {
+        if (mixpanel != null)
+            mixpanel.flush();
+        super.onDestroy();
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		app = (FoodCirclesApplication) getActivity().getApplicationContext();
-		View view = inflater.inflate(R.layout.timeline_list, null);
-		return view;
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        app = (FoodCirclesApplication) getActivity().getApplicationContext();
+        return inflater.inflate(R.layout.timeline_list, null);
+    }
 
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		FontSetter.overrideFonts(getActivity(), view);
-		final String token = FoodCirclesUtils.getToken(getActivity());
-		new AsyncTask<Object, Void, Boolean>() {
-			protected Boolean doInBackground(Object... param) {
-				try {
-					reservations.addAll(Net.getReservationsList(token));
-					return true;
-				} catch (Exception e) {
-					Log.v("", "Error loading reservations", e);
-					return false;
-				}
-			}
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        FontSetter.overrideFonts(getActivity(), view);
+        final String token = FoodCirclesUtils.getToken(getActivity());
+        new AsyncTask<Object, Void, Boolean>() {
+            protected Boolean doInBackground(Object... param) {
+                try {
+                    reservations.addAll(Net.getReservationsList(token));
+                    return true;
+                } catch (Exception e) {
+                    Log.v("", "Error loading reservations", e);
+                    return false;
+                }
+            }
 
-			protected void onPostExecute(Boolean success) {
-				adapter.notifyDataSetChanged();
-				if (!success) {
-					MP.track(mixpanel, "Restaurant List","Failed to load venues");
-					//this means the list is empty!  If you'd like to display
-					//any sort of indicator, here would be the place to do it.
-				}
-				if (reservations.size() == 0) {
-					((TextView) getActivity().findViewById(R.id.noPurchases)).setVisibility(View.VISIBLE);
-				}
-				int totalKidsFed = 0;
+            protected void onPostExecute(Boolean success) {
+                adapter.notifyDataSetChanged();
+                if (!success) {
+                    MP.track(mixpanel, "Restaurant List", "Failed to load venues");
+                    //this means the list is empty!  If you'd like to display
+                    //any sort of indicator, here would be the place to do it.
+                }
+                if (reservations.size() == 0) {
+                    (getActivity().findViewById(R.id.noPurchases)).setVisibility(View.VISIBLE);
+                }
+                int totalKidsFed = 0;
 
-				for (int i=0; i<reservations.size(); i++) {
-					items.add(getViewItem(reservations.get(i)));
-					totalKidsFed += reservations.get(i).getKidsFed();
-				}
-				try {
-					TextView tvKidsFed = (TextView) getActivity().findViewById(R.id.textViewKidFed);
-					tvKidsFed.setText(totalKidsFed + "");
-					app.setTotalKidsFed(totalKidsFed);
-				} catch (Exception e) {}
+                for (int i = 0; i < reservations.size(); i++) {
+                    items.add(getViewItem(reservations.get(i)));
+                    totalKidsFed += reservations.get(i).getKidsFed();
+                }
+                TextView tvKidsFed = (TextView) getActivity().findViewById(R.id.textViewKidFed);
+                tvKidsFed.setText(String.format("%d", totalKidsFed));
+                app.setTotalKidsFed(totalKidsFed);
+            }
+        }.execute();
 
-			}
-		}.execute();
-
-        //TimelineHelper.fillItems(items);
+        TimelineHelper.fillItems(items);
         adapter = new TimelineAdapter(items, new TimelineAdapter.ItemClickListener() {
-			@Override
-			public void onItemClick(Reservation item) {
-					FragmentManager fm = getActivity().getSupportFragmentManager();
-					ReceiptDialogFragment receiptDialog = new ReceiptDialogFragment();
-                    Bundle args = new Bundle();
-                    args.putParcelable(ReceiptDialogFragment.CURRENT_RESERVATION, item);
-                    receiptDialog.setArguments(args);
-					receiptDialog.show(fm, "receipt_dialog");
-					MP.track(mixpanel, "Timeline", "Opened voucher");
-			}
-		});
+            @Override
+            public void onItemClick(Reservation item) {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                ReceiptDialogFragment receiptDialog = new ReceiptDialogFragment();
+                Bundle args = new Bundle();
+                args.putParcelable(ReceiptDialogFragment.CURRENT_RESERVATION, item);
+                receiptDialog.setArguments(args);
+                receiptDialog.show(fm, "receipt_dialog");
+                MP.track(mixpanel, "Timeline", "Opened voucher");
+            }
+        });
 
         RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.rvList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 
 
+        TextView inviteOrImportFriends = (TextView) view.findViewById(R.id.textViewInviteOrImport);
 
-		TextView inviteOrImportFriends = (TextView) view.findViewById(R.id.textViewInviteOrImport);
+        if (FoodCirclesUtils.isConnectedToSocialAccounts(TimelineFragment.this.getActivity())) {
+            inviteOrImportFriends.setText(R.string.invite_friends);
+        }
 
-		if (FoodCirclesUtils.isConnectedToSocialAccounts(TimelineFragment.this.getActivity()))
-		{ inviteOrImportFriends.setText("Invite Friends"); }
-
-		ImageView settingsButton = (ImageView) view.findViewById(R.id.settingButton);
-		settingsButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), AccountOptionsActivity.class);
-				startActivity(intent);
-			}
-		});
+        ImageView settingsButton = (ImageView) view.findViewById(R.id.settingButton);
+        settingsButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AccountOptionsActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
-		LinearLayout inviteFriends = (LinearLayout) view.findViewById(R.id.inviteFriendsLayout);
-		inviteFriends.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
+        LinearLayout inviteFriends = (LinearLayout) view.findViewById(R.id.inviteFriendsLayout);
+        inviteFriends.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
 //				feed = new Feed.Builder()
 //				.setMessage("Try FoodCircles!")
 //				.setName("Savings with a Conscience!")
@@ -170,29 +167,30 @@ public class TimelineFragment extends Fragment {
 //				} else {
 //					mSimpleFacebook.login(mOnLoginListener);
 //				}
-			}
-		});
+            }
+        });
 
-	}
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		//mSimpleFacebook = SimpleFacebook.getInstance(getActivity());
-	}
-
-	private ViewItem getViewItem(Reservation reservation) {
-		int itemViewType = reservation.getState();
-		switch (itemViewType) {
-			case TIMELINE_YOU_AND_FRIENDS_TYPE: return new TimelineHeaderViewItem(reservation);
-			case TIMELINE_VOUCHER_TYPE: return new TimelineVoucherViewItem(reservation);
-			case TIMELINE_FRIEND_TYPE: return new TimelineFriendViewItem(reservation);
-			case TIMELINE_MONTH_TYPE: return new TimelineMonthViewItem(reservation);
-			case TIMELINE_USED_VOUCHER_TYPE: return new TimelineUsedVoucherViewItem(reservation);
-			case TIMELINE_EXPIRING_VOUCHER_TYPE: return new TimelineExpiringVoucherViewItem(reservation);
-			default: return null;
-		}
-	}
+    private ViewItem getViewItem(Reservation reservation) {
+        int itemViewType = reservation.getState();
+        switch (itemViewType) {
+            case TIMELINE_YOU_AND_FRIENDS_TYPE:
+                return new TimelineHeaderViewItem(reservation);
+            case TIMELINE_VOUCHER_TYPE:
+                return new TimelineVoucherViewItem(reservation);
+            case TIMELINE_FRIEND_TYPE:
+                return new TimelineFriendViewItem(reservation);
+            case TIMELINE_MONTH_TYPE:
+                return new TimelineMonthViewItem(reservation);
+            case TIMELINE_USED_VOUCHER_TYPE:
+                return new TimelineUsedVoucherViewItem(reservation);
+            case TIMELINE_EXPIRING_VOUCHER_TYPE:
+                return new TimelineExpiringVoucherViewItem(reservation);
+            default:
+                return null;
+        }
+    }
 
 //	private OnLoginListener mOnLoginListener = new OnLoginListener() {
 //		@Override

@@ -69,7 +69,6 @@ public class AlarmReceiver extends BroadcastReceiver
 						{
 							try
 							{
-
 								//Checks for venues near the user's location
 								LocationManager mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 								Location locationGPS = null;
@@ -84,9 +83,9 @@ public class AlarmReceiver extends BroadcastReceiver
 								
 								
 								if(location==null){
-									venues.addAll(Net.getVenues(-85.632823,42.955202,null));
+									venues.addAll(Net.getVenues(-85.632823,42.955202));
 								}else{
-									venues.addAll(Net.getVenues(location.getLongitude(),location.getLatitude(),null));								
+									venues.addAll(Net.getVenues(location.getLongitude(),location.getLatitude()));
 								}
 								Collections.sort(venues,new SortListByDistance());
 								String loc = venues.get(0).getDistance();

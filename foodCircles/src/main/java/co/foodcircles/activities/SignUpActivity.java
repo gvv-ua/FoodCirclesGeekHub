@@ -87,11 +87,8 @@ public class SignUpActivity extends FacebookLoginActivity {
 		float size = countText.getTextSize();
 		final String numPeopleString;
         String peopleAmount;
-		try {
-            peopleAmount = Net.getMailChimp();
-		} catch (NetException2 e) {
-            peopleAmount = "Many";
-		}
+        peopleAmount = Net.getMailChimp();
+
         numPeopleString = peopleAmount;
 		Spannable countSpannable = new SpannableString(numPeopleString + 
 				" people repurpose their Grand Rapids dining.\nToday, it\'s your turn.");

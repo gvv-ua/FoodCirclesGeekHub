@@ -26,7 +26,6 @@ import java.util.Collections;
 
 import co.foodcircles.R;
 import co.foodcircles.adapters.VenueAdapter;
-import co.foodcircles.json.Charity;
 import co.foodcircles.json.Venue;
 import co.foodcircles.net.Net;
 import co.foodcircles.util.AndroidUtils;
@@ -38,9 +37,9 @@ public class RestaurantListFragment extends Fragment {
     private VenueAdapter adapter;
 
     private ProgressDialog progressDialog;
-    private String TAG = "RestaurantGridFragment";
+    private static final String TAG = "RestaurantGridFragment";
     private FoodCirclesApplication app;
-    MixpanelAPI mixpanel;
+    private MixpanelAPI mixpanel;
     private AndroidUtils.GetLocations getLocations;
 
     @Override
@@ -57,8 +56,7 @@ public class RestaurantListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.polaroid_grid, null);
-        return view;
+        return getActivity().getLayoutInflater().inflate(R.layout.polaroid_grid, null);
     }
 
     @Override
@@ -69,7 +67,7 @@ public class RestaurantListFragment extends Fragment {
         app = (FoodCirclesApplication) getActivity().getApplicationContext();
 
         if (app.venues == null) {
-            app.venues = new ArrayList<Venue>();
+            app.venues = new ArrayList<>();
             progressDialog = ProgressDialog.show(getActivity(), "Please wait", "Loading venues...");
             getLocations = (AndroidUtils.GetLocations)RestaurantListFragment.this.getActivity();
             getLocations.setLocationGPS();
@@ -80,11 +78,11 @@ public class RestaurantListFragment extends Fragment {
                     try {
                         Location location = AndroidUtils.getLastBestLocation(getLocations.getLocationGPS(), getLocations.getLocationNet());
                         if (location == null) {
-                            app.venues.addAll(Net.getVenues(-85.632823, 42.955202, null));
+                            app.venues.addAll(Net.getVenues(-85.632823, 42.955202));
                         } else {
-                            app.venues.addAll(Net.getVenues(location.getLongitude(), location.getLatitude(), null));
+                            app.venues.addAll(Net.getVenues(location.getLongitude(), location.getLatitude()));
                         }
-                        app.charities = new ArrayList<Charity>();
+                        app.charities = new ArrayList<>();
                         app.charities.addAll(Net.getCharities());
                         return true;
                     } catch (Exception e) {
@@ -99,10 +97,10 @@ public class RestaurantListFragment extends Fragment {
                     mPbWeeklyGoal.setProgress(venue.getPeopleAided());
                     mPbWeeklyGoal.setMax(venue.getWeeklyGoal());
                     TextView mTvKidsAidedAmount = (TextView)getActivity().findViewById(R.id.tv_amount_kids_aided);
-                    mTvKidsAidedAmount.setText("" + venue.getPeopleAided());
+                    mTvKidsAidedAmount.setText(String.format("%d", venue.getPeopleAided()));
                     String weeklyGoal = getString(R.string.number_meals, venue.getWeeklyGoal());
                     TextView mTvMealsWeeklyGoal = (TextView)getActivity().findViewById(R.id.tv_meals_weekly_goal);
-                    mTvMealsWeeklyGoal.setText("" + weeklyGoal);
+                    mTvMealsWeeklyGoal.setText(weeklyGoal);
                 }
 
                 protected void onPostExecute(Boolean success) {
