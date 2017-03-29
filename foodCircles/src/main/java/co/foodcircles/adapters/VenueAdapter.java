@@ -26,10 +26,9 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHol
     private final ItemClickListener clickListener;
     Context context;
 
-    public VenueAdapter(Context context, List<Venue> items, ItemClickListener clickListener) {
+    public VenueAdapter(List<Venue> items, ItemClickListener clickListener) {
         this.items = items;
         this.clickListener = clickListener;
-        this.context = context;
     }
 
     @Override
@@ -37,13 +36,14 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHol
         if (inflater == null) {
             inflater = LayoutInflater.from(parent.getContext());
         }
+        context = parent.getContext();
         return new VenueViewHolder(inflater.inflate(R.layout.polaroid, parent, false), clickListener);
     }
 
     @Override
     public void onBindViewHolder(VenueViewHolder holder, int position) {
         Venue venue = items.get(position);
-        holder.bind(venue);
+        holder.bind(venue, context);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHol
         return items.size();
     }
 
-    class VenueViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class VenueViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final ItemClickListener clickListener;
         private Venue item;
         private ImageView logo;
@@ -78,9 +78,9 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHol
             clickListener.onItemClick(item);
         }
 
-        void bind(Venue item) {
+        void bind(Venue item, Context context) {
             this.item = item;
-            Glide.with(VenueAdapter.this.context).load(Net.HOST + item.getImageUrl()).into(logo);
+            Glide.with(context).load(Net.HOST + item.getImageUrl()).into(logo);
             name.setText(item.getName());
             cuisine.setText(item.getFirstTag());
             distance.setText(item.getDistance());

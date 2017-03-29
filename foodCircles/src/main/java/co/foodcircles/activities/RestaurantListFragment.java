@@ -139,7 +139,7 @@ public class RestaurantListFragment extends Fragment {
 
         RecyclerView gridView = (RecyclerView) getActivity().findViewById(R.id.rvVenues);
         gridView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        adapter = new VenueAdapter(getActivity(), app.venues, new VenueAdapter.ItemClickListener() {
+        adapter = new VenueAdapter(app.venues, new VenueAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Venue item) {
                 if (item.getVouchersAvailable() == 0) {
