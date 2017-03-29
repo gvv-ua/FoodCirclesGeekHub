@@ -32,14 +32,8 @@ import co.foodcircles.util.FoodCirclesUtils;
  * This fragment is the view that gives detailed information about the deal,
  * including a picture and venue info
  */
-public class VenueItemFragment extends Fragment
-{
-	ImageView itemImage;
-	TextView itemName;
-	TextView itemFlavorText;
-	TextView itemOriginalPrice;
-	Button button;
-
+public class VenueItemFragment extends Fragment {
+    private Button button;
     private boolean mIsVenueNeedToReserve;
     private Venue venue;
 
@@ -73,23 +67,22 @@ public class VenueItemFragment extends Fragment
             venue = getArguments().getParcelable(RestaurantActivity.SELECTED_VENUE_KEY);
         }
     }
-	
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-	{
-		View view = getActivity().getLayoutInflater().inflate(R.layout.venue_profile, null);
-		FontSetter.overrideFonts(getActivity(), view);
-		return view;
-	}
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = getActivity().getLayoutInflater().inflate(R.layout.venue_profile, null);
+        FontSetter.overrideFonts(getActivity(), view);
+        return view;
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        itemImage = (ImageView) view.findViewById(R.id.imageView);
+        ImageView itemImage = (ImageView) view.findViewById(R.id.imageView);
 
-        itemName = (TextView) view.findViewById(R.id.textViewItemName);
-        itemOriginalPrice = (TextView) view.findViewById(R.id.textViewPrice);
-        itemFlavorText = (TextView) view.findViewById(R.id.textViewItemFlavorText);
+        TextView itemName = (TextView) view.findViewById(R.id.textViewItemName);
+        TextView itemOriginalPrice = (TextView) view.findViewById(R.id.textViewPrice);
+        TextView itemFlavorText = (TextView) view.findViewById(R.id.textViewItemFlavorText);
         button = (Button) view.findViewById(R.id.button);
 
         if (mIsVenueNeedToReserve) {
@@ -112,16 +105,14 @@ public class VenueItemFragment extends Fragment
         itemName.setText(offer.getTitle());
         itemFlavorText.setText(offer.getDetails());
         try {
-            itemOriginalPrice.setText("" + offer.getFullPrice());
+            itemOriginalPrice.setText(String.format("%d", offer.getFullPrice()));
         } catch (Exception e) {
             itemOriginalPrice.setText("9");
         }
 
-        button.setOnClickListener(new OnClickListener()
-        {
+        button.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 if (mIsVenueNeedToReserve) {
                     if (mIsSubscribed) {
                         unsubscribe(venue.getSlug());
@@ -177,7 +168,7 @@ public class VenueItemFragment extends Fragment
         progressDialog = ProgressDialog.show(getActivity(), "Please wait", "Discard reserving...");
         new AsyncTask<Object, Void, Boolean>() {
             protected Boolean doInBackground(Object... param) {
-                String response = Net.unsubscribeVenue(slug, FoodCirclesUtils.getToken(getActivity()));
+                Net.unsubscribeVenue(slug, FoodCirclesUtils.getToken(getActivity()));
                 return true;
             }
 

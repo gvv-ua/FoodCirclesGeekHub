@@ -143,9 +143,8 @@ public class AccountOptionsFragment extends Fragment
 				FoodCirclesUtils.savePassword(AccountOptionsFragment.this.getActivity(), null);
 				FoodCirclesUtils.saveToken(AccountOptionsFragment.this.getActivity(), null);
 				Intent intent = new Intent(AccountOptionsFragment.this.getActivity(), SignUpActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivity(intent);
-				MainActivity.mActivity.finish();
 				AccountOptionsFragment.this.getActivity().finish();
 			}
 		});
