@@ -79,6 +79,9 @@ public class Venue implements Parcelable {
 		phone = AndroidUtils.safelyGetJsonString(json,"phone");
 		web = AndroidUtils.safelyGetJsonString(json,"web");
 		vouchersAvailable=AndroidUtils.safelyGetJsonInt(json, "vouchers_available");
+//        final Random random = new Random();
+//        vouchersAvailable = random.nextInt(2);
+
 		openTimes = AndroidUtils.safelyGetJsonString(json,"open_times");
 		tags = new ArrayList<String>();
 		JSONArray tagsJson = AndroidUtils.safelyGetJsonArray(json,"tags");
@@ -363,7 +366,6 @@ public class Venue implements Parcelable {
 	}
 
 	public int getVouchersAvailable() {
-		
 		return vouchersAvailable;
 	}
 

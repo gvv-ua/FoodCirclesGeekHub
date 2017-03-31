@@ -1,5 +1,7 @@
 package co.foodcircles.util;
 
+import android.location.Location;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +27,8 @@ public class TimelineHelper {
         List<Venue> venues = new ArrayList<>();
 
         try {
-            venues.addAll(Net.getVenues(-85.632823, 42.955202));
+            Location location = null;
+            venues.addAll(Net.getVenues(new LocationCoordinate(location)));
 
             Reservation reservation = new Reservation("1", "gvv", venues.get(0), null, null, 10000);
             reservation.setState(0);

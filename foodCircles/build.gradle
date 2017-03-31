@@ -27,8 +27,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
-
-    useLibrary 'org.apache.http.legacy'
 }
 
 repositories {
@@ -37,7 +35,7 @@ repositories {
 }
 
 ext {
-    supportLibraryVersion = '25.2.0'
+    supportLibraryVersion = '25.3.0'
 }
 
 dependencies {

@@ -16,6 +16,7 @@ import co.foodcircles.json.Charity;
 import co.foodcircles.json.Reservation;
 import co.foodcircles.json.Venue;
 import co.foodcircles.json.Voucher;
+import co.foodcircles.util.LocationCoordinate;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -89,10 +90,10 @@ public class Net {
     }
 
     @SuppressLint("DefaultLocale")
-    public static List<Venue> getVenues(double longitude, double latitude)
+    public static List<Venue> getVenues(LocationCoordinate locationCoordinate)
             throws NetException {
         try {
-            String url = String.format(GET_VENUES, latitude, longitude);
+            String url = String.format(GET_VENUES, locationCoordinate.getLatitude(), locationCoordinate.getLongitude());
             String response = getOk(API_URL + url);
             return Venue.parseVenues(response);
         } catch (JSONException j) {

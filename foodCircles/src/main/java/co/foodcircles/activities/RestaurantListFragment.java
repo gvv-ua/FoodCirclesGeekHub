@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,19 +27,36 @@ import co.foodcircles.R;
 import co.foodcircles.adapters.VenueAdapter;
 import co.foodcircles.json.Venue;
 import co.foodcircles.net.Net;
-import co.foodcircles.util.AndroidUtils;
 import co.foodcircles.util.FontSetter;
 import co.foodcircles.util.FoodCirclesApplication;
+import co.foodcircles.util.LocationCoordinate;
 import co.foodcircles.util.SortListByDistance;
 
 public class RestaurantListFragment extends Fragment {
     private VenueAdapter adapter;
 
     private ProgressDialog progressDialog;
-    private static final String TAG = "RestaurantGridFragment";
+    private static final String TAG = "RestaurantListFragment";
+    private static final String LOCATION_COORDINATES = "LocationCoordinates";
     private FoodCirclesApplication app;
     private MixpanelAPI mixpanel;
-    private AndroidUtils.GetLocations getLocations;
+    private LocationCoordinate locationCoordinate;
+
+    public static RestaurantListFragment newInstance(LocationCoordinate locationCoordinate) {
+        RestaurantListFragment fragment = new RestaurantListFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(LOCATION_COORDINATES, locationCoordinate);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            locationCoordinate = getArguments().getParcelable(LOCATION_COORDINATES);
+        }
+    }
 
     @Override
     public void onStart() {
@@ -69,19 +85,10 @@ public class RestaurantListFragment extends Fragment {
         if (app.venues == null) {
             app.venues = new ArrayList<>();
             progressDialog = ProgressDialog.show(getActivity(), "Please wait", "Loading venues...");
-            getLocations = (AndroidUtils.GetLocations)RestaurantListFragment.this.getActivity();
-            getLocations.setLocationGPS();
-            getLocations.setLocationNet();
-
             new AsyncTask<Object, Void, Boolean>() {
                 protected Boolean doInBackground(Object... param) {
                     try {
-                        Location location = AndroidUtils.getLastBestLocation(getLocations.getLocationGPS(), getLocations.getLocationNet());
-                        if (location == null) {
-                            app.venues.addAll(Net.getVenues(-85.632823, 42.955202));
-                        } else {
-                            app.venues.addAll(Net.getVenues(location.getLongitude(), location.getLatitude()));
-                        }
+                        app.venues.addAll(Net.getVenues(locationCoordinate));
                         app.charities = new ArrayList<>();
                         app.charities.addAll(Net.getCharities());
                         return true;

@@ -1,46 +1,49 @@
 package co.foodcircles.activities;
 
-import android.content.Context;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.app.AlertDialog;
+import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
-//import com.sromku.simple.fb.SimpleFacebook;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.viewpagerindicator.TabPageIndicator;
 
 import co.foodcircles.R;
-import co.foodcircles.util.AndroidUtils;
 import co.foodcircles.util.FontSetter;
 import co.foodcircles.util.FoodCirclesApplication;
+import co.foodcircles.util.LocationCoordinate;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
-public class MainActivity extends FragmentActivity implements AndroidUtils.GetLocations {
+//import com.sromku.simple.fb.SimpleFacebook;
+
+public class MainActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10;
     private static final int PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 11;
 
     private static final String[] CONTENT = new String[]{"NEWS", "FOOD", "YOU"};
     private FoodCirclesApplication app;
     //	SimpleFacebook mSimpleFacebook;
-    private Location locationGPS = null;
-    private Location locationNet = null;
+    private GoogleApiClient googleApiClient;
+    private TabPageIndicator indicator;
 
 
     @Override
@@ -50,19 +53,13 @@ public class MainActivity extends FragmentActivity implements AndroidUtils.GetLo
 
         setContentView(R.layout.simple_tabs);
         app = (FoodCirclesApplication) getApplicationContext();
-        FragmentPagerAdapter adapter = new GoogleMusicAdapter(getSupportFragmentManager());
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        pager.setAdapter(adapter);
-        TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
-        indicator.setViewPager(pager);
-        pager.setCurrentItem(getIntent().getIntExtra("tab", 0));
-        FontSetter.overrideFonts(this, findViewById(R.id.root));
-        if (app.purchasedVoucher) {
-            FragmentManager fm = getSupportFragmentManager();
-            ReceiptDialogFragment receiptDialog = new ReceiptDialogFragment();
-            receiptDialog.show(fm, "receipt_dialog");
-            pager.setCurrentItem(2);
-        }
+        indicator = (TabPageIndicator) findViewById(R.id.indicator);
+        indicator.setVisibility(View.GONE);
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
     }
 
     @Override
@@ -76,9 +73,64 @@ public class MainActivity extends FragmentActivity implements AndroidUtils.GetLo
         }
     }
 
-    class GoogleMusicAdapter extends FragmentPagerAdapter {
-        public GoogleMusicAdapter(FragmentManager fm) {
+    @Override
+    protected void onStart() {
+        googleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        googleApiClient.disconnect();
+        super.onStop();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (checkLocationPermission()) {
+            updateTabs(new LocationCoordinate(LocationServices.FusedLocationApi.getLastLocation(googleApiClient)));
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)) {
+                showExplanationDialog(getString(R.string.need_gps_permission), new String[]{ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        //
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        updateTabs(new LocationCoordinate(null));
+    }
+
+    private void updateTabs(LocationCoordinate locationCoordinate) {
+        FragmentPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager(), locationCoordinate);
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(adapter);
+        indicator.setViewPager(pager);
+        pager.setCurrentItem(getIntent().getIntExtra("tab", 0));
+        FontSetter.overrideFonts(this, findViewById(R.id.root));
+
+        if (app.purchasedVoucher) {
+            FragmentManager fm = getSupportFragmentManager();
+            ReceiptDialogFragment receiptDialog = new ReceiptDialogFragment();
+            receiptDialog.show(fm, "receipt_dialog");
+            pager.setCurrentItem(2);
+        }
+        indicator.setVisibility(View.VISIBLE);
+    }
+
+    class MainPagerAdapter extends FragmentPagerAdapter {
+        private final LocationCoordinate locationCoordinate;
+
+        public MainPagerAdapter(FragmentManager fm, LocationCoordinate locationCoordinate) {
             super(fm);
+            this.locationCoordinate = locationCoordinate;
         }
 
         @Override
@@ -87,7 +139,7 @@ public class MainActivity extends FragmentActivity implements AndroidUtils.GetLo
                 case 0:
                     return new CarouselFragment();
                 case 1:
-                    return new RestaurantListFragment();
+                    return RestaurantListFragment.newInstance(locationCoordinate);
                 case 2:
                     return new TimelineFragment();
                 default:
@@ -111,30 +163,8 @@ public class MainActivity extends FragmentActivity implements AndroidUtils.GetLo
         //SimpleFacebook.getInstance(this).onActivityResult(this, requestCode, resultCode, data);
     }
 
-    public void setLocationGPS() {
-        if (ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
-            LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationGPS = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)) {
-                showExplanationDialog(getString(R.string.need_gps_permission), new String[]{ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-            }
-        }
-    }
-
-    public void setLocationNet() {
-        if (ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED) {
-            LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationNet = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_COARSE_LOCATION)) {
-                showExplanationDialog(getString(R.string.need_location_permission), new String[]{ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
-            }
-        }
+    private boolean checkLocationPermission() {
+        return (ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) || (ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED);
     }
 
     private void showExplanationDialog(final String title, final String[] permissions, final int requestCode) {
@@ -174,28 +204,18 @@ public class MainActivity extends FragmentActivity implements AndroidUtils.GetLo
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
                 if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    locationGPS = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    updateTabs(new LocationCoordinate(LocationServices.FusedLocationApi.getLastLocation(googleApiClient)));
                 } else {
                     Toast.makeText(this, R.string.need_gps_permission, Toast.LENGTH_SHORT).show();
                 }
             }
             case PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION: {
                 if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    locationNet = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    updateTabs(new LocationCoordinate(LocationServices.FusedLocationApi.getLastLocation(googleApiClient)));
                 } else {
                     Toast.makeText(this, R.string.need_location_permission, Toast.LENGTH_SHORT).show();
                 }
             }
         }
-    }
-
-    public Location getLocationGPS() {
-        return locationGPS;
-    }
-
-    public Location getLocationNet() {
-        return locationNet;
     }
 }

@@ -140,11 +140,6 @@
                 <action android:name="co.foodcircles.geonotification" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".services.AlarmSetter" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
 
         <!-- API Stuff... -->
 

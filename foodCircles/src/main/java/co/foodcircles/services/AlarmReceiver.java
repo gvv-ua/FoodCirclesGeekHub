@@ -1,10 +1,5 @@
 package co.foodcircles.services;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -20,6 +15,14 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
+
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
+
 import co.foodcircles.R;
 import co.foodcircles.activities.MP;
 import co.foodcircles.activities.SignInActivity;
@@ -28,16 +31,15 @@ import co.foodcircles.json.Venue;
 import co.foodcircles.net.Net;
 import co.foodcircles.net.NetException;
 import co.foodcircles.util.AndroidUtils;
+import co.foodcircles.util.LocationCoordinate;
 import co.foodcircles.util.SortListByDistance;
-
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class AlarmReceiver extends BroadcastReceiver
 {
-	List<Venue> venues=new ArrayList<Venue>();
+	List<Venue> venues=new ArrayList<>();
 	private final String SOMEACTION = "co.foodcircles.geonotification";
 	private final static long MS_BEFORE_NOTIFY = AlarmManager.INTERVAL_DAY * 7;
 	private MixpanelAPI mixpanel;
@@ -80,13 +82,9 @@ public class AlarmReceiver extends BroadcastReceiver
 									locationNet = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 								}
 								Location location = AndroidUtils.getLastBestLocation(locationGPS, locationNet);
-								
-								
-								if(location==null){
-									venues.addAll(Net.getVenues(-85.632823,42.955202));
-								}else{
-									venues.addAll(Net.getVenues(location.getLongitude(),location.getLatitude()));
-								}
+
+
+								venues.addAll(Net.getVenues(new LocationCoordinate(location)));
 								Collections.sort(venues,new SortListByDistance());
 								String loc = venues.get(0).getDistance();
 								String nums = loc.replaceAll("[^\\d.]", "");
@@ -173,11 +171,5 @@ public class AlarmReceiver extends BroadcastReceiver
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
 		return (netInfo != null && netInfo.isConnectedOrConnecting()) ? true : false;
-	}
-
-	public Location getPassiveLocation(Context context)
-	{
-		LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-		return lm.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
 	}
 }
