@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -15,12 +16,15 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.viewpagerindicator.TabPageIndicator;
 
@@ -35,14 +39,16 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 //import com.sromku.simple.fb.SimpleFacebook;
 
-public class MainActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10;
     private static final int PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 11;
+    private static final String TAG = "MainActivity";
 
     private static final String[] CONTENT = new String[]{"NEWS", "FOOD", "YOU"};
     private FoodCirclesApplication app;
     //	SimpleFacebook mSimpleFacebook;
     private GoogleApiClient googleApiClient;
+    private LocationRequest locationRequest;
     private TabPageIndicator indicator;
 
 
@@ -55,6 +61,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         app = (FoodCirclesApplication) getApplicationContext();
         indicator = (TabPageIndicator) findViewById(R.id.indicator);
         indicator.setVisibility(View.GONE);
+        createLocationRequest();
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -62,6 +69,20 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
                 .build();
     }
 
+    private void createLocationRequest() {
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    protected void startLocationUpdates() {
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+    }
+
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -88,7 +109,8 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         if (checkLocationPermission()) {
-            updateTabs(new LocationCoordinate(LocationServices.FusedLocationApi.getLastLocation(googleApiClient)));
+            //updateTabs(new LocationCoordinate(LocationServices.FusedLocationApi.getLastLocation(googleApiClient)));
+            startLocationUpdates();
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)) {
                 showExplanationDialog(getString(R.string.need_gps_permission), new String[]{ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
@@ -100,12 +122,18 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
     @Override
     public void onConnectionSuspended(int i) {
-        //
+        Log.i(TAG, "Connection suspended");
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         updateTabs(new LocationCoordinate(null));
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        updateTabs(new LocationCoordinate(location));
+        stopLocationUpdates();
     }
 
     private void updateTabs(LocationCoordinate locationCoordinate) {
@@ -204,14 +232,16 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
                 if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    updateTabs(new LocationCoordinate(LocationServices.FusedLocationApi.getLastLocation(googleApiClient)));
+                    //updateTabs(new LocationCoordinate(LocationServices.FusedLocationApi.getLastLocation(googleApiClient)));
+                    startLocationUpdates();
                 } else {
                     Toast.makeText(this, R.string.need_gps_permission, Toast.LENGTH_SHORT).show();
                 }
             }
             case PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION: {
                 if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    updateTabs(new LocationCoordinate(LocationServices.FusedLocationApi.getLastLocation(googleApiClient)));
+                    //updateTabs(new LocationCoordinate(LocationServices.FusedLocationApi.getLastLocation(googleApiClient)));
+                    startLocationUpdates();
                 } else {
                     Toast.makeText(this, R.string.need_location_permission, Toast.LENGTH_SHORT).show();
                 }
