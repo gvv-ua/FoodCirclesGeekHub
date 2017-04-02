@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import co.foodcircles.json.Charity;
 import co.foodcircles.json.Venue;
 import co.foodcircles.json.Voucher;
 
@@ -22,8 +21,6 @@ public class FoodCirclesApplication extends Application
 	public int purchasedCost;
 	public int purchasedGroupSize;
 	public boolean purchasedVoucher = false;
-	public List<Venue> venues;
-	public List<Charity> charities;
 	public boolean needsRestart = false;
 	private int totalKidsFed;
 

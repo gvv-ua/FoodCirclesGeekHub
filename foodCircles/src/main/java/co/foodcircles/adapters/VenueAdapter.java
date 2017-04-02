@@ -1,6 +1,7 @@
 package co.foodcircles.adapters;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import co.foodcircles.R;
@@ -22,13 +24,21 @@ import co.foodcircles.net.Net;
 
 public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHolder> {
     private LayoutInflater inflater;
-    private final List<Venue> items;
+    private List<Venue> items = new ArrayList<>();
     private final ItemClickListener clickListener;
-    Context context;
+    private Context context;
 
     public VenueAdapter(List<Venue> items, ItemClickListener clickListener) {
-        this.items = items;
+        updateAdapter(items);
         this.clickListener = clickListener;
+    }
+
+    public void updateAdapter(@Nullable List<Venue> items) {
+        this.items.clear();
+        if (items != null) {
+            this.items.addAll(items);
+        }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -84,7 +94,7 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHol
             name.setText(item.getName());
             cuisine.setText(item.getFirstTag());
             distance.setText(item.getDistance());
-            left.setText("" + item.getVouchersAvailable());
+            left.setText(String.format("%d", item.getVouchersAvailable()));
             soldOut.setVisibility(item.checkEmpty());
         }
     }
