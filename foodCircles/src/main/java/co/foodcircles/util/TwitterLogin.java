@@ -18,119 +18,118 @@ import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterLogin {
 
-	public static Twitter twitter;
-	public static RequestToken requestToken;
-	public boolean running = false;
-	public TwDialogListener mListener;
-	public static String twitter_uid;
-	Context mContext;
-	private boolean onCompleteCalled;
+    private static Twitter twitter;
+    private static RequestToken requestToken;
+    private TwDialogListener mListener;
+    private Context context;
+    private boolean onCompleteCalled;
     private String mNumberOfPeople;
 
-	public TwitterLogin(Context context, String numberOfPeople){
-		this.mContext = context;
+    public TwitterLogin(Context context, String numberOfPeople) {
+        this.context = context;
         mNumberOfPeople = numberOfPeople;
-	}
-	
-	public void twitterSignUp() {
-		Thread t = new Thread() {
-			public void run() {
-				try {
-					onCompleteCalled = false;
-					ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-					configurationBuilder
-							.setOAuthConsumerKey(Const.CONSUMER_KEY);
-					configurationBuilder
-							.setOAuthConsumerSecret(Const.CONSUMER_SECRET);
-					Configuration configuration = configurationBuilder.build();
-					twitter = new TwitterFactory(configuration).getInstance();
-					requestToken = twitter.getOAuthRequestToken(Const.CALLBACK_URL);
-					twitterMsgkHandler.sendEmptyMessage(0);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		};
-		t.start();
-	}
-	
-	public interface TwDialogListener {
-		public void onComplete(String value);
-		public void onError(String value);
-	}
-	
-	private Handler twitterMsgkHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			int id = msg.what;
-			switch (id) {
-			case 0:
-				showLoginDialog(requestToken.getAuthenticationURL());
-				break;
-			}
-		}
-	};
+    }
 
-	private void showLoginDialog(String url) {
-		final TwDialogListener listener = new TwDialogListener() {
-			@Override
-			public void onComplete(String value) {
-				if (onCompleteCalled == false) {
-					processToken(value);
-					onCompleteCalled = true;
-				}
-			}
+    public void twitterSignUp() {
+        Thread t = new Thread() {
+            public void run() {
+                try {
+                    onCompleteCalled = false;
+                    ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+                    configurationBuilder
+                            .setOAuthConsumerKey(Const.CONSUMER_KEY);
+                    configurationBuilder
+                            .setOAuthConsumerSecret(Const.CONSUMER_SECRET);
+                    Configuration configuration = configurationBuilder.build();
+                    twitter = new TwitterFactory(configuration).getInstance();
+                    requestToken = twitter.getOAuthRequestToken(Const.CALLBACK_URL);
+                    twitterMsgkHandler.sendEmptyMessage(0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        t.start();
+    }
 
-			@Override
-			public void onError(String value) {
-				try{
-					mListener.onError("Failed opening authorization page");
-				}catch (NullPointerException e) {
-					e.printStackTrace();
-				}catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		};
-		new TwitterDialog(mContext, url, listener).show();
-	}
+    public interface TwDialogListener {
+        void onComplete(String value);
 
-	public void processToken(final String callbackUrl) {
-		new Thread() {
-			@Override
-			public void run() {
-				Uri uri = Uri.parse(callbackUrl);
-				if (uri != null
-						&& uri.toString().startsWith(Const.CALLBACK_URL)) {
-					String verifier = uri
-							.getQueryParameter(Const.IEXTRA_OAUTH_VERIFIER);
-					try {
-						AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, verifier);
-						String s = String.valueOf(accessToken.getUserId());
-						final String token = Net.twittersignIn(s);
-						if(FoodCirclesUtils.getEmail(mContext).isEmpty()){
-							
-							Intent in = new Intent(mContext,EmailPromptsActivity.class);
-							in.putExtra("UID", accessToken.getUserId());
+        void onError(String value);
+    }
+
+    private final Handler twitterMsgkHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            int id = msg.what;
+            switch (id) {
+                case 0:
+                    showLoginDialog(requestToken.getAuthenticationURL());
+                    break;
+            }
+        }
+    };
+
+    private void showLoginDialog(String url) {
+        final TwDialogListener listener = new TwDialogListener() {
+            @Override
+            public void onComplete(String value) {
+                if (!onCompleteCalled) {
+                    processToken(value);
+                    onCompleteCalled = true;
+                }
+            }
+
+            @Override
+            public void onError(String value) {
+                try {
+                    mListener.onError("Failed opening authorization page");
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        new TwitterDialog(context, url, listener).show();
+    }
+
+    private void processToken(final String callbackUrl) {
+        new Thread() {
+            @Override
+            public void run() {
+                Uri uri = Uri.parse(callbackUrl);
+                if (uri != null
+                        && uri.toString().startsWith(Const.CALLBACK_URL)) {
+                    String verifier = uri
+                            .getQueryParameter(Const.IEXTRA_OAUTH_VERIFIER);
+                    try {
+                        AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, verifier);
+                        String s = String.valueOf(accessToken.getUserId());
+                        final String token = Net.twittersignIn(s);
+                        if (FoodCirclesUtils.getEmail(context).isEmpty()) {
+
+                            Intent in = new Intent(context, EmailPromptsActivity.class);
+                            in.putExtra("UID", accessToken.getUserId());
                             in.putExtra("peopleNumber", mNumberOfPeople);
-							mContext.startActivity(in);
-						}else{
-							
-							FoodCirclesUtils.saveToken(mContext, token);
-							gotoSignedInPage();
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}.start();
-	}
+                            context.startActivity(in);
+                        } else {
 
-	private void gotoSignedInPage() {
-		Intent intent = new Intent(mContext, MainActivity.class);
-		intent.putExtra("tab", 1);
-		mContext.startActivity(intent);
-		mContext = null;
-	}
+                            FoodCirclesUtils.saveToken(context, token);
+                            gotoSignedInPage();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
+    }
+
+    private void gotoSignedInPage() {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(MainActivity.CURRENT_TAB, MainActivity.TAB_RESTAURANTS);
+        context.startActivity(intent);
+        context = null;
+    }
 }

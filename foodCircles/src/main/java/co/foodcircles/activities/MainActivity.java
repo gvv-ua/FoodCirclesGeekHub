@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
@@ -39,15 +40,22 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10;
     private static final int PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 11;
 
+    public static final String CURRENT_TAB = "tab";
+    private static final String TAG = "MainActivity";
+    public static final int TAB_NEWS = 0;
+    public static final int TAB_RESTAURANTS = 1;
+    public static final int TAB_TIMELINE = 2;
+
     private static final String[] CONTENT = new String[]{"NEWS", "FOOD", "YOU"};
     private FoodCirclesApplication app;
     //	SimpleFacebook mSimpleFacebook;
     private GoogleApiClient googleApiClient;
     private TabPageIndicator indicator;
-
+    private int currentTab = TAB_NEWS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -64,23 +72,28 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
     @Override
     protected void onResume() {
+        Log.d(TAG, "onResume");
         super.onResume();
         //This launches the receipt fragment and reloads the application
         if (app.needsRestart) {
             app.needsRestart = false;
             MainActivity.this.finish();
-            startActivity(getIntent());
+            Intent intent = getIntent();
+            intent.putExtra(MainActivity.CURRENT_TAB, currentTab);
+            startActivity(intent);
         }
     }
 
     @Override
     protected void onStart() {
+        Log.d(TAG, "onStart");
         googleApiClient.connect();
         super.onStart();
     }
 
     @Override
     protected void onStop() {
+        Log.d(TAG, "onStop");
         googleApiClient.disconnect();
         super.onStop();
     }
@@ -111,14 +124,14 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(adapter);
         indicator.setViewPager(pager);
-        pager.setCurrentItem(getIntent().getIntExtra("tab", 0));
+        pager.setCurrentItem(getIntent().getIntExtra(CURRENT_TAB, currentTab));
         FontSetter.overrideFonts(this, findViewById(R.id.root));
 
         if (app.purchasedVoucher) {
             FragmentManager fm = getSupportFragmentManager();
             ReceiptDialogFragment receiptDialog = new ReceiptDialogFragment();
             receiptDialog.show(fm, "receipt_dialog");
-            pager.setCurrentItem(2);
+            pager.setCurrentItem(TAB_TIMELINE);
         }
         indicator.setVisibility(View.VISIBLE);
     }

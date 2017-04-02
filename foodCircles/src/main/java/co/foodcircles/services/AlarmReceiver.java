@@ -37,10 +37,7 @@ import co.foodcircles.net.NetException;
 import co.foodcircles.util.LocationCoordinate;
 import co.foodcircles.util.SortListByDistance;
 
-import static android.R.attr.name;
-
 public class AlarmReceiver extends BroadcastReceiver {
-    List<Venue> venues = new ArrayList<>();
     private final static String SOMEACTION = "co.foodcircles.geonotification";
     private final static String TAG = "AlarmReceiver";
     private final static long MS_BEFORE_NOTIFY = AlarmManager.INTERVAL_DAY * 7;
@@ -75,7 +72,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
     }
 
-    public void tryGeoNotify(final Context context, final LocationCoordinate locationCoordinate) {
+    private void tryGeoNotify(final Context context, final LocationCoordinate locationCoordinate) {
         Log.d(TAG, String.format("tryGeoNotify: %f, %f", locationCoordinate.getLatitude(), locationCoordinate.getLongitude()));
         if (timeSinceLastNotification(context) > MS_BEFORE_NOTIFY && isOnline(context))
         {
@@ -87,6 +84,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                         @Override
                         protected Venue doInBackground(Void... params) {
                             try {
+                                List<Venue> venues = new ArrayList<>();
                                 venues.addAll(Net.getVenues(locationCoordinate));
                                 Collections.sort(venues, new SortListByDistance());
                                 if (venues.size() > 0) {
@@ -131,7 +129,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
     }
 
-    public void makeNotification(Context context, String title, String message) {
+    private void makeNotification(Context context, String title, String message) {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context).setSmallIcon(R.drawable.logo).setContentTitle(title).setContentText(message);
         mBuilder.setSmallIcon(R.drawable.ic_stat_android_notification);
         Intent rateIntent = new Intent(context, SignInActivity.class);
@@ -143,23 +141,23 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     }
 
-    public void setNotifiedTime(Context context) {
+    private void setNotifiedTime(Context context) {
         SharedPreferences pref = context.getSharedPreferences(context.getResources().getString(R.string.preferences), Context.MODE_PRIVATE);
         Editor edit = pref.edit();
         edit.putLong(context.getResources().getString(R.string.last_notification), Calendar.getInstance().getTimeInMillis());
         edit.commit();
     }
 
-    public long timeSinceLastNotification(Context context) {
+    private long timeSinceLastNotification(Context context) {
         SharedPreferences pref = context.getSharedPreferences(context.getResources().getString(R.string.preferences), Context.MODE_PRIVATE);
         long lastNotification = pref.getLong(context.getResources().getString(R.string.last_notification), 0);
         long now = Calendar.getInstance().getTimeInMillis();
         return now - lastNotification;
     }
 
-    public boolean isOnline(Context context) {
+    private boolean isOnline(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return (netInfo != null && netInfo.isConnectedOrConnecting()) ? true : false;
+        return (netInfo != null && netInfo.isConnectedOrConnecting());
     }
 }

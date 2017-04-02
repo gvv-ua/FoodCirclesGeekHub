@@ -22,10 +22,6 @@ import co.foodcircles.net.Net;
 import co.foodcircles.util.AndroidUtils;
 import co.foodcircles.util.FoodCirclesUtils;
 
-/**
- * Created by gvv on 20.03.17.
- */
-
 public class FacebookLoginActivity extends Activity {
     CallbackManager fbCallbackManager;
 
@@ -36,19 +32,19 @@ public class FacebookLoginActivity extends Activity {
         LoginManager.getInstance().registerCallback(fbCallbackManager, fbCallback);
     }
 
-    private void fbSignIn(final String userID, final String emailid) {
+    private void fbSignIn(final String userId, final String emailId) {
         AndroidUtils.showProgress(this);
         new Thread() {
             public void run() {
                 try {
-                    final String token = Net.facebookSignUp(userID,emailid);
+                    final String token = Net.facebookSignUp(userId, emailId);
                     FacebookLoginActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             AndroidUtils.dismissProgress();
                             FoodCirclesUtils.saveToken(FacebookLoginActivity.this,
                                     token);
-                            FoodCirclesUtils.saveEmail(FacebookLoginActivity.this, emailid);
+                            FoodCirclesUtils.saveEmail(FacebookLoginActivity.this, emailId);
                             gotoSignedInPage();
                             FacebookLoginActivity.this.finish();
                         }
@@ -63,13 +59,13 @@ public class FacebookLoginActivity extends Activity {
                         }
                     });
                 }
-            };
+            }
         }.start();
     }
 
     public void gotoSignedInPage() {
         Intent intent = new Intent(FacebookLoginActivity.this, MainActivity.class);
-        intent.putExtra("tab", 1);
+        intent.putExtra(MainActivity.CURRENT_TAB, MainActivity.TAB_RESTAURANTS);
         startActivity(intent);
         FacebookLoginActivity.this.finish();
     }
@@ -96,7 +92,7 @@ public class FacebookLoginActivity extends Activity {
         graphRequest.executeAsync();
     }
 
-    private FacebookCallback fbCallback = new FacebookCallback<LoginResult>() {
+    private final FacebookCallback<LoginResult> fbCallback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
             getFacebookInfo(loginResult.getAccessToken());
@@ -104,7 +100,7 @@ public class FacebookLoginActivity extends Activity {
 
         @Override
         public void onCancel() {
-            Toast.makeText(FacebookLoginActivity.this,"Facebook permissions cancelled!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(FacebookLoginActivity.this, "Facebook permissions cancelled!", Toast.LENGTH_SHORT).show();
         }
 
         @Override

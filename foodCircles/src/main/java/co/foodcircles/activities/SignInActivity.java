@@ -1,6 +1,5 @@
 package co.foodcircles.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
@@ -24,35 +23,27 @@ import co.foodcircles.util.FoodCirclesUtils;
 import co.foodcircles.util.TwitterLogin;
 
 public class SignInActivity extends FacebookLoginActivity {
-	EditText email;
-	EditText password;
-	Button signInButton;
-	TextView signUpButton;
-	private Button buttonFacebook;
-	private Button buttonTwitter;
-	boolean signedIn=false;
-	Context mContext;
-	String id="";
+    private EditText email;
+    private EditText password;
 
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.signin);
-		FontSetter.overrideFonts(this, findViewById(R.id.root));
-		TextView t2 = (TextView) findViewById(R.id.forgotpassword);
-	    t2.setMovementMethod(LinkMovementMethod.getInstance());
-		mContext = this;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.signin);
+        FontSetter.overrideFonts(this, findViewById(R.id.root));
+        TextView t2 = (TextView) findViewById(R.id.forgotpassword);
+        t2.setMovementMethod(LinkMovementMethod.getInstance());
 
-		email = (EditText) findViewById(R.id.editTextEmail);
-		password = (EditText) findViewById(R.id.editTextPassword);
-		signInButton = (Button) findViewById(R.id.buttonSignIn);
-		signUpButton = (TextView) findViewById(R.id.buttonSignUp);
-		buttonFacebook = (Button) findViewById(R.id.buttonFacebookI);
-		buttonTwitter = (Button) findViewById(R.id.buttonTwitterI);
+        email = (EditText) findViewById(R.id.editTextEmail);
+        password = (EditText) findViewById(R.id.editTextPassword);
+        Button signInButton = (Button) findViewById(R.id.buttonSignIn);
+        TextView signUpButton = (TextView) findViewById(R.id.buttonSignUp);
+        Button buttonFacebook = (Button) findViewById(R.id.buttonFacebookI);
+        Button buttonTwitter = (Button) findViewById(R.id.buttonTwitterI);
 
-		buttonFacebook.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
+        buttonFacebook.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
                 AccessToken accessToken = AccessToken.getCurrentAccessToken();
                 if (accessToken == null) {
                     final FoodCirclesApplication app = (FoodCirclesApplication) getApplicationContext();
@@ -60,85 +51,80 @@ public class SignInActivity extends FacebookLoginActivity {
                 } else {
                     getFacebookInfo(accessToken);
                 }
-			}
-		});
-		buttonTwitter.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
+            }
+        });
+        buttonTwitter.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
                 String peopleNumber = SignInActivity.this.getIntent().getStringExtra("peopleNumber");
-				new TwitterLogin(mContext, peopleNumber).twitterSignUp();
-			}
-		});
+                new TwitterLogin(SignInActivity.this, peopleNumber).twitterSignUp();
+            }
+        });
 
-		if (FoodCirclesUtils.getPassword(this).isEmpty() == false) {
-			password.setText(FoodCirclesUtils.getPassword(this));
-			new Thread() {
-				public void run() {
-					signIn(email.getText().toString(), password.getText().toString());
-				};
-			}.start();
-		}
+        if (!FoodCirclesUtils.getPassword(this).isEmpty()) {
+            password.setText(FoodCirclesUtils.getPassword(this));
+            new Thread() {
+                public void run() {
+                    signIn(email.getText().toString(), password.getText().toString());
+                }
+            }.start();
+        }
 
-		signInButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				new Thread() {
-					public void run() {
-						signIn(email.getText().toString(), password.getText().toString());
-					};
-				}.start();
-			}
-		});
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread() {
+                    public void run() {
+                        signIn(email.getText().toString(), password.getText().toString());
+                    }
+                }.start();
+            }
+        });
 
-		signUpButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
-				startActivity(intent);
-				SignInActivity.this.finish();
-			}
-		});
-		
-	}
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
+                startActivity(intent);
+                SignInActivity.this.finish();
+            }
+        });
 
-	private void signIn(final String email, final String password) {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				AndroidUtils.showProgress(SignInActivity.this);
-			}
-		});
-		try {
-			final String token = Net.signIn(email, password);
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					FoodCirclesUtils.saveToken(SignInActivity.this, token);
-					FoodCirclesUtils.saveEmail(SignInActivity.this, email);
-					FoodCirclesUtils.savePassword(SignInActivity.this, password);
-					AndroidUtils.dismissProgress();
+    }
+
+    private void signIn(final String email, final String password) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AndroidUtils.showProgress(SignInActivity.this);
+            }
+        });
+        try {
+            final String token = Net.signIn(email, password);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    FoodCirclesUtils.saveToken(SignInActivity.this, token);
+                    FoodCirclesUtils.saveEmail(SignInActivity.this, email);
+                    FoodCirclesUtils.savePassword(SignInActivity.this, password);
+                    AndroidUtils.dismissProgress();
                     gotoSignedInPage();
-				}
-			});
-		} catch (final NetException2 e) {
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					AndroidUtils.alert(SignInActivity.this, "Couldn't sign in: Email not registered");
-					AndroidUtils.dismissProgress();
-				}
-			});
-		}
-	}
+                }
+            });
+        } catch (final NetException2 e) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    AndroidUtils.alert(SignInActivity.this, "Couldn't sign in: Email not registered");
+                    AndroidUtils.dismissProgress();
+                }
+            });
+        }
+    }
 
-	@Override
-	protected void onResume() {
-	 	super.onResume();
-	 }
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         fbCallbackManager.onActivityResult(requestCode, resultCode, data);
-	}
+    }
 }

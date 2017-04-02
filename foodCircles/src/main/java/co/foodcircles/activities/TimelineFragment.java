@@ -35,6 +35,7 @@ import co.foodcircles.net.Net;
 import co.foodcircles.util.FontSetter;
 import co.foodcircles.util.FoodCirclesApplication;
 import co.foodcircles.util.FoodCirclesUtils;
+import co.foodcircles.util.TimelineHelper;
 
 //import com.sromku.simple.fb.Permission;
 //import com.sromku.simple.fb.SimpleFacebook;
@@ -46,10 +47,10 @@ public class TimelineFragment extends Fragment {
     private TimelineAdapter adapter;
     private FoodCirclesApplication app;
     private MixpanelAPI mixpanel;
-    //	private SimpleFacebook mSimpleFacebook;
-//	private Feed feed;
-    private List<Reservation> reservations = new ArrayList<>();
-    private List<ViewItem> items = new ArrayList<>();
+//    private SimpleFacebook mSimpleFacebook;
+//    private Feed feed;
+    private final List<Reservation> reservations = new ArrayList<>();
+    private final List<ViewItem> items = new ArrayList<>();
 
     private static final int TIMELINE_YOU_AND_FRIENDS_TYPE = 5;
     private static final int TIMELINE_VOUCHER_TYPE = 0;
