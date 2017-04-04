@@ -78,7 +78,7 @@ public class VenueItemFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ImageView itemImage = (ImageView) view.findViewById(R.id.imageView);
+        ImageView itemImage = (ImageView) view.findViewById(R.id.ivVenue);
 
         TextView itemName = (TextView) view.findViewById(R.id.textViewItemName);
         TextView itemOriginalPrice = (TextView) view.findViewById(R.id.textViewPrice);
@@ -100,7 +100,7 @@ public class VenueItemFragment extends Fragment {
 
 
         Offer offer = venue.getOffers().get(0);
-        Glide.with(getActivity()).load(Net.HOST + venue.getImageUrl()).into(itemImage);
+        Glide.with(getActivity()).load(Net.HOST + venue.getLargeImageUrl()).into(itemImage);
 
         itemName.setText(offer.getTitle());
         itemFlavorText.setText(offer.getDetails());
