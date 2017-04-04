@@ -1,13 +1,11 @@
 package co.foodcircles.activities;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,24 +16,13 @@ import android.widget.TextView;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import co.foodcircles.R;
 import co.foodcircles.adapters.TimelineAdapter;
-import co.foodcircles.adapters.base.ViewItem;
-import co.foodcircles.adapters.viewitems.TimelineExpiringVoucherViewItem;
-import co.foodcircles.adapters.viewitems.TimelineFriendViewItem;
-import co.foodcircles.adapters.viewitems.TimelineHeaderViewItem;
-import co.foodcircles.adapters.viewitems.TimelineMonthViewItem;
-import co.foodcircles.adapters.viewitems.TimelineUsedVoucherViewItem;
-import co.foodcircles.adapters.viewitems.TimelineVoucherViewItem;
+import co.foodcircles.data.ReservationList;
 import co.foodcircles.json.Reservation;
-import co.foodcircles.net.Net;
 import co.foodcircles.util.FontSetter;
 import co.foodcircles.util.FoodCirclesApplication;
 import co.foodcircles.util.FoodCirclesUtils;
-import co.foodcircles.util.TimelineHelper;
 
 //import com.sromku.simple.fb.Permission;
 //import com.sromku.simple.fb.SimpleFacebook;
@@ -43,21 +30,12 @@ import co.foodcircles.util.TimelineHelper;
 //import com.sromku.simple.fb.listeners.OnLoginListener;
 //import com.sromku.simple.fb.listeners.OnPublishListener;
 
-public class TimelineFragment extends Fragment {
+public class TimelineFragment extends Fragment implements ReservationList.OnDataUpdateSuccessCallback, ReservationList.OnDataUpdateFailCallback{
     private TimelineAdapter adapter;
     private FoodCirclesApplication app;
     private MixpanelAPI mixpanel;
 //    private SimpleFacebook mSimpleFacebook;
 //    private Feed feed;
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final List<ViewItem> items = new ArrayList<>();
-
-    private static final int TIMELINE_YOU_AND_FRIENDS_TYPE = 5;
-    private static final int TIMELINE_VOUCHER_TYPE = 0;
-    private static final int TIMELINE_FRIEND_TYPE = 1;
-    private static final int TIMELINE_MONTH_TYPE = 2;
-    private static final int TIMELINE_USED_VOUCHER_TYPE = 3;
-    private static final int TIMELINE_EXPIRING_VOUCHER_TYPE = 4;
 
     @Override
     public void onStart() {
@@ -84,41 +62,7 @@ public class TimelineFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         FontSetter.overrideFonts(getActivity(), view);
         final String token = FoodCirclesUtils.getToken(getActivity());
-        new AsyncTask<Object, Void, Boolean>() {
-            protected Boolean doInBackground(Object... param) {
-                try {
-                    reservations.addAll(Net.getReservationsList(token));
-                    return true;
-                } catch (Exception e) {
-                    Log.v("", "Error loading reservations", e);
-                    return false;
-                }
-            }
-
-            protected void onPostExecute(Boolean success) {
-                adapter.notifyDataSetChanged();
-                if (!success) {
-                    MP.track(mixpanel, "Restaurant List", "Failed to load venues");
-                    //this means the list is empty!  If you'd like to display
-                    //any sort of indicator, here would be the place to do it.
-                }
-                if (reservations.size() == 0) {
-                    (getActivity().findViewById(R.id.noPurchases)).setVisibility(View.VISIBLE);
-                }
-                int totalKidsFed = 0;
-
-                for (int i = 0; i < reservations.size(); i++) {
-                    items.add(getViewItem(reservations.get(i)));
-                    totalKidsFed += reservations.get(i).getKidsFed();
-                }
-                TextView tvKidsFed = (TextView) getActivity().findViewById(R.id.textViewKidFed);
-                tvKidsFed.setText(String.format("%d", totalKidsFed));
-                app.setTotalKidsFed(totalKidsFed);
-            }
-        }.execute();
-
-        //TimelineHelper.fillItems(items);
-        adapter = new TimelineAdapter(items, new TimelineAdapter.ItemClickListener() {
+        adapter = new TimelineAdapter(ReservationList.getInstance().getReservations(), new TimelineAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Reservation item) {
                 FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -170,27 +114,28 @@ public class TimelineFragment extends Fragment {
             }
         });
 
+        ReservationList.getInstance().updateData(token, this, this);
     }
 
-    private ViewItem getViewItem(Reservation reservation) {
-        int itemViewType = reservation.getState();
-        switch (itemViewType) {
-            case TIMELINE_YOU_AND_FRIENDS_TYPE:
-                return new TimelineHeaderViewItem(reservation);
-            case TIMELINE_VOUCHER_TYPE:
-                return new TimelineVoucherViewItem(reservation);
-            case TIMELINE_FRIEND_TYPE:
-                return new TimelineFriendViewItem(reservation);
-            case TIMELINE_MONTH_TYPE:
-                return new TimelineMonthViewItem(reservation);
-            case TIMELINE_USED_VOUCHER_TYPE:
-                return new TimelineUsedVoucherViewItem(reservation);
-            case TIMELINE_EXPIRING_VOUCHER_TYPE:
-                return new TimelineExpiringVoucherViewItem(reservation);
-            default:
-                return null;
+    @Override
+    public void onUpdateVenuesSuccess() {
+        TextView tvKidsFed = (TextView) getActivity().findViewById(R.id.textViewKidFed);
+        tvKidsFed.setText(String.format("%d", ReservationList.getInstance().getTotalKidsFed()));
+        app.setTotalKidsFed(ReservationList.getInstance().getTotalKidsFed()); //TODO: remove
+
+        if (ReservationList.getInstance().getReservations().size() == 0) {
+            (getActivity().findViewById(R.id.noPurchases)).setVisibility(View.VISIBLE);
         }
+        adapter.updateAdapter(ReservationList.getInstance().getReservations());
     }
+
+    @Override
+    public void onUpdateVenuesFailed() {
+        MP.track(mixpanel, "Restaurant List", "Failed to load venues");
+        //this means the list is empty!  If you'd like to display
+        //any sort of indicator, here would be the place to do it.
+    }
+
 
 //	private OnLoginListener mOnLoginListener = new OnLoginListener() {
 //		@Override

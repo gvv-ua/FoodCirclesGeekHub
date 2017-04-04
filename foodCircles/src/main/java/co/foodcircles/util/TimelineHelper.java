@@ -3,9 +3,10 @@ package co.foodcircles.util;
 import android.location.Location;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
-import co.foodcircles.adapters.base.ViewItem;
+import co.foodcircles.adapters.base.TimelineViewItem;
 import co.foodcircles.adapters.viewitems.TimelineExpiringVoucherViewItem;
 import co.foodcircles.adapters.viewitems.TimelineFriendViewItem;
 import co.foodcircles.adapters.viewitems.TimelineMonthViewItem;
@@ -23,13 +24,14 @@ import co.foodcircles.net.NetException;
 
 public class TimelineHelper {
 
-    public static List<ViewItem> fillItems(List<ViewItem> items) {
+    public static List<TimelineViewItem> fillItems(List<TimelineViewItem> items) {
         List<Venue> venues = new ArrayList<>();
 
         try {
             Location location = null;
             venues.addAll(Net.getVenues(new LocationCoordinate(location)));
 
+            GregorianCalendar calendar = new GregorianCalendar(2017, 1, 23);
             Reservation reservation = new Reservation("1", "gvv", venues.get(0), null, null, 10000);
             reservation.setState(0);
             reservation.setVenue(venues.get(0));
@@ -49,7 +51,8 @@ public class TimelineHelper {
             reservation.setVenue(venues.get(1));
             items.add(new TimelineFriendViewItem(reservation));
 
-            reservation = new Reservation("4", "gvv4", venues.get(0), null, null, 10000);
+
+            reservation = new Reservation("4", "gvv4", venues.get(0), null, null, calendar.getTime().getTime());
             reservation.setState(2);
             reservation.setVenue(venues.get(0));
             items.add(new TimelineMonthViewItem(reservation));

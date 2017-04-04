@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 
 import co.foodcircles.R;
 import co.foodcircles.adapters.base.DelegateAdapter;
-import co.foodcircles.adapters.base.ViewItem;
+import co.foodcircles.adapters.base.TimelineViewItem;
 import co.foodcircles.adapters.viewitems.TimelineFriendViewItem;
 import co.foodcircles.net.Net;
 import co.foodcircles.util.FoodCirclesUtils;
@@ -32,7 +32,7 @@ public class TimelineFriendAdapter implements DelegateAdapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, ViewItem viewItem) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, TimelineViewItem viewItem) {
         ItemViewHolder viewHolder = (ItemViewHolder) holder;
         viewHolder.bind((TimelineFriendViewItem) viewItem, context);
     }

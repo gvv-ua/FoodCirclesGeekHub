@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import co.foodcircles.R;
 import co.foodcircles.adapters.base.DelegateAdapter;
-import co.foodcircles.adapters.base.ViewItem;
+import co.foodcircles.adapters.base.TimelineViewItem;
 import co.foodcircles.adapters.viewitems.TimelineHeaderViewItem;
 
 /**
@@ -24,7 +24,7 @@ public class TimelineHeaderAdapter implements DelegateAdapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, ViewItem viewItem) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, TimelineViewItem viewItem) {
         ItemViewHolder viewHolder = (ItemViewHolder) holder;
         viewHolder.bind((TimelineHeaderViewItem) viewItem);
     }

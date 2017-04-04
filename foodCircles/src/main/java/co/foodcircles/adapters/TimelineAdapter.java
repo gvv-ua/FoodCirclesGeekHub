@@ -1,16 +1,18 @@
 package co.foodcircles.adapters;
 
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import co.foodcircles.R;
 import co.foodcircles.adapters.base.DelegateAdapter;
-import co.foodcircles.adapters.base.ViewItem;
+import co.foodcircles.adapters.base.TimelineViewItem;
 import co.foodcircles.json.Reservation;
 
 /**
@@ -21,16 +23,25 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final static String TAG = "TimelineAdapter";
 
     private final SparseArray<DelegateAdapter> adapters = new SparseArray<>();
-    private final List<ViewItem> items;
+    private final List<TimelineViewItem> items = new ArrayList<>();
 
-    public TimelineAdapter(List<ViewItem> items, ItemClickListener clickListener) {
+    public TimelineAdapter(List<TimelineViewItem> items, ItemClickListener clickListener) {
         adapters.put(R.layout.timeline_top_row, new TimelineHeaderAdapter());
         adapters.put(R.layout.timeline_row, new TimelineVoucherAdapter(clickListener));
         adapters.put(R.layout.timeline_row_friend, new TimelineFriendAdapter());
         adapters.put(R.layout.timeline_row_used, new TimelineUsedVoucherAdapter());
         adapters.put(R.layout.timeline_row_expiring, new TimelineExpiringVoucherAdapter(clickListener));
         adapters.put(R.layout.timeline_row_month, new TimelineMonthAdapter());
-        this.items = items;
+
+        updateAdapter(items);
+    }
+
+    public void updateAdapter(@Nullable List<TimelineViewItem> items) {
+        this.items.clear();
+        if (items != null) {
+            this.items.addAll(items);
+        }
+        notifyDataSetChanged();
     }
 
     @Override

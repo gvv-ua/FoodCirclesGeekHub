@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import co.foodcircles.R;
 import co.foodcircles.adapters.base.DelegateAdapter;
-import co.foodcircles.adapters.base.ViewItem;
+import co.foodcircles.adapters.base.TimelineViewItem;
 import co.foodcircles.adapters.viewitems.TimelineVoucherViewItem;
 import co.foodcircles.util.FoodCirclesUtils;
 
@@ -30,7 +30,7 @@ public class TimelineVoucherAdapter implements DelegateAdapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, ViewItem viewItem) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, TimelineViewItem viewItem) {
         ItemViewHolder viewHolder = (ItemViewHolder) holder;
         viewHolder.bind((TimelineVoucherViewItem) viewItem);
     }

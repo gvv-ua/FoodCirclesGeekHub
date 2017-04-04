@@ -11,5 +11,5 @@ import android.view.ViewGroup;
 
 public interface DelegateAdapter {
     RecyclerView.ViewHolder onCreateViewHolder(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent);
-    void onBindViewHolder(RecyclerView.ViewHolder holder, ViewItem viewItem);
+    void onBindViewHolder(RecyclerView.ViewHolder holder, TimelineViewItem viewItem);
 }
