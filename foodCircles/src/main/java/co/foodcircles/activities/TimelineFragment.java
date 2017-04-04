@@ -121,7 +121,6 @@ public class TimelineFragment extends Fragment implements ReservationList.OnData
     public void onUpdateVenuesSuccess() {
         TextView tvKidsFed = (TextView) getActivity().findViewById(R.id.textViewKidFed);
         tvKidsFed.setText(String.format("%d", ReservationList.getInstance().getTotalKidsFed()));
-        app.setTotalKidsFed(ReservationList.getInstance().getTotalKidsFed()); //TODO: remove
 
         if (ReservationList.getInstance().getReservations().size() == 0) {
             (getActivity().findViewById(R.id.noPurchases)).setVisibility(View.VISIBLE);

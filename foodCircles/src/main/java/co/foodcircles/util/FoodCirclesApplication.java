@@ -22,7 +22,6 @@ public class FoodCirclesApplication extends Application
 	public int purchasedGroupSize;
 	public boolean purchasedVoucher = false;
 	public boolean needsRestart = false;
-	private int totalKidsFed;
 
 	private List permissions = Arrays.asList("email", "public_profile");
 	
@@ -45,14 +44,6 @@ public class FoodCirclesApplication extends Application
 		}
 		catch (Exception e){ }
 		activities = new ArrayList<Activity>();
-	}
-
-	public int getTotalKidsFed() {
-		return totalKidsFed;
-	}
-
-	public void setTotalKidsFed(int totalKidsFed) {
-		this.totalKidsFed = totalKidsFed;
 	}
 
 	@Override
