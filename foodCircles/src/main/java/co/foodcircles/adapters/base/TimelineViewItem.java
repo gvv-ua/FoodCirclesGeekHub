@@ -6,4 +6,5 @@ package co.foodcircles.adapters.base;
 
 public interface TimelineViewItem {
     int viewType();
+    long getId();
 }

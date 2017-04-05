@@ -21,4 +21,7 @@ public class TimelineHeaderViewItem implements TimelineViewItem {
 
     @Override
     public int viewType() { return R.layout.timeline_top_row; }
+
+    @Override
+    public long getId() { return item.getId(); }
 }

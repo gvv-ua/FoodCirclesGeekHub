@@ -22,7 +22,7 @@ public class Reservation implements Parcelable {
 	public static final int USED = 2;
 	public static final int ACTIVE = 1;
 	public static final int EXPIRED = 3;
-	private String id;
+	private long id;
 	private String user;
 	private String code;
 	private Venue venue;
@@ -37,7 +37,7 @@ public class Reservation implements Parcelable {
 		JSONObject jsonObject = new JSONObject(jsonString);
 		JSONObject jsonContent = jsonObject.getJSONObject("content");
 		JSONArray jsonArray = AndroidUtils.safelyGetJsonArray(jsonContent, "payments");
-		List<Reservation> reservations = new ArrayList<Reservation>();
+		List<Reservation> reservations = new ArrayList<>();
 		for (int i = 0, ii = jsonArray.length(); i < ii; i++) {
 			try {
 				reservations.add(new Reservation(jsonArray.getString(i)));
@@ -62,7 +62,7 @@ public class Reservation implements Parcelable {
 	public Reservation(String jsonString) throws JSONException {
 
 		JSONObject json = new JSONObject(jsonString);
-		id = AndroidUtils.safelyGetJsonString(json, "id");
+		id = AndroidUtils.safelyGetJsonInt(json, "id");
 		String stateHolder = AndroidUtils.safelyGetJsonString(json, "state");
 		user = AndroidUtils.safelyGetJsonString(json, "user");
 		code = AndroidUtils.safelyGetJsonString(json, "code");
@@ -101,7 +101,7 @@ public class Reservation implements Parcelable {
 		}
 	}
 
-	public Reservation(String id, String user, Venue venue, Offer offer,
+	public Reservation(long id, String user, Venue venue, Offer offer,
 			Charity charity, long datePurchased) {
 		super();
 		this.id = id;
@@ -109,11 +109,11 @@ public class Reservation implements Parcelable {
 		this.datePurchased = datePurchased;
 	}
 
-	public String getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -232,7 +232,7 @@ public class Reservation implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(this.id);
+		dest.writeLong(this.id);
 		dest.writeString(this.user);
 		dest.writeString(this.code);
 		dest.writeParcelable(this.venue, flags);
@@ -243,7 +243,7 @@ public class Reservation implements Parcelable {
 	}
 
 	protected Reservation(Parcel in) {
-		this.id = in.readString();
+		this.id = in.readLong();
 		this.user = in.readString();
 		this.code = in.readString();
 		this.venue = in.readParcelable(Venue.class.getClassLoader());

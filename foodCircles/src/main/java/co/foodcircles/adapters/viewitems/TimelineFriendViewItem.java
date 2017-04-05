@@ -21,4 +21,7 @@ public class TimelineFriendViewItem implements TimelineViewItem {
 
     @Override
     public int viewType() { return R.layout.timeline_row_friend; }
+
+    @Override
+    public long getId() { return item.getId(); }
 }

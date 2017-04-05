@@ -33,6 +33,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         adapters.put(R.layout.timeline_row_expiring, new TimelineExpiringVoucherAdapter(clickListener));
         adapters.put(R.layout.timeline_row_month, new TimelineMonthAdapter());
 
+        setHasStableIds(true);
         updateAdapter(items);
     }
 
@@ -59,6 +60,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return items.get(position).getId();
     }
 
     @Override

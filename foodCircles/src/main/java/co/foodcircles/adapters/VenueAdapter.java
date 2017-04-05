@@ -31,6 +31,7 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHol
     public VenueAdapter(List<Venue> items, ItemClickListener clickListener) {
         updateAdapter(items);
         this.clickListener = clickListener;
+        setHasStableIds(true);
     }
 
     public void updateAdapter(@Nullable List<Venue> items) {
@@ -59,6 +60,11 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHol
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return items.get(position).getId();
     }
 
     static class VenueViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

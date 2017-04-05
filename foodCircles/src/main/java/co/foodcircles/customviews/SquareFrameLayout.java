@@ -18,7 +18,7 @@ public class SquareFrameLayout extends FrameLayout
 		super(context, attrs);
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@TargetApi(Build.VERSION_CODES.N_MR1)
 	public SquareFrameLayout(Context context, AttributeSet attrs, int defStyle)
 	{
 		super(context, attrs, defStyle);

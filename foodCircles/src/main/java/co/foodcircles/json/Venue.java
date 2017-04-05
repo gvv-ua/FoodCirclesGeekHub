@@ -14,7 +14,7 @@ import java.util.List;
 import co.foodcircles.util.AndroidUtils;
 
 public class Venue implements Parcelable {
-	private String id;
+	private long id;
 	private String name;
     private String slug;
 	private String address;
@@ -42,7 +42,7 @@ public class Venue implements Parcelable {
 	{
 		JSONObject jsonObject=new JSONObject(jsonString);
 		JSONArray jsonArray = jsonObject.getJSONArray("content");
-		List<Venue> venues = new ArrayList<Venue>();
+		List<Venue> venues = new ArrayList<>();
 
 		for (int i = 0, ii = jsonArray.length(); i < ii; i++)
 		{
@@ -65,12 +65,12 @@ public class Venue implements Parcelable {
 	public Venue(String jsonString) throws JSONException
 	{
 		JSONObject json = new JSONObject(jsonString);
-		id = AndroidUtils.safelyGetJsonString(json,"id");
+		id = AndroidUtils.safelyGetJsonInt(json,"id");
 		name = AndroidUtils.safelyGetJsonString(json,"name");
         slug = AndroidUtils.safelyGetJsonString(json,"slug");
-		address = AndroidUtils.safelyGetJsonString(json,"address");;
-		city = AndroidUtils.safelyGetJsonString(json,"city");;
-		state = AndroidUtils.safelyGetJsonString(json,"state");;
+		address = AndroidUtils.safelyGetJsonString(json,"address");
+		city = AndroidUtils.safelyGetJsonString(json,"city");
+		state = AndroidUtils.safelyGetJsonString(json,"state");
 		zip = AndroidUtils.safelyGetJsonString(json,"zip");
 		distance = AndroidUtils.safelyGetJsonString(json,"distance");
 		latitude = AndroidUtils.safelyGetJsonDouble(json,"lat");
@@ -83,7 +83,7 @@ public class Venue implements Parcelable {
 //        vouchersAvailable = random.nextInt(2);
 
 		openTimes = AndroidUtils.safelyGetJsonString(json,"open_times");
-		tags = new ArrayList<String>();
+		tags = new ArrayList<>();
 		JSONArray tagsJson = AndroidUtils.safelyGetJsonArray(json,"tags");
 
 		for (int i = 0; i < tagsJson.length(); i++)
@@ -91,7 +91,7 @@ public class Venue implements Parcelable {
 			tags.add(AndroidUtils.safelyGetJsonString(tagsJson.getJSONObject(i),"name"));
 		}
 
-		offers = new ArrayList<Offer>();
+		offers = new ArrayList<>();
 		JSONArray offersJson = AndroidUtils.safelyGetJsonArray(json,"offers");
 		for (int i = 0; i < offersJson.length(); i++)
 		{
@@ -100,7 +100,7 @@ public class Venue implements Parcelable {
 			}catch(Exception e){ }
 		}
 
-		socials = new ArrayList<Social>();
+		socials = new ArrayList<>();
 		JSONArray socialsJson = AndroidUtils.safelyGetJsonArray(json,"social_links");
 		for (int i = 0; i < socialsJson.length(); i++)
 		{
@@ -120,7 +120,7 @@ public class Venue implements Parcelable {
 
 	}
 
-	public Venue(String id, String name, String slug, String address, String city, String state, String zip, double latitude, double longitude, String description, String phone,
+	public Venue(long id, String name, String slug, String address, String city, String state, String zip, double latitude, double longitude, String description, String phone,
 			String url, List<String> tags, List<Offer> offers, String openTimes, String imageUrl)
 	{
 		super();
@@ -145,7 +145,7 @@ public class Venue implements Parcelable {
 	public Venue(boolean testVenue)
 	{
 		super();
-		this.id = "1";
+		this.id = 1;
 		this.name = "Stella's Lounge";
         this.slug = "test-slug";
 		this.address = "Address";
@@ -158,8 +158,8 @@ public class Venue implements Parcelable {
 		this.description = "Description";
 		this.phone = "Phone";
 		this.web = "Web";
-		this.tags = new ArrayList<String>();
-		this.offers = new ArrayList<Offer>();
+		this.tags = new ArrayList<>();
+		this.offers = new ArrayList<>();
 		offers.add(new Offer(true));
 		offers.add(new Offer(true));
 		this.openTimes = "8:00AM - 10:00PM";
@@ -167,12 +167,12 @@ public class Venue implements Parcelable {
 		this.largeImageUrl = "/media/BAhbBlsHOgZmSSIvMjAxMi8wNS8yNC8xM180N181MF81OTRfR29qb19FdGhpb3BpYW4ucG5nBjoGRVQ";
 	}
 
-	public String getId()
+	public long getId()
 	{
 		return id;
 	}
 
-	public void setId(String id)
+	public void setId(long id)
 	{
 		this.id = id;
 	}
@@ -409,7 +409,7 @@ public class Venue implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(this.id);
+		dest.writeLong(this.id);
 		dest.writeString(this.name);
 		dest.writeString(this.slug);
 		dest.writeString(this.address);
@@ -435,7 +435,7 @@ public class Venue implements Parcelable {
 	}
 
 	protected Venue(Parcel in) {
-		this.id = in.readString();
+		this.id = in.readLong();
 		this.name = in.readString();
 		this.slug = in.readString();
 		this.address = in.readString();
@@ -449,9 +449,9 @@ public class Venue implements Parcelable {
 		this.phone = in.readString();
 		this.web = in.readString();
 		this.tags = in.createStringArrayList();
-		this.socials = new ArrayList<Social>();
+		this.socials = new ArrayList<>();
 		in.readList(this.socials, Social.class.getClassLoader());
-		this.offers = new ArrayList<Offer>();
+		this.offers = new ArrayList<>();
 		in.readList(this.offers, Offer.class.getClassLoader());
 		this.openTimes = in.readString();
 		this.imageUrl = in.readString();

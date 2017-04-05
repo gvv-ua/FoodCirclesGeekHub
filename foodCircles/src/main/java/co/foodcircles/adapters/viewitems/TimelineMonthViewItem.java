@@ -21,4 +21,7 @@ public class TimelineMonthViewItem implements TimelineViewItem {
 
     @Override
     public int viewType() { return R.layout.timeline_row_month; }
+
+    @Override
+    public long getId() { return item.getId(); }
 }

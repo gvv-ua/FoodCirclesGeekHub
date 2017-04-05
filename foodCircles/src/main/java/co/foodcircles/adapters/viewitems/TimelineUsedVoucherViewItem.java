@@ -21,4 +21,7 @@ public class TimelineUsedVoucherViewItem implements TimelineViewItem {
 
     @Override
     public int viewType() { return R.layout.timeline_row_used; }
+
+    @Override
+    public long getId() { return item.getId(); }
 }

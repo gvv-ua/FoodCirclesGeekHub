@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,6 +28,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import java.util.List;
+
 import co.foodcircles.R;
 import co.foodcircles.json.Social;
 import co.foodcircles.json.Venue;
@@ -41,6 +42,10 @@ public class VenueProfileFragment extends Fragment implements OnMarkerClickListe
     private GoogleMap map;
     private MarkerOptions destinationMarker;
     private MixpanelAPI mixpanel;
+
+    private ImageView facebookView;
+    private ImageView twitterView;
+    private ImageView yelpView;
 
     public static VenueProfileFragment newInstance(Venue venue) {
         VenueProfileFragment fragment = new VenueProfileFragment();
@@ -106,17 +111,25 @@ public class VenueProfileFragment extends Fragment implements OnMarkerClickListe
             }
         });
 
-        ImageView facebookView = (ImageView) view.findViewById(R.id.imageViewFacebook);
-        ImageView twitterView = (ImageView) view.findViewById(R.id.imageViewTwitter);
-        ImageView yelpView = (ImageView) view.findViewById(R.id.imageViewYelp);
+        facebookView = (ImageView) view.findViewById(R.id.imageViewFacebook);
+        twitterView = (ImageView) view.findViewById(R.id.imageViewTwitter);
+        yelpView = (ImageView) view.findViewById(R.id.imageViewYelp);
+
+        prepareSocialButtons();
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
+
+    private void prepareSocialButtons() {
         facebookView.setVisibility(View.INVISIBLE);
         twitterView.setVisibility(View.INVISIBLE);
         yelpView.setVisibility(View.INVISIBLE);
 
-        //Based on the venue's social links, checks for the social button values and makes their buttons visible and clickable.  If there are none, catch the exception.
-        try {
-            for (int i = 0, ii = this.venue.getSocial().size(); i < ii; i++) {
-                final Social currentSocial = venue.getSocial().get(i);
+        //Based on the venue's social links, checks for the social button values and makes their buttons visible and clickable.
+        List<Social> socials = venue.getSocial();
+        if (socials != null) {
+            for (final Social currentSocial: socials) {
                 if (currentSocial.getType().trim().equals("facebook")) {
                     facebookView.setVisibility(View.VISIBLE);
                     facebookView.setOnClickListener(new OnClickListener() {
@@ -153,12 +166,7 @@ public class VenueProfileFragment extends Fragment implements OnMarkerClickListe
                     });
                 }
             }
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
         }
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
     }
 
     @Override
