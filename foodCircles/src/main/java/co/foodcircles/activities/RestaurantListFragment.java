@@ -219,14 +219,16 @@ public class RestaurantListFragment extends Fragment implements GoogleApiClient.
     }
 
     private void setWeeklyGoalData(Venue venue) {
-        ProgressBar mPbWeeklyGoal = (ProgressBar) getActivity().findViewById(R.id.pb_weekly_goal);
-        mPbWeeklyGoal.setProgress(venue.getPeopleAided());
-        mPbWeeklyGoal.setMax(venue.getWeeklyGoal());
-        TextView mTvKidsAidedAmount = (TextView) getActivity().findViewById(R.id.tv_amount_kids_aided);
-        mTvKidsAidedAmount.setText(String.format("%d", venue.getPeopleAided()));
-        String weeklyGoal = getString(R.string.number_meals, venue.getWeeklyGoal());
-        TextView mTvMealsWeeklyGoal = (TextView) getActivity().findViewById(R.id.tv_meals_weekly_goal);
-        mTvMealsWeeklyGoal.setText(weeklyGoal);
+        if (getActivity() != null) {
+            ProgressBar mPbWeeklyGoal = (ProgressBar) getActivity().findViewById(R.id.pb_weekly_goal);
+            mPbWeeklyGoal.setProgress(venue.getPeopleAided());
+            mPbWeeklyGoal.setMax(venue.getWeeklyGoal());
+            TextView mTvKidsAidedAmount = (TextView) getActivity().findViewById(R.id.tv_amount_kids_aided);
+            mTvKidsAidedAmount.setText(String.format("%d", venue.getPeopleAided()));
+            String weeklyGoal = getString(R.string.number_meals, venue.getWeeklyGoal());
+            TextView mTvMealsWeeklyGoal = (TextView) getActivity().findViewById(R.id.tv_meals_weekly_goal);
+            mTvMealsWeeklyGoal.setText(weeklyGoal);
+        }
     }
 
     @Override
@@ -236,7 +238,7 @@ public class RestaurantListFragment extends Fragment implements GoogleApiClient.
         if (venues.size() > 0) {
             setWeeklyGoalData(venues.get(0));
             adapter.updateAdapter(venues);
-        } else {
+        } else if (getActivity() != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage("Sorry!  We can't find any deals in your area.  Email or call your favorite local restaurant with a conscience and invite them to join FoodCircles.net!").setTitle("No Restaurants!");
             builder.setPositiveButton("OK", new OnClickListener() {
@@ -251,15 +253,17 @@ public class RestaurantListFragment extends Fragment implements GoogleApiClient.
     @Override
     public void onUpdateVenuesFailed() {
         MP.track(mixpanel, "Restaurant List", "Failed to load venues");
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Could not load venues.").setTitle("Network Error");
-        builder.setPositiveButton("OK", new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                RestaurantListFragment.this.getActivity().finish();
-            }
-        });
-        progressDialog.dismiss();
-        builder.create().show();
+        if (getActivity() != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Could not load venues.").setTitle("Network Error");
+            builder.setPositiveButton("OK", new OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    RestaurantListFragment.this.getActivity().finish();
+                }
+            });
+            progressDialog.dismiss();
+            builder.create().show();
+        }
     }
 }

@@ -205,7 +205,6 @@ public class VenueItemFragment extends Fragment {
         Intent intent = new Intent(getActivity(), BuyOptionsActivity.class);
         intent.putExtra(RestaurantActivity.SELECTED_VENUE_KEY, venue);
         startActivity(intent);
-        app.addPoppableActivity(getActivity());
     }
 
     private void calculateDaysLeft(View v) {

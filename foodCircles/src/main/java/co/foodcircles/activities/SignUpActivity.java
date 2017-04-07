@@ -218,7 +218,6 @@ public class SignUpActivity extends FacebookLoginActivity {
                     startActivity(intent);
                     SignUpActivity.this.finish();
                     FoodCirclesApplication app = (FoodCirclesApplication) getApplicationContext();
-                    app.newTop();
                 }
             });
         } catch (final NetException2 e) {

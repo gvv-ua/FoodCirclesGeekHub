@@ -370,7 +370,6 @@ public class BuyFragment extends Fragment
                 app.needsRestart = true;
 
                 getActivity().finish();
-                app.newTop();
             } catch (JSONException e) {
                 Log.e("PaypalResult", "an extremely unlikely failure occurred: ", e);
             }

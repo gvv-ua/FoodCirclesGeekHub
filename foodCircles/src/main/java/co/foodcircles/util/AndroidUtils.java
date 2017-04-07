@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -119,18 +118,6 @@ public class AndroidUtils {
         SharedPreferences myPrefs = me.getSharedPreferences(name, me.MODE_PRIVATE);
         SharedPreferences.Editor e = myPrefs.edit();
         e.remove(fieldName).commit();
-    }
-
-    public static Location getLastBestLocation(Location locationGPS, Location locationNet) {
-        long GPSLocationTime = 0;
-        if (null != locationGPS) {
-            GPSLocationTime = locationGPS.getTime();
-        }
-        long NetLocationTime = 0;
-        if (null != locationNet) {
-            NetLocationTime = locationNet.getTime();
-        }
-        return (0 < GPSLocationTime - NetLocationTime) ? locationGPS : locationNet;
     }
 
     public static String safelyGetJsonString(JSONObject json, String string) {

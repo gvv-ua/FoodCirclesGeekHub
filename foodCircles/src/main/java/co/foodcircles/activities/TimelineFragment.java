@@ -119,11 +119,13 @@ public class TimelineFragment extends Fragment implements ReservationList.OnData
 
     @Override
     public void onUpdateVenuesSuccess() {
-        TextView tvKidsFed = (TextView) getActivity().findViewById(R.id.textViewKidFed);
-        tvKidsFed.setText(String.format("%d", ReservationList.getInstance().getTotalKidsFed()));
+        if (getActivity() != null) {
+            TextView tvKidsFed = (TextView) getActivity().findViewById(R.id.textViewKidFed);
+            tvKidsFed.setText(String.format("%d", ReservationList.getInstance().getTotalKidsFed()));
 
-        if (ReservationList.getInstance().getReservations().size() == 0) {
-            (getActivity().findViewById(R.id.noPurchases)).setVisibility(View.VISIBLE);
+            if (ReservationList.getInstance().getReservations().size() == 0) {
+                (getActivity().findViewById(R.id.noPurchases)).setVisibility(View.VISIBLE);
+            }
         }
         adapter.updateAdapter(ReservationList.getInstance().getReservations());
     }

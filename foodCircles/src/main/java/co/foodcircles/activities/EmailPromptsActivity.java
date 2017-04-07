@@ -59,7 +59,6 @@ public class EmailPromptsActivity extends Activity {
         System.out.println("TID :" + twit_UID);
 
         FoodCirclesApplication app = (FoodCirclesApplication) getApplicationContext();
-        app.addPoppableActivity(this);
 
         TextView copyText = (TextView) findViewById(R.id.textViewCopy);
         Spannable spannable = new SpannableString(
