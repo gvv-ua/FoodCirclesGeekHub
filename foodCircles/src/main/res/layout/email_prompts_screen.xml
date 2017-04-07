@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/background" >
 
-    <include layout="@layout/background_shine_strip" />
+    <!--<include layout="@layout/background_shine_strip" />-->
 
     <LinearLayout
         android:id="@+id/root"
