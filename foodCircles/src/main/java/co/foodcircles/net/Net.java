@@ -159,17 +159,20 @@ public class Net {
     }
 
     private static String getSignUpErrorMsg(JSONObject json) throws JSONException {
-        JSONObject errorsJson = json.getJSONObject("errors");
+        if (json.has("errors")) {
+            JSONObject errorsJson = json.getJSONObject("errors");
+            JSONArray emailErrors = errorsJson.getJSONArray("email");
+            String emailErrMsg = emailErrors.getString(0);
 
-        JSONArray emailErrors = errorsJson.getJSONArray("email");
-        String emailErrMsg = emailErrors.getString(0);
+            JSONArray passwordErrors = errorsJson.getJSONArray("password");
+            String passwordErrMsg = passwordErrors.getString(0);
 
-        JSONArray passwordErrors = errorsJson.getJSONArray("password");
-        String passwordErrMsg = passwordErrors.getString(0);
+            String errMsgDescription = json.getString("description");
 
-        String errMsgDescription = json.getString("description");
-
-        return String.format("%s\nEmail %s\nPassword %s", errMsgDescription, emailErrMsg, passwordErrMsg);
+            return String.format("%s\nEmail %s\nPassword %s", errMsgDescription, emailErrMsg, passwordErrMsg);
+        } else {
+            return json.getString("description");
+        }
     }
 
     public static String twitterSignUp(String userEmail, String UID)

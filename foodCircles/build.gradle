@@ -45,8 +45,7 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
     compile 'com.google.android.gms:play-services:+'
     compile "com.mixpanel.android:mixpanel-android:4.+"
-    compile files('libs/PayPalAndroidSDK.jar')
-    //compile 'com.paypal.sdk:paypal-android-sdk:2.15.3'
+    compile 'com.paypal.sdk:paypal-android-sdk:2.15.3'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
         transitive = true;
     }

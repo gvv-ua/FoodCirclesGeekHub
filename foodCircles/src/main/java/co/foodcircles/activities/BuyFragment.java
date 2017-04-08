@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.paypal.android.sdk.payments.PayPalPayment;
+import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
@@ -55,6 +56,7 @@ import co.foodcircles.util.FoodCirclesUtils;
 
 public class BuyFragment extends Fragment
 {
+    private static final String TAG = "BuyFragment";
 	int CENTS_IN_DOLLAR = 100;
 	FoodCirclesApplication app;
 	private Venue venue;
@@ -72,6 +74,8 @@ public class BuyFragment extends Fragment
 	private boolean adjustedSlider = false;
 	private boolean selectedDifferentCharity = false;
 	MixpanelAPI mixpanel;
+
+	private static final int REQUEST_CODE_PAYMENT = 1;
 
 	@Override
 	public void onStart()
@@ -263,15 +267,11 @@ public class BuyFragment extends Fragment
 				app.purchasedOffer = selectedOffer.getTitle();
 				app.purchasedCost = priceValue;
 				app.purchasedGroupSize = selectedOffer.getMinDiners();
-				PayPalPayment voucherPayment = new PayPalPayment(new BigDecimal(priceValue), "USD", paypalOffer);
+				PayPalPayment voucherPayment = new PayPalPayment(new BigDecimal(priceValue), "USD", paypalOffer, PayPalPayment.PAYMENT_INTENT_SALE);
 				Intent intent = new Intent(getActivity(), PaymentActivity.class);
-				intent.putExtra(PaymentActivity.EXTRA_PAYPAL_ENVIRONMENT, PaymentActivity.ENVIRONMENT_PRODUCTION);
-				intent.putExtra(PaymentActivity.EXTRA_CLIENT_ID, "ATtEOxB-eX60pOi_fHSv3K2PvAX8LRme-eyngA9l6LRSTIr9SeJHtmpaJL4M");
-				intent.putExtra(PaymentActivity.EXTRA_RECEIVER_EMAIL, "jtkumario@gmail.com");
-				intent.putExtra(PaymentActivity.EXTRA_PAYER_ID, FoodCirclesUtils.getToken(getActivity()));
+				intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, BuyOptionsActivity.getConfig());
 				intent.putExtra(PaymentActivity.EXTRA_PAYMENT, voucherPayment);
-
-				startActivityForResult(intent, 0);
+				startActivityForResult(intent, REQUEST_CODE_PAYMENT);
 			}
 		});
 
@@ -338,43 +338,45 @@ public class BuyFragment extends Fragment
 	//Verify the PayPal sale and add the certificate to the user's account
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (data == null) return;
-            MP.track(mixpanel, "Successful Payment");
-            final PaymentConfirmation confirm = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
-            if (confirm == null) return;
-            //Server verification happens here
-            try {
-                JSONObject jsonRoot = confirm.toJSONObject();
-                if (jsonRoot == null) return;
-                JSONObject jsonProofOfPayment = jsonRoot.optJSONObject("proof_of_payment");
-                if (jsonProofOfPayment == null) return;
-                JSONObject jsonAdaptivePayment = jsonProofOfPayment.optJSONObject("adaptive_payment");
-                if (jsonAdaptivePayment == null) return;
-                String payKey = jsonAdaptivePayment.optString("pay_key", "");
-                String authToken = FoodCirclesUtils.getToken(getActivity());
-                Voucher results = null;
-                if (authToken != null && priceValue != 0 && selectedOffer != null && payKey != null && selectedCharity != null) {
-                    results = Net.verifyPayment(authToken, priceValue, selectedOffer.getId(), payKey, selectedCharity.getId());
-                } else {
-                    return;
+		if (resultCode == Activity.RESULT_OK) {
+			MP.track(mixpanel, "Successful Payment");
+			PaymentConfirmation confirm = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+			if (confirm != null) {
+                try {
+                    JSONObject jsonRoot = confirm.toJSONObject();
+                    if (jsonRoot == null) return;
+                    JSONObject jsonResponse = jsonRoot.optJSONObject("response");
+                    if (jsonResponse == null) return;
+                    String id = jsonResponse.optString("id", "");
+                    String authToken = FoodCirclesUtils.getToken(getActivity());
+                    Voucher results;
+                    if (authToken != null && priceValue != 0 && selectedOffer != null && id != null && selectedCharity != null) {
+                        results = Net.verifyPayment(authToken, priceValue, selectedOffer.getId(), id, selectedCharity.getId());
+                    } else {
+                        return;
+                    }
+                    app.newVoucher = results;
+                } catch (NetException2 e1) {
+                    Log.d(TAG, "NetException exception", e1);
                 }
-                app.newVoucher = results;
-            } catch (NetException2 e1) {
-                Log.d("PayPal", "NetException exception", e1);
+
+                try {
+                    Log.i(TAG, confirm.toJSONObject().toString(4));
+                    app.purchasedVoucher = true;
+                    app.needsRestart = true;
+
+                    getActivity().finish();
+                } catch (JSONException e) {
+                    Log.e(TAG, "an extremely unlikely failure occurred: ", e);
+                }
             }
-
-            try {
-                Log.i("paymentExample", confirm.toJSONObject().toString(4));
-                app.purchasedVoucher = true;
-                app.needsRestart = true;
-
-                getActivity().finish();
-            } catch (JSONException e) {
-                Log.e("PaypalResult", "an extremely unlikely failure occurred: ", e);
-            }
-        }
-
+		}
+		else if (resultCode == Activity.RESULT_CANCELED) {
+			Log.i("paymentExample", "The user canceled.");
+		}
+		else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
+			Log.i("paymentExample", "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+		}
     }
 
 	private void setPrices()
