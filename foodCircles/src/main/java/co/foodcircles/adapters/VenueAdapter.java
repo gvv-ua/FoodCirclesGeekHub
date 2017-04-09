@@ -1,6 +1,5 @@
 package co.foodcircles.adapters;
 
-import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,7 +25,6 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHol
     private LayoutInflater inflater;
     private List<Venue> items = new ArrayList<>();
     private final ItemClickListener clickListener;
-    private Context context;
 
     public VenueAdapter(List<Venue> items, ItemClickListener clickListener) {
         updateAdapter(items);
@@ -47,14 +45,13 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHol
         if (inflater == null) {
             inflater = LayoutInflater.from(parent.getContext());
         }
-        context = parent.getContext();
         return new VenueViewHolder(inflater.inflate(R.layout.polaroid, parent, false), clickListener);
     }
 
     @Override
     public void onBindViewHolder(VenueViewHolder holder, int position) {
         Venue venue = items.get(position);
-        holder.bind(venue, context);
+        holder.bind(venue);
     }
 
     @Override
@@ -94,14 +91,18 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHol
             clickListener.onItemClick(item);
         }
 
-        void bind(Venue item, Context context) {
+        void bind(Venue item) {
             this.item = item;
-            Glide.with(context).load(Net.HOST + item.getImageUrl()).into(logo);
+            Glide.with(itemView.getContext()).load(Net.HOST + item.getImageUrl()).into(logo);
             name.setText(item.getName());
             cuisine.setText(item.getFirstTag());
             distance.setText(item.getDistance());
             left.setText(String.format("%d", item.getVouchersAvailable()));
-            soldOut.setVisibility(item.checkEmpty());
+            if (item.getVouchersAvailable() > 0) {
+                soldOut.setVisibility(View.GONE);
+            } else {
+                soldOut.setVisibility(View.VISIBLE);
+            }
         }
     }
 

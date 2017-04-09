@@ -1,6 +1,5 @@
 package co.foodcircles.adapters;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,18 +22,15 @@ import co.foodcircles.util.FoodCirclesUtils;
  */
 
 public class TimelineFriendAdapter implements DelegateAdapter {
-    private Context context;
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
-        context = parent.getContext();
         return new ItemViewHolder(inflater.inflate(R.layout.timeline_row_friend, parent, false));
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, TimelineViewItem viewItem) {
         ItemViewHolder viewHolder = (ItemViewHolder) holder;
-        viewHolder.bind((TimelineFriendViewItem) viewItem, context);
+        viewHolder.bind((TimelineFriendViewItem) viewItem);
     }
 
     private static class ItemViewHolder extends RecyclerView.ViewHolder {
@@ -54,11 +50,11 @@ public class TimelineFriendAdapter implements DelegateAdapter {
             image = (ImageView) itemView.findViewById(R.id.imageViewFriend);
         }
 
-        private void bind(TimelineFriendViewItem item, Context context) {
+        private void bind(TimelineFriendViewItem item) {
             this.item = item;
             date.setText(FoodCirclesUtils.convertLongIntoStringDate(item.getItem().getDatePurchased()));
             venue.setText(item.getItem().getVenue().getName());
-            Glide.with(context).load(Net.HOST + item.getItem().getVenue().getImageUrl()).into(image);
+            Glide.with(itemView.getContext()).load(Net.HOST + item.getItem().getVenue().getImageUrl()).into(image);
         }
     }
 }

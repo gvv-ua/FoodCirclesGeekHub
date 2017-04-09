@@ -1,6 +1,7 @@
 package co.foodcircles.util;
 
 import android.location.Location;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -77,7 +78,7 @@ public class TimelineHelper {
 //            items.add(new TimelineHeaderViewItem(reservation));
 
         } catch (NetException e) {
-
+            Log.d("TimeLineHelper", e.getMessage());
         }
 
         return items;

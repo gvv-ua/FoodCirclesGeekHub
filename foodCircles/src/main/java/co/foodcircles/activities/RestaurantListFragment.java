@@ -49,23 +49,12 @@ public class RestaurantListFragment extends Fragment implements GoogleApiClient.
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10;
     private static final int PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 11;
     private static final String TAG = "RestaurantListFragment";
-    private static final String LOCATION_COORDINATES = "LocationCoordinates";
 
     private VenueAdapter adapter;
     private ProgressDialog progressDialog;
 
-    private FoodCirclesApplication app;
     private MixpanelAPI mixpanel;
-    private LocationCoordinate locationCoordinate;
     private GoogleApiClient googleApiClient;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            locationCoordinate = getArguments().getParcelable(LOCATION_COORDINATES);
-        }
-    }
 
     @Override
     public void onStart() {
@@ -104,7 +93,7 @@ public class RestaurantListFragment extends Fragment implements GoogleApiClient.
                 .build();
 
         FontSetter.overrideFonts(getActivity(), view);
-        app = (FoodCirclesApplication) getActivity().getApplicationContext();
+        FoodCirclesApplication app = (FoodCirclesApplication) getActivity().getApplicationContext();
 
         RecyclerView gridView = (RecyclerView) getActivity().findViewById(R.id.rvVenues);
         gridView.setLayoutManager(new GridLayoutManager(getActivity(), 2));

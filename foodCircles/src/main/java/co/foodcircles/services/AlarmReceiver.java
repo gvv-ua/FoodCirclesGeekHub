@@ -145,7 +145,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         SharedPreferences pref = context.getSharedPreferences(context.getResources().getString(R.string.preferences), Context.MODE_PRIVATE);
         Editor edit = pref.edit();
         edit.putLong(context.getResources().getString(R.string.last_notification), Calendar.getInstance().getTimeInMillis());
-        edit.commit();
+        edit.apply();
     }
 
     private long timeSinceLastNotification(Context context) {

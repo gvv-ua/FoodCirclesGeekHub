@@ -86,8 +86,6 @@ public class TwitterLogin {
                     mListener.onError("Failed opening authorization page");
                 } catch (NullPointerException e) {
                     e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
         };

@@ -29,7 +29,9 @@ import java.util.Calendar;
 import java.util.List;
 
 import co.foodcircles.R;
+import co.foodcircles.data.VenueList;
 import co.foodcircles.json.Reservation;
+import co.foodcircles.json.Venue;
 import co.foodcircles.net.Net;
 import co.foodcircles.util.AndroidUtils;
 import co.foodcircles.util.FontSetter;
@@ -166,7 +168,11 @@ public class ReceiptDialogFragment extends DialogFragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(),
                         VenueProfileActivity.class);
-                intent.putExtra(RestaurantActivity.SELECTED_VENUE_KEY, reservation.getVenue());
+                Venue venue = VenueList.getInstance().getById(reservation.getVenue().getId());
+                if (venue == null) {
+                    venue = reservation.getVenue();
+                }
+                intent.putExtra(RestaurantActivity.SELECTED_VENUE_KEY, venue);
                 startActivity(intent);
             }
         });

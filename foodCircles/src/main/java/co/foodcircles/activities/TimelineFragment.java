@@ -21,7 +21,6 @@ import co.foodcircles.adapters.TimelineAdapter;
 import co.foodcircles.data.ReservationList;
 import co.foodcircles.json.Reservation;
 import co.foodcircles.util.FontSetter;
-import co.foodcircles.util.FoodCirclesApplication;
 import co.foodcircles.util.FoodCirclesUtils;
 
 //import com.sromku.simple.fb.Permission;
@@ -32,7 +31,6 @@ import co.foodcircles.util.FoodCirclesUtils;
 
 public class TimelineFragment extends Fragment implements ReservationList.OnDataUpdateSuccessCallback, ReservationList.OnDataUpdateFailCallback{
     private TimelineAdapter adapter;
-    private FoodCirclesApplication app;
     private MixpanelAPI mixpanel;
 //    private SimpleFacebook mSimpleFacebook;
 //    private Feed feed;
@@ -53,7 +51,6 @@ public class TimelineFragment extends Fragment implements ReservationList.OnData
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        app = (FoodCirclesApplication) getActivity().getApplicationContext();
         return inflater.inflate(R.layout.timeline_list, null);
     }
 

@@ -53,11 +53,11 @@ public class TimelineHeaderAdapter implements DelegateAdapter {
 
         private void bind(TimelineHeaderViewItem item) {
             this.item = item;
-            int totalKidsFed = 0; //TODO: ????????
+            int totalKidsFed = 0;
             if (totalKidsFed == 1) {
-                childrenFed.setText(totalKidsFed + " child fed");
+                childrenFed.setText(String.format(itemView.getContext().getString(R.string.child_fed), totalKidsFed));
             } else {
-                childrenFed.setText(totalKidsFed + " children fed");
+                childrenFed.setText(String.format(itemView.getContext().getString(R.string.children_fed), totalKidsFed));
             }
         }
     }

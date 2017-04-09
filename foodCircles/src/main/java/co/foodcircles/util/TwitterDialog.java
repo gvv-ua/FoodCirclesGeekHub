@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Display;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -23,7 +25,7 @@ import co.foodcircles.util.TwitterLogin.TwDialogListener;
 
 
 public class TwitterDialog extends Dialog {
-
+    private static final String TAG = "TwitterDialog";
     private static final float[] DIMENSIONS_LANDSCAPE = {480, 280};
     private static final float[] DIMENSIONS_PORTRAIT = {300, 450};
     private static final FrameLayout.LayoutParams FILL = new FrameLayout.LayoutParams(
@@ -61,7 +63,7 @@ public class TwitterDialog extends Dialog {
         mContent = new LinearLayout(getContext());
         mContent.setOrientation(LinearLayout.VERTICAL);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Drawable icon = getContext().getResources().getDrawable(R.drawable.ic_stat_logo);
+        Drawable icon = ContextCompat.getDrawable(getContext(), R.drawable.ic_stat_logo);
         Display display = getWindow().getWindowManager().getDefaultDisplay();
         final float scale = getContext().getResources().getDisplayMetrics().density;
         @SuppressWarnings("deprecation")
@@ -111,7 +113,7 @@ public class TwitterDialog extends Dialog {
                 listener.onError(description);
                 TwitterDialog.this.dismiss();
             } catch (NullPointerException e) {
-            } catch (Exception e) {
+                Log.d(TAG, e.getMessage());
             }
         }
 

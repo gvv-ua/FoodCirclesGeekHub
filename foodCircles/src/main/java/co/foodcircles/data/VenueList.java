@@ -36,6 +36,15 @@ public class VenueList {
         return venues;
     }
 
+    public Venue getById(long id) {
+        for (Venue venue: venues) {
+            if (venue.getId() == id) {
+                return venue;
+            }
+        }
+        return null;
+    }
+
     public void updateData(final LocationCoordinate locationCoordinate, final OnDataUpdateSuccessCallback successCallback, final OnDataUpdateFailCallback failCallback) {
         new AsyncTask<Object, Void, Boolean>() {
 

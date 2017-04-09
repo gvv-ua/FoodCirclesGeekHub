@@ -1,11 +1,12 @@
 package co.foodcircles.util;
 
+import android.content.Context;
+import android.util.Log;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import android.content.Context;
 
 public class FoodCirclesUtils {
 	public static final String TAG = "foodcircles";
@@ -70,13 +71,13 @@ public class FoodCirclesUtils {
 	public static boolean isFacebookConnected(Context me) {
 		String isConected = AndroidUtils.getSharePreferences(me, TAG,
 				"isfacebookconnected");
-		return (isConected.equalsIgnoreCase("true")) ? true : false;
+		return (isConected.equalsIgnoreCase("true"));
 	}
 
 	public static boolean isTwitterConnected(Context me) {
 		String isConected = AndroidUtils.getSharePreferences(me, TAG,
 				"istwitterconnected");
-		return (isConected.equalsIgnoreCase("true")) ? true : false;
+		return (isConected.equalsIgnoreCase("true"));
 	}
 
 	public static String convertLongIntoStringDate(long datePurchased) {
@@ -86,17 +87,17 @@ public class FoodCirclesUtils {
 		Calendar c = Calendar.getInstance();
 		try {
 			c.setTime(sdf.parse(dt));
-		} catch (java.text.ParseException e) {}
+		} catch (java.text.ParseException e) {
+			Log.d(TAG, e.getMessage());
+		}
 		SimpleDateFormat sdf1 = new SimpleDateFormat("MM/dd");
-		String output = sdf1.format(c.getTime());
-		return output;
+		return sdf1.format(c.getTime());
 	}
 
 	public static String convertLongToFormattedDateString(long date,
 			String format) {
 		DateFormat formatter = new SimpleDateFormat(format);
-		String dt = formatter.format(convertLongToDate(date).getTime());
-		return dt;
+		return formatter.format(convertLongToDate(date).getTime());
 	}
 
 	public static Date convertLongToDate(long date) {

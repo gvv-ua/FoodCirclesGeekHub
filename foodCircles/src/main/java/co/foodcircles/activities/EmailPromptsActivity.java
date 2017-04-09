@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.AbsoluteSizeSpan;
@@ -95,7 +96,7 @@ public class EmailPromptsActivity extends Activity {
                         R.style.TextAppearanceLargeBold), countSpannable.length() - 24,
                 countSpannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         countSpannable.setSpan(
-                new ForegroundColorSpan(getResources().getColor(
+                new ForegroundColorSpan(ContextCompat.getColor(this,
                         R.color.dark_font)), 0, countSpannable.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         countSpannable.setSpan(new AbsoluteSizeSpan((int) size), 0,
@@ -110,7 +111,7 @@ public class EmailPromptsActivity extends Activity {
                         R.style.TextAppearanceLargeBold), 0, signinsucess.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         countSpannable1.setSpan(
-                new ForegroundColorSpan(getResources().getColor(
+                new ForegroundColorSpan(ContextCompat.getColor(this,
                         R.color.dark_font)), 0, countSpannable1.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         countSpannable1.setSpan(new AbsoluteSizeSpan((int) size), 0,

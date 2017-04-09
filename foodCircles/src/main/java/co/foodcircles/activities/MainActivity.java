@@ -29,7 +29,7 @@ public class MainActivity extends FragmentActivity {
     private FoodCirclesApplication app;
     //	SimpleFacebook mSimpleFacebook;
 
-    private TabPageIndicator indicator;
+
     private int currentTab = TAB_NEWS;
 
     @Override
@@ -40,7 +40,7 @@ public class MainActivity extends FragmentActivity {
 
         setContentView(R.layout.simple_tabs);
         app = (FoodCirclesApplication) getApplicationContext();
-        indicator = (TabPageIndicator) findViewById(R.id.indicator);
+        TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
         FragmentPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(adapter);

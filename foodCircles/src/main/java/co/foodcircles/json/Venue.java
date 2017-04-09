@@ -2,6 +2,7 @@ package co.foodcircles.json;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 
 import org.json.JSONArray;
@@ -10,10 +11,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import co.foodcircles.util.AndroidUtils;
 
 public class Venue implements Parcelable {
+    private final static String TAG = "Venue";
 	private long id;
 	private String name;
     private String slug;
@@ -97,7 +100,9 @@ public class Venue implements Parcelable {
 		{
 			try{
 				offers.add(new Offer(offersJson.getString(i)));
-			}catch(Exception e){ }
+			}catch(Exception e){
+                Log.d(TAG, e.getMessage());
+            }
 		}
 
 		socials = new ArrayList<>();
@@ -107,16 +112,21 @@ public class Venue implements Parcelable {
 			try{
 			socials.add(new Social(socialsJson.getString(i)));
 			}catch(Exception e){
+                Log.d(TAG, e.getMessage());
 			}
 		}
 		
 
 		try{
 			imageUrl = AndroidUtils.safelyGetJsonString(json,"timeline_image");
-		}catch(Exception e){}
+		}catch(Exception e){
+            Log.d(TAG, e.getMessage());
+        }
 		try{
 			largeImageUrl = AndroidUtils.safelyGetJsonString(json,"main_image");
-		}catch(Exception e){}
+		}catch(Exception e){
+            Log.d(TAG, e.getMessage());
+        }
 
 	}
 

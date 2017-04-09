@@ -18,7 +18,7 @@ import io.fabric.sdk.android.Fabric;
 
 public class SplashActivity extends Activity
 {
-	private int splashDelay = 1000;
+	private final static int splashDelay = 1000;
 
 	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState)

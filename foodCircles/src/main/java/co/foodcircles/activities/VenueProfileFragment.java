@@ -50,7 +50,9 @@ public class VenueProfileFragment extends Fragment implements OnMarkerClickListe
     public static VenueProfileFragment newInstance(Venue venue) {
         VenueProfileFragment fragment = new VenueProfileFragment();
         Bundle args = new Bundle();
-        args.putParcelable(RestaurantActivity.SELECTED_VENUE_KEY, venue);
+        if (venue != null) {
+            args.putParcelable(RestaurantActivity.SELECTED_VENUE_KEY, venue);
+        }
         fragment.setArguments(args);
         return fragment;
     }

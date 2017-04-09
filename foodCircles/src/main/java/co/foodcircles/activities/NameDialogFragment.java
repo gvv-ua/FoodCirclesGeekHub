@@ -56,7 +56,7 @@ public class NameDialogFragment extends DialogFragment
 							});
 
 						}
-					};
+					}
 				}.start();
 				NameDialogFragment.this.dismiss();
 			}

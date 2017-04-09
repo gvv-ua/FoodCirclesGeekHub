@@ -21,11 +21,6 @@ public class FoodCirclesApplication extends Application
 	private List<String> permissions = Arrays.asList("email", "public_profile");
 	
 	@Override
-	public void onCreate() {
-		super.onCreate();
-	}
-
-	@Override
 	protected void attachBaseContext(Context base) {
 		super.attachBaseContext(base);
 		MultiDex.install(this);

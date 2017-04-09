@@ -37,5 +37,8 @@
     <string name="hours_colon">Hours: %s</string>
     <string name="people_amount">%s people repurpose their Grand Rapids dining. Today, it\'s your turn.</string>
     <string name="cannot_received_venue_name">The venue name could not be recieved!</string>
+    <string name="child_fed">%d child fed</string>
+    <string name="children_fed">%d children fed</string>
+
 
 </resources>

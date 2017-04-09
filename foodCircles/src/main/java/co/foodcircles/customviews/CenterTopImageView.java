@@ -2,10 +2,10 @@ package co.foodcircles.customviews;
 
 import android.content.Context;
 import android.graphics.Matrix;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
-public class CenterTopImageView extends ImageView
+public class CenterTopImageView extends AppCompatImageView
 {
 
 	public CenterTopImageView(Context context)

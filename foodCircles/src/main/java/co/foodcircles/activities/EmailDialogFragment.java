@@ -57,7 +57,7 @@ public class EmailDialogFragment extends DialogFragment
 							});
 
 						}
-					};
+					}
 				}.start();
 			}
 		});

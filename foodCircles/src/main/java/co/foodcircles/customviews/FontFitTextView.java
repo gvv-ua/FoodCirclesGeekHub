@@ -1,11 +1,11 @@
 package co.foodcircles.customviews;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.widget.TextView;
 
-public class FontFitTextView extends TextView
+public class FontFitTextView extends AppCompatTextView
 {
 	private static final float THRESHOLD = 0.5f;
 

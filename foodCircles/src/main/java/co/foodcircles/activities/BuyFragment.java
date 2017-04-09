@@ -6,9 +6,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.AbsoluteSizeSpan;
@@ -57,8 +59,9 @@ import co.foodcircles.util.FoodCirclesUtils;
 
 public class BuyFragment extends Fragment {
     private static final String TAG = "BuyFragment";
-    int CENTS_IN_DOLLAR = 100;
-    FoodCirclesApplication app;
+    private final static int CENTS_IN_DOLLAR = 100;
+
+    private FoodCirclesApplication app;
     private Venue venue;
     private Offer selectedOffer;
     private Charity selectedCharity;
@@ -66,14 +69,13 @@ public class BuyFragment extends Fragment {
     private SeekBar seekBar;
     private TextView price;
     private TextView meals;
-    private Spinner donateTo;
     private TextView minPrice, medianPrice, maxPrice;
     private int priceValue;
     private int minPriceValue, medianPriceValue, maxPriceValue;
     private boolean selectedDifferentOffer = false;
     private boolean adjustedSlider = false;
     private boolean selectedDifferentCharity = false;
-    MixpanelAPI mixpanel;
+    private MixpanelAPI mixpanel;
 
     private static final int REQUEST_CODE_PAYMENT = 1;
 
@@ -143,7 +145,8 @@ public class BuyFragment extends Fragment {
         };
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_text, offersList) {
-            public View getView(int position, View convertView, ViewGroup parent) {
+            public @NonNull
+            View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
                 TextView tv = (TextView) v;
                 String str = tv.getText().toString();
@@ -153,7 +156,7 @@ public class BuyFragment extends Fragment {
                     Spannable spannable = new SpannableString(str);
                     float textSize = tv.getTextSize();
                     spannable.setSpan(new TextAppearanceSpan(getActivity(), R.style.TextAppearanceNormal), str.indexOf("("), str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.secondary_text)), str.indexOf("("), str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    spannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getActivity(), R.color.secondary_text)), str.indexOf("("), str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     spannable.setSpan(new AbsoluteSizeSpan((int) textSize), str.indexOf("("), str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     tv.setText(spannable);
                 }
@@ -185,9 +188,9 @@ public class BuyFragment extends Fragment {
             }
         });
 
-        donateTo = (Spinner) view.findViewById(R.id.spinnerDonateTo);
+        Spinner donateTo = (Spinner) view.findViewById(R.id.spinnerDonateTo);
         @SuppressWarnings("serial")
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(), R.layout.spinner_text, new ArrayList<String>() {
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getActivity(), R.layout.spinner_text, new ArrayList<String>() {
             {
                 for (Charity charity : CharityList.getInstance().getCharities())
                     add(charity.getName());

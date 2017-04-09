@@ -8,8 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.EditText;
@@ -50,7 +48,6 @@ public class AndroidUtils {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
                 listener.onOk(value);
-                return;
             }
         });
 
@@ -59,7 +56,6 @@ public class AndroidUtils {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 listener.onCancel();
-                return;
             }
         });
         builder.create().show();
@@ -109,7 +105,7 @@ public class AndroidUtils {
             Log.i("Saving", name + " & " + value);
             SharedPreferences myPrefs = me.getSharedPreferences(name, Context.MODE_PRIVATE);
             SharedPreferences.Editor e = myPrefs.edit();
-            e.putString(fieldName, value).commit();
+            e.putString(fieldName, value).apply();
         }
     }
 
@@ -117,7 +113,7 @@ public class AndroidUtils {
         @SuppressWarnings("static-access")
         SharedPreferences myPrefs = me.getSharedPreferences(name, me.MODE_PRIVATE);
         SharedPreferences.Editor e = myPrefs.edit();
-        e.remove(fieldName).commit();
+        e.remove(fieldName).apply();
     }
 
     public static String safelyGetJsonString(JSONObject json, String string) {
@@ -150,22 +146,6 @@ public class AndroidUtils {
         } catch (JSONException e) {
             return 0;
         }
-    }
-
-    public static boolean haveNetworkConnection(Context context) {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
     }
 
     @SuppressWarnings("unused")

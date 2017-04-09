@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -217,7 +218,7 @@ public class VenueItemFragment extends Fragment {
         LinearLayout llDaysKeftDots = (LinearLayout) v.findViewById(R.id.ll_days_left_dots);
         for (int i = 0; i < Calendar.SATURDAY - daysLeftUntilSaturday; i++) {
             View dot = llDaysKeftDots.getChildAt(i);
-            dot.setBackground(getResources().getDrawable(R.drawable.days_left_white));
+            dot.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.days_left_white));
         }
     }
 }
