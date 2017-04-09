@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import co.foodcircles.json.Charity;
 import co.foodcircles.json.Venue;
 import co.foodcircles.net.Net;
 import co.foodcircles.util.LocationCoordinate;
@@ -21,7 +20,6 @@ public class VenueList {
     private final static String TAG = "VenueList";
     private static VenueList venueList;
     private final List<Venue> venues;
-    private final List<Charity> charities;
 
     public static VenueList getInstance() {
         if (venueList == null) {
@@ -32,15 +30,10 @@ public class VenueList {
 
     private VenueList() {
         venues = new ArrayList<>();
-        charities = new ArrayList<>();
     }
 
     public List<Venue> getVenues() {
         return venues;
-    }
-
-    public List<Charity> getCharities() {
-        return charities;
     }
 
     public void updateData(final LocationCoordinate locationCoordinate, final OnDataUpdateSuccessCallback successCallback, final OnDataUpdateFailCallback failCallback) {
@@ -50,7 +43,6 @@ public class VenueList {
                 try {
                     venues.clear();
                     venues.addAll(Net.getVenues(locationCoordinate));
-                    charities.addAll(Net.getCharities());
                     return true;
                 } catch (Exception e) {
                     Log.v(TAG, "Error loading venues", e);

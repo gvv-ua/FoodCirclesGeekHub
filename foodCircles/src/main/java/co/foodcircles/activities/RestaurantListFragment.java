@@ -32,6 +32,7 @@ import java.util.List;
 
 import co.foodcircles.R;
 import co.foodcircles.adapters.VenueAdapter;
+import co.foodcircles.data.CharityList;
 import co.foodcircles.data.VenueList;
 import co.foodcircles.json.Venue;
 import co.foodcircles.util.FontSetter;
@@ -151,6 +152,9 @@ public class RestaurantListFragment extends Fragment implements GoogleApiClient.
 
     private void updateVenues(final LocationCoordinate locationCoordinate) {
         VenueList.getInstance().updateData(locationCoordinate, this, this);
+        if (CharityList.getInstance().getCharities().isEmpty()) {
+            CharityList.getInstance().updateData();
+        }
     }
 
     @Override

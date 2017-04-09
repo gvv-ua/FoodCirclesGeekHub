@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.foodcircles.R;
-import co.foodcircles.data.VenueList;
+import co.foodcircles.data.CharityList;
 import co.foodcircles.exception.NetException2;
 import co.foodcircles.json.Charity;
 import co.foodcircles.json.Offer;
@@ -130,7 +130,7 @@ public class BuyFragment extends Fragment {
         }
         final List<Offer> offers = venue.getOffers();
         selectedOffer = offers.get(0);
-        selectedCharity = VenueList.getInstance().getCharities().get(0);
+        selectedCharity = CharityList.getInstance().getCharities().get(0);
 
         offerSpinner = (Spinner) view.findViewById(R.id.spinnerNumFriends);
         @SuppressWarnings("serial")
@@ -189,7 +189,7 @@ public class BuyFragment extends Fragment {
         @SuppressWarnings("serial")
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(), R.layout.spinner_text, new ArrayList<String>() {
             {
-                for (Charity charity : VenueList.getInstance().getCharities())
+                for (Charity charity : CharityList.getInstance().getCharities())
                     add(charity.getName());
             }
         });
@@ -199,7 +199,7 @@ public class BuyFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 selectedDifferentCharity = true;
-                selectedCharity = VenueList.getInstance().getCharities().get(position);
+                selectedCharity = CharityList.getInstance().getCharities().get(position);
             }
 
             @Override
