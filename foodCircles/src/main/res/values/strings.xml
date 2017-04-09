@@ -35,5 +35,6 @@
     <string name="invite_friends">Invite Friends</string>
     <string name="check_timeline_for_code">Check timeline for code</string>
     <string name="hours_colon">Hours: %s</string>
+    <string name="people_amount">%s people repurpose their Grand Rapids dining. Today, it\'s your turn.</string>
 
 </resources>

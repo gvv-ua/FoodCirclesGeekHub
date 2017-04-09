@@ -59,8 +59,8 @@ public class VenueList {
             }
 
             protected void onPostExecute(Boolean success) {
-                Collections.sort(venues, new SortListByDistance());
                 if (success) {
+                    Collections.sort(venues, new SortListByDistance());
                     successCallback.onUpdateVenuesSuccess();
                 } else {
                     failCallback.onUpdateVenuesFailed();

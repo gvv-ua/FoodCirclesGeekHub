@@ -7,12 +7,10 @@ import android.support.multidex.MultiDex;
 import java.util.Arrays;
 import java.util.List;
 
-import co.foodcircles.json.Venue;
 import co.foodcircles.json.Voucher;
 
 public class FoodCirclesApplication extends Application
 {
-	public Venue selectedVenue;
 	public Voucher newVoucher;
 	public String purchasedOffer;
 	public int purchasedCost;
@@ -20,7 +18,7 @@ public class FoodCirclesApplication extends Application
 	public boolean purchasedVoucher = false;
 	public boolean needsRestart = false;
 
-	private List permissions = Arrays.asList("email", "public_profile");
+	private List<String> permissions = Arrays.asList("email", "public_profile");
 	
 	@Override
 	public void onCreate() {
@@ -33,7 +31,7 @@ public class FoodCirclesApplication extends Application
 		MultiDex.install(this);
 	}
 
-	public List getPermissions() {
+	public List<String> getPermissions() {
 		return permissions;
 	}
 }

@@ -27,7 +27,6 @@ import okhttp3.Response;
 public class Net {
     private static final String TAG = Net.class.getSimpleName();
 
-    //public static final String HOST = "http://staging.foodcircles.net";
     public static final String HOST = "http://joinfoodcircles.org";
     //public static final String HOST = "https://foodcircles.gq";
     private static final String API_URL = "/api";
@@ -339,7 +338,6 @@ public class Net {
 //    }
 
     public static boolean markReservationAsUsed(String id) {
-        //String response = postRedeemed(id.trim());
         String response = getOk(MARK_REDEEMED + id.trim());
         return response.equals("success");
     }

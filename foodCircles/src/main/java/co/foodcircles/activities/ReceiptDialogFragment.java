@@ -103,13 +103,13 @@ public class ReceiptDialogFragment extends DialogFragment {
 			} catch (Exception e) {
 			}
 			try {
-				textViewVenue.setText(app.selectedVenue.getName());
+				//textViewVenue.setText(app.selectedVenue.getName());
+				textViewVenue.setText(app.newVoucher.getVenue());
 			} catch (Exception e) {
+                textViewVenue.setText("The venue name could not be recieved!");
 				Log.d("", "The venue name could not be recieved!");
 			}
-			try {
-				textViewVenue.setText(app.selectedVenue.getName());
-			} catch (Exception e) {}
+
 			textViewDonated.setText("$" + app.purchasedCost + " donated");
 			if (app.purchasedCost == 1) {
 				textViewChildrenFed.setText("(" + app.purchasedCost

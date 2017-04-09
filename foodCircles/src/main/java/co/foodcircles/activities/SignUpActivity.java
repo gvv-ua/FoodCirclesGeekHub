@@ -4,7 +4,9 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.AbsoluteSizeSpan;
@@ -38,6 +40,7 @@ public class SignUpActivity extends FacebookLoginActivity {
     private EditText email;
     private EditText password;
     private MixpanelAPI mixpanel;
+    private String numPeopleString;
 
     @Override
     public void onStart() {
@@ -59,30 +62,7 @@ public class SignUpActivity extends FacebookLoginActivity {
         FontSetter.overrideFonts(this, findViewById(R.id.root));
 
         final FoodCirclesApplication app = (FoodCirclesApplication) getApplicationContext();
-        //app.addPoppableActivity(this);
-
-        TextView countText = (TextView) findViewById(R.id.textViewCount);
-        float size = countText.getTextSize();
-        final String numPeopleString;
-        String peopleAmount;
-        peopleAmount = Net.getMailChimp();
-
-        numPeopleString = peopleAmount;
-        Spannable countSpannable = new SpannableString(numPeopleString +
-                " people repurpose their Grand Rapids dining.\nToday, it\'s your turn.");
-        countSpannable.setSpan(new TextAppearanceSpan(this,
-                        R.style.TextAppearanceLargeBold), 0, numPeopleString.length(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        countSpannable.setSpan(new TextAppearanceSpan(this,
-                        R.style.TextAppearanceLargeBold), countSpannable.length() - 24,
-                countSpannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        countSpannable.setSpan(
-                new ForegroundColorSpan(getResources().getColor(
-                        R.color.dark_font)), 0, countSpannable.length(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        countSpannable.setSpan(new AbsoluteSizeSpan((int) size), 0,
-                countSpannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        countText.setText(countSpannable);
+        getPeopleAmount();
 
         email = (EditText) findViewById(R.id.editTextEmail);
         password = (EditText) findViewById(R.id.editTextPassword);
@@ -142,6 +122,37 @@ public class SignUpActivity extends FacebookLoginActivity {
             }
         });
         startupNotifications();
+    }
+
+    private void getPeopleAmount() {
+        AndroidUtils.showProgress(this);
+        new AsyncTask<Object, Void, String>() {
+            protected String doInBackground(Object... param) {
+                return Net.getMailChimp();
+            }
+
+            protected void onPostExecute(String peopleAmount) {
+                AndroidUtils.dismissProgress();
+                TextView countText = (TextView) findViewById(R.id.textViewCount);
+                float size = countText.getTextSize();
+
+                numPeopleString = peopleAmount;
+                Spannable countSpannable = new SpannableString(String.format(getString(R.string.people_amount), numPeopleString));
+
+                countSpannable.setSpan(new TextAppearanceSpan(SignUpActivity.this,
+                                R.style.TextAppearanceLargeBold), 0, numPeopleString.length(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                countSpannable.setSpan(new TextAppearanceSpan(SignUpActivity.this,
+                                R.style.TextAppearanceLargeBold), countSpannable.length() - 24,
+                        countSpannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                countSpannable.setSpan(
+                        new ForegroundColorSpan(ContextCompat.getColor(SignUpActivity.this, R.color.dark_font)), 0, countSpannable.length(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                countSpannable.setSpan(new AbsoluteSizeSpan((int) size), 0,
+                        countSpannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                countText.setText(countSpannable);
+            }
+        }.execute();
     }
 
     private void signUp(final String email, final String password) {
@@ -217,7 +228,6 @@ public class SignUpActivity extends FacebookLoginActivity {
                     intent.putExtra(MainActivity.CURRENT_TAB, MainActivity.TAB_RESTAURANTS);
                     startActivity(intent);
                     SignUpActivity.this.finish();
-                    FoodCirclesApplication app = (FoodCirclesApplication) getApplicationContext();
                 }
             });
         } catch (final NetException2 e) {
