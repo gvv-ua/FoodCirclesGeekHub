@@ -7,9 +7,9 @@ android {
 
     defaultConfig {
         applicationId "co.foodcircles"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 25
-        multiDexEnabled true
+        multiDexEnabled false
     }
 
     signingConfigs {
@@ -25,6 +25,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -36,6 +37,7 @@ repositories {
 
 ext {
     supportLibraryVersion = '25.3.0'
+    playServicesVersion = '10.2.1'
 }
 
 dependencies {
@@ -43,7 +45,8 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.+'
     compile "com.android.support:gridlayout-v7:$supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
-    compile 'com.google.android.gms:play-services:+'
+    compile "com.google.android.gms:play-services-location:$playServicesVersion"
+    compile "com.google.android.gms:play-services-maps:$playServicesVersion"
     compile "com.mixpanel.android:mixpanel-android:4.+"
     compile 'com.paypal.sdk:paypal-android-sdk:2.15.3'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
