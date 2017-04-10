@@ -252,7 +252,11 @@ public class BuyFragment extends Fragment {
                     MP.track(mixpanel, "Buying Voucher", "Price", "Between Regular and Double Price");
                 else MP.track(mixpanel, "Buying Voucher", "Price", "Double Price");
 
-                String paypalOffer = (selectedOffer.getTitle() + " from " + venue.getName()).substring(0, 22);
+
+                String paypalOffer = selectedOffer.getTitle() + " from " + venue.getName();
+                if (paypalOffer.length() > 22) {
+                    paypalOffer = paypalOffer.substring(0, 22);
+                }
                 paypalOffer = (paypalOffer + "...");
                 app.purchasedOffer = selectedOffer.getTitle();
                 app.purchasedCost = priceValue;
