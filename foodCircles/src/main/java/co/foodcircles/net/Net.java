@@ -213,7 +213,8 @@ public class Net {
             json = new JSONObject(html);
             if (json.getBoolean("error")) {
                 n.setMessage(json.getString("description"));
-                return json.getString("description");
+                //return json.getString("description");
+                return "error";
             }
             return json.getString("auth_token");
         } catch (JSONException e) {

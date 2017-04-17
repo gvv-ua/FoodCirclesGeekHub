@@ -36,10 +36,9 @@ public class TwitterLogin {
                 try {
                     onCompleteCalled = false;
                     ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-                    configurationBuilder
-                            .setOAuthConsumerKey(Const.CONSUMER_KEY);
-                    configurationBuilder
-                            .setOAuthConsumerSecret(Const.CONSUMER_SECRET);
+                    configurationBuilder.setOAuthConsumerKey(Const.CONSUMER_KEY);
+                    configurationBuilder.setOAuthConsumerSecret(Const.CONSUMER_SECRET);
+                    configurationBuilder.setIncludeEmailEnabled(true);
                     Configuration configuration = configurationBuilder.build();
                     twitter = new TwitterFactory(configuration).getInstance();
                     requestToken = twitter.getOAuthRequestToken(Const.CALLBACK_URL);
@@ -103,10 +102,11 @@ public class TwitterLogin {
                             .getQueryParameter(Const.IEXTRA_OAUTH_VERIFIER);
                     try {
                         AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, verifier);
+//                        User user = twitter.verifyCredentials();
                         String s = String.valueOf(accessToken.getUserId());
                         final String token = Net.twittersignIn(s);
-                        if (FoodCirclesUtils.getEmail(context).isEmpty()) {
-
+                        //if (FoodCirclesUtils.getEmail(context).isEmpty()) {
+                        if (token.equals("error")) {
                             Intent in = new Intent(context, EmailPromptsActivity.class);
                             in.putExtra("UID", accessToken.getUserId());
                             in.putExtra("peopleNumber", mNumberOfPeople);
