@@ -42,6 +42,9 @@ public class Net {
     //public static String logo = "https://foodcircles.org/media/BAhbBlsHOgZmSSIkMjAxMy8wOC8yMC8xNl81Nl8xMV84MzNfRkFRLnBuZwY6BkVU";
     public static String logo = "http://joinfoodcircles.org/media/W1siZiIsIjIwMTYvMTIvMTMvMDJfNTdfMzBfNjY3X2dlbmVyb3NpdHlfd2ViLnBuZyJdXQ";
 
+    public static String FACEBOOK_URL = "https://www.facebook.com/FoodCircles";
+    public static String FACEBOOK_PAGE_ID = "179227878796116";
+
     private static final OkHttpClient client = new OkHttpClient();
 
     private static String postOk(String path, RequestBody params) {

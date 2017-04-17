@@ -1,7 +1,7 @@
 package co.foodcircles.activities;
 
-import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +22,9 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import co.foodcircles.R;
 import co.foodcircles.util.FontSetter;
 import co.foodcircles.util.FoodCirclesUtils;
+
+import static co.foodcircles.net.Net.FACEBOOK_PAGE_ID;
+import static co.foodcircles.net.Net.FACEBOOK_URL;
 
 public class AccountOptionsFragment extends Fragment
 {
@@ -112,7 +115,10 @@ public class AccountOptionsFragment extends Fragment
 
 			@Override
 			public void onClick(View v) {
-				getOpenFacebookIntent(v.getContext());
+				Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
+				String facebookUrl = getFacebookPageURL();
+				facebookIntent.setData(Uri.parse(facebookUrl));
+				startActivity(facebookIntent);
 			}
 			
 		});
@@ -152,12 +158,17 @@ public class AccountOptionsFragment extends Fragment
 		return view;
 	}
 	
-	public static Intent getOpenFacebookIntent(Context context) {
-		   try {
-		    context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
-		    return new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/<id_here>"));
-		   } catch (Exception e) {
-		    return new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/<user_name_here>"));
-		   }
+	public String getFacebookPageURL() {
+		PackageManager packageManager = getActivity().getPackageManager();
+		try {
+			int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
+			if (versionCode >= 3002850) {
+				return "fb://facewebmodal/f?href=" + FACEBOOK_URL;
+			} else {
+				return "fb://page/" + FACEBOOK_PAGE_ID;
+			}
+		} catch (PackageManager.NameNotFoundException e) {
+			return FACEBOOK_URL;
 		}
+	}
 }
