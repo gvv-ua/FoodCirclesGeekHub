@@ -1,8 +1,6 @@
 package co.foodcircles.util;
 
 import android.app.Application;
-import android.content.Context;
-import android.support.multidex.MultiDex;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,14 +17,32 @@ public class FoodCirclesApplication extends Application
 	public boolean needsRestart = false;
 
 	private List<String> permissions = Arrays.asList("email", "public_profile");
-	
-	@Override
-	protected void attachBaseContext(Context base) {
-		super.attachBaseContext(base);
-		MultiDex.install(this);
-	}
 
 	public List<String> getPermissions() {
 		return permissions;
+	}
+
+	public Voucher getNewVoucher() {
+		return newVoucher;
+	}
+
+	public String getPurchasedOffer() {
+		return purchasedOffer;
+	}
+
+	public int getPurchasedCost() {
+		return purchasedCost;
+	}
+
+	public int getPurchasedGroupSize() {
+		return purchasedGroupSize;
+	}
+
+	public boolean isPurchasedVoucher() {
+		return purchasedVoucher;
+	}
+
+	public boolean isNeedsRestart() {
+		return needsRestart;
 	}
 }
