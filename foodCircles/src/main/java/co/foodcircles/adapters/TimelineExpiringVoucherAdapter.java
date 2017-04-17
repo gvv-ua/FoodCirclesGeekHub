@@ -61,11 +61,7 @@ public class TimelineExpiringVoucherAdapter implements DelegateAdapter {
             date.setText(FoodCirclesUtils.convertLongIntoStringDate(item.getItem().getStartsExpiring().getTime()));
             venue.setText(item.getItem().getVenue().getName());
             int kidsFed = item.getItem().getOffer().getChildrenFed();
-            if (kidsFed == 1) {
-                childrenFed.setText(String.format(itemView.getContext().getString(R.string.child_fed), kidsFed));
-            } else {
-                childrenFed.setText(String.format(itemView.getContext().getString(R.string.children_fed), kidsFed));
-            }
+            childrenFed.setText(String.format(itemView.getContext().getResources().getQuantityString(R.plurals.children_fed, kidsFed), kidsFed));
         }
     }
 }

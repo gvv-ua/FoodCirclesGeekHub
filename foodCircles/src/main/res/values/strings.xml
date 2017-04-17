@@ -39,8 +39,14 @@
     <string name="hours_colon">Hours: %s</string>
     <string name="people_amount">%s people repurpose their Grand Rapids dining. Today, it\'s your turn.</string>
     <string name="cannot_received_venue_name">The venue name could not be recieved!</string>
-    <string name="child_fed">%d child fed</string>
-    <string name="children_fed">%d children fed</string>
+    <plurals name="children_fed">
+        <item quantity="one">%d child fed</item>
+        <item quantity="other">%d children fed</item>
+    </plurals>
 
+    <string name="usd_donated">$ %d donated</string>
+    <string name="min_group_diners">min. group %d.</string>
+    <string name="reservation_feed_msg">I\'ve fed %1$d hungry %1$s simply by eating at %1$s.</string>
+    <!--<string name="reservation_feed_msg">Ive fed %1$d %2$s</string>-->
 
 </resources>

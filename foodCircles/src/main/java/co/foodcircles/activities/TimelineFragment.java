@@ -20,20 +20,14 @@ import co.foodcircles.R;
 import co.foodcircles.adapters.TimelineAdapter;
 import co.foodcircles.data.ReservationList;
 import co.foodcircles.json.Reservation;
+import co.foodcircles.util.FacebookShare;
 import co.foodcircles.util.FontSetter;
 import co.foodcircles.util.FoodCirclesUtils;
-
-//import com.sromku.simple.fb.Permission;
-//import com.sromku.simple.fb.SimpleFacebook;
-//import com.sromku.simple.fb.entities.Feed;
-//import com.sromku.simple.fb.listeners.OnLoginListener;
-//import com.sromku.simple.fb.listeners.OnPublishListener;
 
 public class TimelineFragment extends Fragment implements ReservationList.OnDataUpdateSuccessCallback, ReservationList.OnDataUpdateFailCallback{
     private TimelineAdapter adapter;
     private MixpanelAPI mixpanel;
-//    private SimpleFacebook mSimpleFacebook;
-//    private Feed feed;
+    private FacebookShare facebookShare;
 
     @Override
     public void onStart() {
@@ -58,6 +52,7 @@ public class TimelineFragment extends Fragment implements ReservationList.OnData
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FontSetter.overrideFonts(getActivity(), view);
+        facebookShare = (FacebookShare) getActivity();
         final String token = FoodCirclesUtils.getToken(getActivity());
         adapter = new TimelineAdapter(ReservationList.getInstance().getReservations(), new TimelineAdapter.ItemClickListener() {
             @Override
@@ -97,17 +92,7 @@ public class TimelineFragment extends Fragment implements ReservationList.OnData
         inviteFriends.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-//				feed = new Feed.Builder()
-//				.setMessage("Try FoodCircles!")
-//				.setName("Savings with a Conscience!")
-//				.setCaption("Local restaurants, a $1 dish, and $1 donated to feed a hungry child.")
-//				.setDescription("#bofo: http://www.joinfoodcircles.org @foodcircles ")
-//				.setPicture(Net.logo).setLink("http://www.joinfoodcircles.org").build();
-//				if (mSimpleFacebook.isLogin()){
-//					mSimpleFacebook.publish(feed, true, onPublishListener);
-//				} else {
-//					mSimpleFacebook.login(mOnLoginListener);
-//				}
+                facebookShare.shareOnFacebook("Savings with a Conscience! Local restaurants, a $1 dish, and $1 donated to feed a hungry child. #bofo: http://www.joinfoodcircles.org @foodcircles");
             }
         });
 
@@ -130,54 +115,6 @@ public class TimelineFragment extends Fragment implements ReservationList.OnData
     @Override
     public void onUpdateVenuesFailed() {
         MP.track(mixpanel, "Restaurant List", "Failed to load venues");
-        //this means the list is empty!  If you'd like to display
-        //any sort of indicator, here would be the place to do it.
     }
 
-
-//	private OnLoginListener mOnLoginListener = new OnLoginListener() {
-//		@Override
-//		public void onFail(String reason) {
-//			Toast.makeText(getActivity().getBaseContext(), "Facebook Login Failed:" + reason, Toast.LENGTH_SHORT).show();
-//		}
-//
-//		@Override
-//		public void onException(Throwable throwable) {
-//			Toast.makeText(getActivity().getBaseContext(), "Whoops- we've encountered a problem!", Toast.LENGTH_SHORT).show();
-//			throwable.printStackTrace();
-//		}
-//
-//		@Override
-//		public void onThinking() {
-//		}
-//
-//		@Override
-//		public void onLogin() {
-//			mSimpleFacebook.publish(feed, true, onPublishListener);
-//		}
-//
-//		@Override
-//		public void onNotAcceptingPermissions(Permission.Type type) {
-//			Toast.makeText(getActivity().getBaseContext(),"Facebook permissions cancelled!", Toast.LENGTH_SHORT).show();
-//		}
-//	};
-//
-//	private OnPublishListener onPublishListener = new OnPublishListener() {
-//		@Override
-//		public void onFail(String reason) {
-//			Toast.makeText(getActivity().getBaseContext(),"Whoops! The post didn't go through!", Toast.LENGTH_SHORT).show();
-//		}
-//		@Override
-//		public void onException(Throwable throwable) {
-//			Toast.makeText(getActivity().getBaseContext(),"Whoops! The post didn't go through!", Toast.LENGTH_SHORT).show();
-//		}
-//		@Override
-//		public void onThinking() {
-//		}
-//
-//		@Override
-//		public void onComplete(String postId) {
-//			Toast.makeText(getActivity().getBaseContext(),"Thanks for sharing the word!", Toast.LENGTH_SHORT).show();
-//		}
-//	};
 }

@@ -40,6 +40,7 @@ public class Net {
     private static final String VENUES_UNSUBSCRIBE = "/venues/%s/unsubscribe?auth_token=%s";
     private static final String VENUES_IS_SUBSCRIBED = "/venues/%s/subscribed.json?auth_token=%s";
     //public static String logo = "https://foodcircles.org/media/BAhbBlsHOgZmSSIkMjAxMy8wOC8yMC8xNl81Nl8xMV84MzNfRkFRLnBuZwY6BkVU";
+    public static String logo = "http://joinfoodcircles.org/media/W1siZiIsIjIwMTYvMTIvMTMvMDJfNTdfMzBfNjY3X2dlbmVyb3NpdHlfd2ViLnBuZyJdXQ";
 
     private static final OkHttpClient client = new OkHttpClient();
 

@@ -14,7 +14,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,18 +29,14 @@ import java.util.List;
 
 import co.foodcircles.R;
 import co.foodcircles.data.VenueList;
+import co.foodcircles.json.Offer;
 import co.foodcircles.json.Reservation;
 import co.foodcircles.json.Venue;
 import co.foodcircles.net.Net;
 import co.foodcircles.util.AndroidUtils;
+import co.foodcircles.util.FacebookShare;
 import co.foodcircles.util.FontSetter;
 import co.foodcircles.util.FoodCirclesApplication;
-
-//import com.sromku.simple.fb.Permission;
-//import com.sromku.simple.fb.SimpleFacebook;
-//import com.sromku.simple.fb.entities.Feed;
-//import com.sromku.simple.fb.listeners.OnLoginListener;
-//import com.sromku.simple.fb.listeners.OnPublishListener;
 
 public class ReceiptDialogFragment extends DialogFragment {
     private static final String TAG = "ReceiptDialogFragment";
@@ -49,9 +44,12 @@ public class ReceiptDialogFragment extends DialogFragment {
     private FoodCirclesApplication app;
     private TextView textViewCode;
     private Reservation reservation;
-//	private SimpleFacebook mSimpleFacebook;
-//	private Feed feed;
-
+    private TextView textViewItemName;
+    private TextView textViewVenue;
+    private TextView textViewDonated;
+    private TextView textViewChildrenFed;
+    private TextView textViewSecondLine;
+    private FacebookShare facebookShare;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,7 +59,6 @@ public class ReceiptDialogFragment extends DialogFragment {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -70,89 +67,28 @@ public class ReceiptDialogFragment extends DialogFragment {
         this.getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getDialog().getWindow().setBackgroundDrawable(
                 new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        View v = inflater.inflate(R.layout.voucher_receipt, container, false);
-        FontSetter.overrideFonts(getActivity(), v.findViewById(R.id.root));
-        app = (FoodCirclesApplication) getActivity().getApplicationContext();
-        View teeth = v.findViewById(R.id.viewTiledTeeth);
-        textViewCode = (TextView) v.findViewById(R.id.textViewCode);
-        TextView textViewItemName = (TextView) v.findViewById(R.id.textViewItemName);
-        TextView textViewVenue = (TextView) v.findViewById(R.id.textViewVenue);
-        TextView textViewDonated = (TextView) v.findViewById(R.id.textViewDonated);
-        TextView textViewChildrenFed = (TextView) v.findViewById(R.id.textViewChildrenFed);
-        TextView textViewSecondLine = (TextView) v.findViewById(R.id.textViewMinGroup);
-        // Display the purchased voucher
-        Calendar date = Calendar.getInstance();
-        date.add(Calendar.MONTH, 1);
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-        String formattedDate = formatter.format(date.getTime());
-        String minGroupString = "";
-        if ((reservation != null) && (reservation.getOffer().getMinDiners() > 0)) {
-            minGroupString = ("min. group " + reservation.getOffer().getMinDiners() + ". ");
-        }
+        return inflater.inflate(R.layout.voucher_receipt, container, false);
+    }
 
-        textViewSecondLine.setText(minGroupString + "use by "
-                + formattedDate);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        facebookShare = (FacebookShare) getActivity();
+        FontSetter.overrideFonts(getActivity(), view.findViewById(R.id.root));
+        app = (FoodCirclesApplication) getActivity().getApplicationContext();
+        View teeth = view.findViewById(R.id.viewTiledTeeth);
+        textViewCode = (TextView) view.findViewById(R.id.textViewCode);
+        textViewItemName = (TextView) view.findViewById(R.id.textViewItemName);
+        textViewVenue = (TextView) view.findViewById(R.id.textViewVenue);
+        textViewDonated = (TextView) view.findViewById(R.id.textViewDonated);
+        textViewChildrenFed = (TextView) view.findViewById(R.id.textViewChildrenFed);
+        textViewSecondLine = (TextView) view.findViewById(R.id.textViewMinGroup);
+
 
         if (app.purchasedVoucher) {
-            try {
-                textViewCode.setText(app.newVoucher.getCode());
-            } catch (Exception e) {
-                textViewCode.setText(R.string.check_timeline_for_code);
-            }
-            try {
-                Log.d("ReceiptDialogFramgnet", "The first one: the textViewItemName is set to " + app.purchasedOffer);
-                textViewItemName.setText(app.purchasedOffer);
-            } catch (Exception e) {
-                Log.d(TAG, e.getMessage());
-            }
-            try {
-                //textViewVenue.setText(app.selectedVenue.getName());
-                textViewVenue.setText(app.newVoucher.getVenue());
-            } catch (Exception e) {
-                textViewVenue.setText(R.string.cannot_received_venue_name);
-                Log.d("", getString(R.string.cannot_received_venue_name));
-            }
-
-            textViewDonated.setText("$" + app.purchasedCost + " donated");
-            if (app.purchasedCost == 1) {
-                textViewChildrenFed.setText("(" + app.purchasedCost
-                        + " kids fed)");
-            } else {
-                textViewChildrenFed.setText("(" + app.purchasedCost + " kids fed)");
-            }
+            showNewVoucher();
         } else {
-            try {
-                try {
-                    textViewCode.setText(reservation.getCode());
-                } catch (Exception e) {
-                    Log.d(TAG, e.getMessage());
-                }
-                try {
-                    textViewItemName.setText(reservation.getOffer().getName());
-                } catch (Exception e) {
-                    Log.d(TAG, e.getMessage());
-                }
-                try {
-                    textViewVenue.setText(reservation.getVenue().getName());
-                } catch (Exception e) {
-                    Log.d(TAG, e.getMessage());
-                }
-                textViewDonated.setText("$"
-                        + reservation.getKidsFed() + " donated");
-                if (reservation.getKidsFed() == 1) {
-                    textViewChildrenFed.setText("("
-                            + reservation.getKidsFed()
-                            + " kids fed)");
-                } else {
-                    textViewChildrenFed.setText("("
-                            + reservation.getKidsFed()
-                            + " kids fed)");
-                }
-                textViewChildrenFed.setText("("
-                        + reservation.getKidsFed() + " kids fed)");
-            } catch (Exception e) {
-                Log.d(TAG, e.getMessage());
-            }
+            showReservation();
         }
 
         BitmapDrawable teethDrawable = new BitmapDrawable(getResources(),
@@ -177,7 +113,7 @@ public class ReceiptDialogFragment extends DialogFragment {
             }
         });
 
-        Button markAsUsedButton = (Button) v.findViewById(R.id.buttonMarkAsUsed);
+        Button markAsUsedButton = (Button) view.findViewById(R.id.buttonMarkAsUsed);
         markAsUsedButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -201,29 +137,20 @@ public class ReceiptDialogFragment extends DialogFragment {
             }
         });
 
-        ImageView facebook = (ImageView) v.findViewById(R.id.imageViewFacebook);
+        ImageView facebook = (ImageView) view.findViewById(R.id.imageViewFacebook);
         facebook.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-//				String child="child";
-//				if(app.currentReservation.getKidsFed()>1)
-//					child="children";
-//				String shareText=" I've fed "+app.currentReservation.getKidsFed()+" hungry "+child+" simply by eating at "+app.currentReservation.getVenue().getName();
-//				feed = new Feed.Builder()
-//				.setMessage("Try FoodCircles!")
-//				.setName("Savings with a Conscience!")
-//				.setCaption(shareText)
-//				.setDescription("#bofo: http://www.joinfoodcircles.org� @foodcircles ")
-//				.setPicture(Net.logo).setLink("http://www.joinfoodcircles.org").build();
-//				if (mSimpleFacebook.isLogin()){
-//					mSimpleFacebook.publish(feed, true, onPublishListener);
-//				} else {
-//					mSimpleFacebook.login(mOnLoginListener);
-//				}
+                if (reservation != null) {
+                    String shareText = (reservation.getKidsFed() > 1)
+                            ? String.format(getString(R.string.reservation_feed_msg), reservation.getKidsFed(), "children", reservation.getVenue().getName())
+                            : String.format(getString(R.string.reservation_feed_msg), reservation.getKidsFed(), "child", reservation.getVenue().getName());
+                    facebookShare.shareOnFacebook("Savings with a Conscience! " + shareText + "#bofo: http://www.joinfoodcircles.org� @foodcircles ");
+                }
             }
         });
-        ImageView twitter = (ImageView) v.findViewById(R.id.imageViewTwitter);
+        ImageView twitter = (ImageView) view.findViewById(R.id.imageViewTwitter);
         twitter.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -238,8 +165,47 @@ public class ReceiptDialogFragment extends DialogFragment {
             }
         });
         app.purchasedVoucher = false;
+    }
 
-        return v;
+    private void showReservation() {
+        if (reservation != null) {
+            textViewCode.setText(reservation.getCode());
+            Offer offer = reservation.getOffer();
+            if (offer != null) {
+                textViewItemName.setText(offer.getName());
+                String minGroupString = "";
+                if (offer.getMinDiners() > 0) {
+                    minGroupString = (String.format(getString(R.string.min_group_diners), offer.getMinDiners()));
+                }
+                Calendar date = Calendar.getInstance();
+                date.add(Calendar.MONTH, 1);
+                SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+                String formattedDate = formatter.format(date.getTime());
+                textViewSecondLine.setText(minGroupString + "use by " + formattedDate);
+            }
+            Venue venue = reservation.getVenue();
+            if (venue != null) {
+                textViewVenue.setText(venue.getName());
+            }
+
+            textViewDonated.setText(String.format(getString(R.string.usd_donated), reservation.getKidsFed()));
+            textViewChildrenFed.setText(String.format(getResources().getQuantityString(R.plurals.children_fed, reservation.getKidsFed()), reservation.getKidsFed()));
+        }
+    }
+
+    private void showNewVoucher() {
+        if (app.newVoucher != null) {
+            textViewCode.setText(app.newVoucher.getCode());
+            textViewVenue.setText(app.newVoucher.getVenue());
+        } else {
+            textViewCode.setText(R.string.check_timeline_for_code);
+            textViewVenue.setText(R.string.cannot_received_venue_name);
+        }
+        textViewItemName.setText(app.purchasedOffer);
+        textViewDonated.setText(String.format(getString(R.string.usd_donated), app.purchasedCost));
+
+
+        textViewChildrenFed.setText(String.format(getResources().getQuantityString(R.plurals.children_fed, app.purchasedCost), app.purchasedCost));
     }
 
     private void markAsUsed(final String code) {
@@ -284,51 +250,4 @@ public class ReceiptDialogFragment extends DialogFragment {
         }
         return tweetIntent;
     }
-
-//	private OnLoginListener mOnLoginListener = new OnLoginListener() {
-//		@Override
-//		public void onFail(String reason) {
-//			Toast.makeText(getActivity().getBaseContext(), "Facebook Login Failed:" + reason, Toast.LENGTH_SHORT).show();
-//		}
-//
-//		@Override
-//		public void onException(Throwable throwable) {
-//			Toast.makeText(getActivity().getBaseContext(), "Whoops- we've encountered a problem!", Toast.LENGTH_SHORT).show();
-//			throwable.printStackTrace();
-//		}
-//
-//		@Override
-//		public void onThinking() {
-//			// Place here if we want to show progress bar while login is occurring
-//		}
-//
-//		@Override
-//		public void onLogin() {
-//			mSimpleFacebook.publish(feed, true, onPublishListener);
-//		}
-//
-//		@Override
-//		public void onNotAcceptingPermissions(Permission.Type type) {
-//			Toast.makeText(getActivity().getBaseContext(),"Facebook permissions cancelled!", Toast.LENGTH_SHORT).show();
-//		}
-//	};
-//
-//	private OnPublishListener onPublishListener = new OnPublishListener() {
-//		@Override
-//		public void onFail(String reason) {
-//			Toast.makeText(getActivity().getBaseContext(),"Whoops! The post didn't go through!", Toast.LENGTH_SHORT).show();
-//		}
-//		@Override
-//		public void onException(Throwable throwable) {
-//			Toast.makeText(getActivity().getBaseContext(),"Whoops! The post didn't go through!", Toast.LENGTH_SHORT).show();
-//		}
-//		@Override
-//		public void onThinking() {
-//		}
-//
-//		@Override
-//		public void onComplete(String postId) {
-//			Toast.makeText(getActivity().getBaseContext(),"Thanks for sharing the word!", Toast.LENGTH_SHORT).show();
-//		}
-//	};
 }

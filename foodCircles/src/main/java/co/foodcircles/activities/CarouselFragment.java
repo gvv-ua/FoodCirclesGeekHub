@@ -3,6 +3,7 @@ package co.foodcircles.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,17 +14,12 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import co.foodcircles.R;
 import co.foodcircles.net.Net;
+import co.foodcircles.util.FacebookShare;
 import co.foodcircles.util.FontSetter;
-
-//import com.sromku.simple.fb.Permission;
-//import com.sromku.simple.fb.SimpleFacebook;
-//import com.sromku.simple.fb.entities.Feed;
-//import com.sromku.simple.fb.listeners.OnLoginListener;
-//import com.sromku.simple.fb.listeners.OnPublishListener;
 
 public class CarouselFragment extends Fragment {
     MixpanelAPI mixpanel;
-//	SimpleFacebook mSimpleFacebook;
+    private FacebookShare facebookShare;
 
     @Override
     public void onStart() {
@@ -51,17 +47,6 @@ public class CarouselFragment extends Fragment {
             }
         });
 
-        (view.findViewById(R.id.imageViewFacebook)).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MP.track(mixpanel, "Shared Via Facebook", "activity", "News");
-//				if (mSimpleFacebook.isLogin()){
-//					mSimpleFacebook.publish(feed, true, onPublishListener);
-//				} else {
-//					mSimpleFacebook.login(mOnLoginListener);
-//				}
-            }
-        });
 
         (view.findViewById(R.id.imageViewTwitter)).setOnClickListener(new OnClickListener() {
             @Override
@@ -80,63 +65,17 @@ public class CarouselFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-//		mSimpleFacebook = SimpleFacebook.getInstance(getActivity());
-    }
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        facebookShare = (FacebookShare) getActivity();
 
-//	private OnLoginListener mOnLoginListener = new OnLoginListener() {
-//		@Override
-//		public void onFail(String reason) {
-//			Toast.makeText(getActivity().getBaseContext(), "Facebook Login Failed:" + reason, Toast.LENGTH_SHORT).show();
-//		}
-//
-//		@Override
-//		public void onException(Throwable throwable) {
-//			Toast.makeText(getActivity().getBaseContext(), "Whoops- we've encountered a problem!", Toast.LENGTH_SHORT).show();
-//			throwable.printStackTrace();
-//		}
-//
-//		@Override
-//		public void onThinking() {
-//			// Place here if we want to show progress bar while login is occurring
-//		}
-//
-//		@Override
-//		public void onLogin() {
-//			mSimpleFacebook.publish(feed, true, onPublishListener);
-//		}
-//
-//		@Override
-//		public void onNotAcceptingPermissions(Permission.Type type) {
-//			Toast.makeText(getActivity().getBaseContext(),"Facebook permissions cancelled!", Toast.LENGTH_SHORT).show();
-//		}
-//	};
-//
-//	private OnPublishListener onPublishListener = new OnPublishListener() {
-//		@Override
-//		public void onFail(String reason) {
-//			Toast.makeText(getActivity().getBaseContext(),"Whoops! The post didn't go through!", Toast.LENGTH_SHORT).show();
-//		}
-//		@Override
-//		public void onException(Throwable throwable) {
-//			Toast.makeText(getActivity().getBaseContext(),"Whoops! The post didn't go through!", Toast.LENGTH_SHORT).show();
-//		}
-//		@Override
-//		public void onThinking() {
-//		}
-//
-//		@Override
-//		public void onComplete(String postId) {
-//			Toast.makeText(getActivity().getBaseContext(),"Thanks for sharing the word!", Toast.LENGTH_SHORT).show();
-//		}
-//	};
-//
-//	// feed builder
-//	private Feed feed = new Feed.Builder()
-//			.setMessage("Try FoodCircles!")
-//			.setName("Savings with a Conscience!")
-//			.setCaption("Snag a $1 dish and $1 donated to feed a hungry child!")
-//			.setDescription("#bofo: http://www.joinfoodcircles.org @foodcircles ")
-//			.setPicture(Net.logo).setLink("http://www.joinfoodcircles.org").build();
+        (view.findViewById(R.id.imageViewFacebook)).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MP.track(mixpanel, "Shared Via Facebook", "activity", "News");
+                facebookShare.shareOnFacebook("Savings with a Conscience! Snag a $1 dish and $1 donated to feed a hungry child! #bofo: http://www.joinfoodcircles.org @foodcircles");
+            }
+        });
+
+    }
 }
