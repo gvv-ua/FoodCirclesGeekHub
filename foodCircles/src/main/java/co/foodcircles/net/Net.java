@@ -201,10 +201,10 @@ public class Net {
         }
     }
 
-    public static String twittersignIn(String uid)
+    public static String twitterSignIn(long uid)
             throws NetException2 {
         RequestBody requestBody = new FormBody.Builder()
-                .add("uid", uid)
+                .add("uid", String.format("%d", uid))
                 .build();
         String html = postOk(API_URL + "/sessions/sign_in", requestBody);
         JSONObject json;

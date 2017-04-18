@@ -14,6 +14,12 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 
 import org.json.JSONObject;
 
@@ -22,14 +28,17 @@ import co.foodcircles.net.Net;
 import co.foodcircles.util.AndroidUtils;
 import co.foodcircles.util.FoodCirclesUtils;
 
-public class FacebookLoginActivity extends Activity {
+public class SocialLoginActivity extends Activity {
     CallbackManager fbCallbackManager;
+    TwitterAuthClient authClient;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fbCallbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(fbCallbackManager, fbCallback);
+
+        authClient = new TwitterAuthClient();
     }
 
     private void fbSignIn(final String userId, final String emailId) {
@@ -38,22 +47,22 @@ public class FacebookLoginActivity extends Activity {
             public void run() {
                 try {
                     final String token = Net.facebookSignUp(userId, emailId);
-                    FacebookLoginActivity.this.runOnUiThread(new Runnable() {
+                    SocialLoginActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             AndroidUtils.dismissProgress();
-                            FoodCirclesUtils.saveToken(FacebookLoginActivity.this,
+                            FoodCirclesUtils.saveToken(SocialLoginActivity.this,
                                     token);
-                            FoodCirclesUtils.saveEmail(FacebookLoginActivity.this, emailId);
+                            FoodCirclesUtils.saveEmail(SocialLoginActivity.this, emailId);
                             gotoSignedInPage();
-                            FacebookLoginActivity.this.finish();
+                            SocialLoginActivity.this.finish();
                         }
                     });
                 } catch (final NetException2 e) {
-                    FacebookLoginActivity.this.runOnUiThread(new Runnable() {
+                    SocialLoginActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            AndroidUtils.showAlertOk(FacebookLoginActivity.this,
+                            AndroidUtils.showAlertOk(SocialLoginActivity.this,
                                     "Sign-up Failed - " + e.getMessage());
                             AndroidUtils.dismissProgress();
                         }
@@ -64,10 +73,10 @@ public class FacebookLoginActivity extends Activity {
     }
 
     public void gotoSignedInPage() {
-        Intent intent = new Intent(FacebookLoginActivity.this, MainActivity.class);
+        Intent intent = new Intent(SocialLoginActivity.this, MainActivity.class);
         intent.putExtra(MainActivity.CURRENT_TAB, MainActivity.TAB_RESTAURANTS);
         startActivity(intent);
-        FacebookLoginActivity.this.finish();
+        SocialLoginActivity.this.finish();
     }
 
     public void getFacebookInfo(final AccessToken accessToken) {
@@ -92,6 +101,42 @@ public class FacebookLoginActivity extends Activity {
         graphRequest.executeAsync();
     }
 
+    private void twSingnIn() {
+        new Thread() {
+            @Override
+            public void run() {
+                TwitterSession session = Twitter.getInstance().core.getSessionManager().getActiveSession();
+                try {
+                    final String token = Net.twitterSignIn(session.getUserId());
+                        if (token.equals("error")) {
+//            authClient.requestEmail(session, new Callback<String>() {
+//                @Override
+//                public void success(Result<String> result) {
+//                    Toast.makeText(getApplicationContext(), "Request Email success", Toast.LENGTH_LONG).show();
+//                }
+//
+//                @Override
+//                public void failure(TwitterException exception) {
+//                    Toast.makeText(getApplicationContext(), "Request Email fail", Toast.LENGTH_LONG).show();
+//                }
+//            });
+
+                            Intent intent = new Intent(SocialLoginActivity.this, EmailPromptsActivity.class);
+                            intent.putExtra("UID", session.getUserId());
+                            //intent.putExtra("peopleNumber", mNumberOfPeople);
+                            startActivity(intent);
+                        } else {
+                            FoodCirclesUtils.saveToken(SocialLoginActivity.this, token);
+                            gotoSignedInPage();
+                        }
+                } catch (NetException2 e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+
+    }
+
     private final FacebookCallback<LoginResult> fbCallback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
@@ -100,13 +145,26 @@ public class FacebookLoginActivity extends Activity {
 
         @Override
         public void onCancel() {
-            Toast.makeText(FacebookLoginActivity.this, "Facebook permissions cancelled!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SocialLoginActivity.this, "Facebook permissions cancelled!", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onError(FacebookException error) {
-            Toast.makeText(FacebookLoginActivity.this, "Whoops- we've encountered a problem!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SocialLoginActivity.this, "Whoops- we've encountered a problem!", Toast.LENGTH_SHORT).show();
             error.printStackTrace();
+        }
+    };
+
+    public final com.twitter.sdk.android.core.Callback<TwitterSession> twitterSessionCallback = new Callback<TwitterSession>() {
+        @Override
+        public void success(Result<TwitterSession> result) {
+            twSingnIn();
+        }
+
+        @Override
+        public void failure(TwitterException exception) {
+            Toast.makeText(SocialLoginActivity.this, "Whoops- we've encountered a problem!", Toast.LENGTH_SHORT).show();
+            exception.printStackTrace();
         }
     };
 

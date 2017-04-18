@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,6 +23,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -154,14 +157,15 @@ public class ReceiptDialogFragment extends DialogFragment {
         twitter.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String child = "child";
-                if (reservation.getKidsFed() > 1)
-                    child = "children";
-                String shareText = "I've fed " + reservation.getKidsFed() + " hungry " + child + " simply by eating at " + reservation.getVenue().getName() + " #bofo. http://www.joinfoodcircles.org";
-
-                Intent shareIntent = findTwitterClient();
-                shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
-                startActivity(Intent.createChooser(shareIntent, "Share"));
+                if (reservation != null) {
+                    String shareText = (reservation.getKidsFed() > 1)
+                            ? String.format(getString(R.string.reservation_feed_msg), reservation.getKidsFed(), "children", reservation.getVenue().getName())
+                            : String.format(getString(R.string.reservation_feed_msg), reservation.getKidsFed(), "child", reservation.getVenue().getName());
+                    TweetComposer.Builder builder = new TweetComposer.Builder(getActivity())
+                            .text(shareText + "#bofo: http://www.joinfoodcircles.org� @foodcircles ")
+                            .image(Uri.parse(Net.logo));
+                    builder.show();
+                }
             }
         });
         app.purchasedVoucher = false;

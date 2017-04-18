@@ -20,9 +20,8 @@ import co.foodcircles.util.AndroidUtils;
 import co.foodcircles.util.FontSetter;
 import co.foodcircles.util.FoodCirclesApplication;
 import co.foodcircles.util.FoodCirclesUtils;
-import co.foodcircles.util.TwitterLogin;
 
-public class SignInActivity extends FacebookLoginActivity {
+public class SignInActivity extends SocialLoginActivity {
     private EditText email;
     private EditText password;
 
@@ -57,7 +56,8 @@ public class SignInActivity extends FacebookLoginActivity {
             @Override
             public void onClick(View arg0) {
                 String peopleNumber = SignInActivity.this.getIntent().getStringExtra("peopleNumber");
-                new TwitterLogin(SignInActivity.this, peopleNumber).twitterSignUp();
+                //new TwitterLogin(SignInActivity.this, peopleNumber).twitterSignUp();
+                authClient.authorize(SignInActivity.this, twitterSessionCallback);
             }
         });
 
@@ -126,5 +126,6 @@ public class SignInActivity extends FacebookLoginActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         fbCallbackManager.onActivityResult(requestCode, resultCode, data);
+        authClient.onActivityResult(requestCode, resultCode, data);
     }
 }

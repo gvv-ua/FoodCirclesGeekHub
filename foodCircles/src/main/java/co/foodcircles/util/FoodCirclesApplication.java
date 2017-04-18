@@ -2,10 +2,14 @@ package co.foodcircles.util;
 
 import android.app.Application;
 
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+
 import java.util.Arrays;
 import java.util.List;
 
 import co.foodcircles.json.Voucher;
+import io.fabric.sdk.android.Fabric;
 
 public class FoodCirclesApplication extends Application
 {
@@ -20,6 +24,13 @@ public class FoodCirclesApplication extends Application
 
 	public List<String> getPermissions() {
 		return permissions;
+	}
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		final TwitterAuthConfig authConfig = new TwitterAuthConfig(Const.CONSUMER_KEY, Const.CONSUMER_SECRET);
+		Fabric.with(this, new Twitter(authConfig));
 	}
 
 	public Voucher getNewVoucher() {

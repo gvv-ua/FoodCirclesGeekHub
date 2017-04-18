@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 import co.foodcircles.R;
 import co.foodcircles.net.Net;
@@ -51,14 +52,10 @@ public class CarouselFragment extends Fragment {
         (view.findViewById(R.id.imageViewTwitter)).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("https://twitter.com/intent/tweet?source=webclient&text=Local+restaurants%2C+a+%241+dish%2C+and+%241+donated+to+feed+a+hungry+child.+Go+%23bofo%3A+http%3A%2F%2Fwww.joinfoodcircles.org%C2%A0+%40foodcircles"));
-                    startActivity(intent);
-                } catch (Exception e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("https://twitter.com/#!/FoodCircles")));
-                }
+                TweetComposer.Builder builder = new TweetComposer.Builder(getActivity())
+                        .text("Savings with a Conscience! Snag a $1 dish and $1 donated to feed a hungry child! #bofo: http://www.joinfoodcircles.org @foodcircles")
+                        .image(Uri.parse(Net.logo));
+                builder.show();
             }
         });
         return view;
