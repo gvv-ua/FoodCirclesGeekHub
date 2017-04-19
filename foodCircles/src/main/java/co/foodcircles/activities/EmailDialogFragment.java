@@ -1,7 +1,9 @@
 package co.foodcircles.activities;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,7 +19,23 @@ import co.foodcircles.util.FoodCirclesUtils;
 
 public class EmailDialogFragment extends DialogFragment
 {
-	@Override
+	private OnUpdateEmail callback = null;
+
+	public interface OnUpdateEmail {
+		void updateEmail(String newEmail);
+	}
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        try {
+            callback = (OnUpdateEmail) getTargetFragment();
+        } catch (ClassCastException e) {
+            Log.d("EmailDialogFragment", "Calling Fragment must implement OnUpdateEmail");
+        }
+    }
+
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -45,6 +63,9 @@ public class EmailDialogFragment extends DialogFragment
 								public void run() {
 									FoodCirclesUtils.saveEmail(EmailDialogFragment.this.getActivity(), email);
 									AndroidUtils.alert(EmailDialogFragment.this.getActivity(), "Email updated");
+                                    if (callback != null) {
+                                        callback.updateEmail(email);
+                                    }
 									EmailDialogFragment.this.dismiss();
 								}
 							});

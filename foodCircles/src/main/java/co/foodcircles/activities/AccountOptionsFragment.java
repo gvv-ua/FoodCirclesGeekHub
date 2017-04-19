@@ -27,8 +27,9 @@ import co.foodcircles.util.FoodCirclesUtils;
 import static co.foodcircles.net.Net.FACEBOOK_PAGE_ID;
 import static co.foodcircles.net.Net.FACEBOOK_URL;
 
-public class AccountOptionsFragment extends Fragment {
+public class AccountOptionsFragment extends Fragment implements EmailDialogFragment.OnUpdateEmail {
     MixpanelAPI mixpanel;
+    private TextView textViewEmail;
 
     @Override
     public void onStart() {
@@ -47,7 +48,7 @@ public class AccountOptionsFragment extends Fragment {
         View view = getActivity().getLayoutInflater().inflate(R.layout.options, null);
         FontSetter.overrideFonts(getActivity(), view);
         TextView textViewName = (TextView) view.findViewById(R.id.textViewName);
-        TextView textViewEmail = (TextView) view.findViewById(R.id.textViewEmail);
+        textViewEmail = (TextView) view.findViewById(R.id.textViewEmail);
         TextView textViewPassword = (TextView) view.findViewById(R.id.textViewPassword);
         CheckBox checkBoxFacebook = (CheckBox) view.findViewById(R.id.checkBoxFacebook);
         CheckBox checkBoxTwitter = (CheckBox) view.findViewById(R.id.checkBoxTwitter);
@@ -71,6 +72,7 @@ public class AccountOptionsFragment extends Fragment {
                 MP.track(mixpanel, "Options", "Clicked email");
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 EmailDialogFragment emailDialog = new EmailDialogFragment();
+                emailDialog.setTargetFragment(AccountOptionsFragment.this, 0);
                 emailDialog.show(fm, "email_dialog");
             }
         });
@@ -155,5 +157,10 @@ public class AccountOptionsFragment extends Fragment {
         } catch (PackageManager.NameNotFoundException e) {
             return FACEBOOK_URL;
         }
+    }
+
+    @Override
+    public void updateEmail(String newEmail) {
+        textViewEmail.setText(newEmail);
     }
 }

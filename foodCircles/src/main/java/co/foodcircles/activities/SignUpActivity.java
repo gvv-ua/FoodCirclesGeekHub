@@ -33,7 +33,6 @@ import co.foodcircles.net.Net;
 import co.foodcircles.services.AlarmReceiver;
 import co.foodcircles.util.AndroidUtils;
 import co.foodcircles.util.FontSetter;
-import co.foodcircles.util.FoodCirclesApplication;
 import co.foodcircles.util.FoodCirclesUtils;
 
 public class SignUpActivity extends SocialLoginActivity {
@@ -61,7 +60,6 @@ public class SignUpActivity extends SocialLoginActivity {
 
         FontSetter.overrideFonts(this, findViewById(R.id.root));
 
-        final FoodCirclesApplication app = (FoodCirclesApplication) getApplicationContext();
         getPeopleAmount();
 
         email = (EditText) findViewById(R.id.editTextEmail);
@@ -72,12 +70,7 @@ public class SignUpActivity extends SocialLoginActivity {
             if (!FoodCirclesUtils.getEmail(this).isEmpty()) {
                 final String un = FoodCirclesUtils.getEmail(this);
                 final String pw = FoodCirclesUtils.getPassword(this);
-
-                new Thread() {
-                    public void run() {
-                        signIn(un, pw);
-                    }
-                }.start();
+                signIn(un, pw);
             }
         }
 
@@ -130,14 +123,12 @@ public class SignUpActivity extends SocialLoginActivity {
     }
 
     private void getPeopleAmount() {
-        AndroidUtils.showProgress(this);
         new AsyncTask<Object, Void, String>() {
             protected String doInBackground(Object... param) {
                 return Net.getMailChimp();
             }
 
             protected void onPostExecute(String peopleAmount) {
-                AndroidUtils.dismissProgress();
                 TextView countText = (TextView) findViewById(R.id.textViewCount);
                 float size = countText.getTextSize();
                 setPeopleCount(peopleAmount);
@@ -211,18 +202,20 @@ public class SignUpActivity extends SocialLoginActivity {
     }
 
     private void signIn(final String email, final String password) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                AndroidUtils.showProgress(SignUpActivity.this, "Logging In...",
-                        "Please wait");
+        AndroidUtils.showProgress(this, "Logging In...", "Please wait");
+        new AsyncTask<Object, Void, String>() {
+            private String error = "";
+            protected String doInBackground(Object... param) {
+                try {
+                    return Net.signIn(email, password);
+                } catch (NetException2 e) {
+                    error = e.getMessage();
+                    return "";
+                }
             }
-        });
-        try {
-            final String token = Net.signIn(email, password);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+
+            protected void onPostExecute(String token) {
+                if (!token.equals("")) {
                     FoodCirclesUtils.saveToken(SignUpActivity.this, token);
                     FoodCirclesUtils.saveEmail(SignUpActivity.this, email);
                     FoodCirclesUtils
@@ -233,18 +226,13 @@ public class SignUpActivity extends SocialLoginActivity {
                     intent.putExtra(MainActivity.CURRENT_TAB, MainActivity.TAB_RESTAURANTS);
                     startActivity(intent);
                     SignUpActivity.this.finish();
-                }
-            });
-        } catch (final NetException2 e) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    AndroidUtils.alert(SignUpActivity.this,
-                            "Oops! Sign-in Failed : " + e.getMessage());
+                } else {
                     AndroidUtils.dismissProgress();
+                    AndroidUtils.alert(SignUpActivity.this, "Oops! Sign-in Failed : " + error);
                 }
-            });
-        }
+
+            }
+        }.execute();
     }
 
     @Override
