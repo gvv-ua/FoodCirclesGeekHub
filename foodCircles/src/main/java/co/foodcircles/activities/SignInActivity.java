@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterSession;
 
 import co.foodcircles.R;
 import co.foodcircles.exception.NetException2;
@@ -46,7 +48,7 @@ public class SignInActivity extends SocialLoginActivity {
                 AccessToken accessToken = AccessToken.getCurrentAccessToken();
                 if (accessToken == null) {
                     final FoodCirclesApplication app = (FoodCirclesApplication) getApplicationContext();
-                    LoginManager.getInstance().logInWithReadPermissions(SignInActivity.this, app.getPermissions());
+                    LoginManager.getInstance().logInWithReadPermissions(SignInActivity.this, getFbPermissions());
                 } else {
                     getFacebookInfo(accessToken);
                 }
@@ -56,8 +58,13 @@ public class SignInActivity extends SocialLoginActivity {
             @Override
             public void onClick(View arg0) {
                 String peopleNumber = SignInActivity.this.getIntent().getStringExtra("peopleNumber");
-                //new TwitterLogin(SignInActivity.this, peopleNumber).twitterSignUp();
-                authClient.authorize(SignInActivity.this, twitterSessionCallback);
+                setPeopleCount(peopleNumber);
+                TwitterSession session = Twitter.getInstance().core.getSessionManager().getActiveSession();
+                if (session == null) {
+                    authClient.authorize(SignInActivity.this, twitterSessionCallback);
+                } else {
+                    twSingnIn();
+                }
             }
         });
 

@@ -17,6 +17,7 @@ import co.foodcircles.R;
 import co.foodcircles.net.Net;
 import co.foodcircles.util.FacebookShare;
 import co.foodcircles.util.FontSetter;
+import co.foodcircles.util.FoodCirclesUtils;
 
 public class CarouselFragment extends Fragment {
     MixpanelAPI mixpanel;
@@ -52,9 +53,12 @@ public class CarouselFragment extends Fragment {
         (view.findViewById(R.id.imageViewTwitter)).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                final Uri uri = FoodCirclesUtils.getLogoUri(getActivity());
                 TweetComposer.Builder builder = new TweetComposer.Builder(getActivity())
-                        .text("Savings with a Conscience! Snag a $1 dish and $1 donated to feed a hungry child! #bofo: http://www.joinfoodcircles.org @foodcircles")
-                        .image(Uri.parse(Net.logo));
+                        .text("Savings with a Conscience! Snag a $1 dish and $1 donated to feed a hungry child! #bofo: http://www.joinfoodcircles.org @foodcircles");
+                if (uri != null) {
+                    builder.image(uri);
+                }
                 builder.show();
             }
         });

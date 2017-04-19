@@ -23,6 +23,9 @@ import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 
 import org.json.JSONObject;
 
+import java.util.Arrays;
+import java.util.List;
+
 import co.foodcircles.exception.NetException2;
 import co.foodcircles.net.Net;
 import co.foodcircles.util.AndroidUtils;
@@ -31,6 +34,13 @@ import co.foodcircles.util.FoodCirclesUtils;
 public class SocialLoginActivity extends Activity {
     CallbackManager fbCallbackManager;
     TwitterAuthClient authClient;
+    private String peopleCount;
+
+    private List<String> fbPermissions = Arrays.asList("email", "public_profile");
+
+    public List<String> getFbPermissions() {
+        return fbPermissions;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,7 +51,7 @@ public class SocialLoginActivity extends Activity {
         authClient = new TwitterAuthClient();
     }
 
-    private void fbSignIn(final String userId, final String emailId) {
+    private void fbSignIn(final String userId, final String userName, final String emailId) {
         AndroidUtils.showProgress(this);
         new Thread() {
             public void run() {
@@ -54,6 +64,7 @@ public class SocialLoginActivity extends Activity {
                             FoodCirclesUtils.saveToken(SocialLoginActivity.this,
                                     token);
                             FoodCirclesUtils.saveEmail(SocialLoginActivity.this, emailId);
+                            FoodCirclesUtils.saveName(SocialLoginActivity.this, userName);
                             gotoSignedInPage();
                             SocialLoginActivity.this.finish();
                         }
@@ -81,17 +92,18 @@ public class SocialLoginActivity extends Activity {
 
     public void getFacebookInfo(final AccessToken accessToken) {
         Bundle params = new Bundle();
-        params.putString("fields", "id, email");
+        params.putString("fields", "id, name, email");
         GraphRequest graphRequest = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
                 if (response.getError() == null) {
                     final String email = object.optString("email");
                     final String id = accessToken.getUserId();
+                    final String name = object.optString("name");
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            fbSignIn(id, email);
+                            fbSignIn(id, name, email);
                         }
                     });
                 }
@@ -101,7 +113,7 @@ public class SocialLoginActivity extends Activity {
         graphRequest.executeAsync();
     }
 
-    private void twSingnIn() {
+    public void twSingnIn() {
         new Thread() {
             @Override
             public void run() {
@@ -123,10 +135,11 @@ public class SocialLoginActivity extends Activity {
 
                             Intent intent = new Intent(SocialLoginActivity.this, EmailPromptsActivity.class);
                             intent.putExtra("UID", session.getUserId());
-                            //intent.putExtra("peopleNumber", mNumberOfPeople);
+                            intent.putExtra("peopleNumber", getPeopleCount());
                             startActivity(intent);
                         } else {
                             FoodCirclesUtils.saveToken(SocialLoginActivity.this, token);
+                            FoodCirclesUtils.saveName(SocialLoginActivity.this, session.getUserName());
                             gotoSignedInPage();
                         }
                 } catch (NetException2 e) {
@@ -145,7 +158,7 @@ public class SocialLoginActivity extends Activity {
 
         @Override
         public void onCancel() {
-            Toast.makeText(SocialLoginActivity.this, "Facebook permissions cancelled!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SocialLoginActivity.this, "Facebook fbPermissions cancelled!", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -168,4 +181,11 @@ public class SocialLoginActivity extends Activity {
         }
     };
 
+    public String getPeopleCount() {
+        return peopleCount;
+    }
+
+    public void setPeopleCount(String peopleCount) {
+        this.peopleCount = peopleCount;
+    }
 }

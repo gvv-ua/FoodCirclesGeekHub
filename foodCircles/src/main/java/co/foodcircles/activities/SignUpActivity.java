@@ -22,6 +22,8 @@ import android.widget.TextView;
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterSession;
 
 import java.util.Calendar;
 
@@ -38,7 +40,7 @@ public class SignUpActivity extends SocialLoginActivity {
     private EditText email;
     private EditText password;
     private MixpanelAPI mixpanel;
-    private String numPeopleString;
+
 
     @Override
     public void onStart() {
@@ -93,7 +95,7 @@ public class SignUpActivity extends SocialLoginActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(SignUpActivity.this,
                         SignInActivity.class);
-                intent.putExtra("peopleNumber", numPeopleString);
+                intent.putExtra("peopleNumber", getPeopleCount());
                 startActivity(intent);
                 SignUpActivity.this.finish();
             }
@@ -105,7 +107,7 @@ public class SignUpActivity extends SocialLoginActivity {
             public void onClick(View arg0) {
                 AccessToken accessToken = AccessToken.getCurrentAccessToken();
                 if (accessToken == null) {
-                    LoginManager.getInstance().logInWithReadPermissions(SignUpActivity.this, app.getPermissions());
+                    LoginManager.getInstance().logInWithReadPermissions(SignUpActivity.this, getFbPermissions());
                 } else {
                     getFacebookInfo(accessToken);
                 }
@@ -116,7 +118,12 @@ public class SignUpActivity extends SocialLoginActivity {
         buttonTwitter.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                authClient.authorize(SignUpActivity.this, twitterSessionCallback);
+                TwitterSession session = Twitter.getInstance().core.getSessionManager().getActiveSession();
+                if (session == null) {
+                    authClient.authorize(SignUpActivity.this, twitterSessionCallback);
+                } else {
+                    twSingnIn();
+                }
             }
         });
         startupNotifications();
@@ -133,12 +140,12 @@ public class SignUpActivity extends SocialLoginActivity {
                 AndroidUtils.dismissProgress();
                 TextView countText = (TextView) findViewById(R.id.textViewCount);
                 float size = countText.getTextSize();
+                setPeopleCount(peopleAmount);
 
-                numPeopleString = peopleAmount;
-                Spannable countSpannable = new SpannableString(String.format(getString(R.string.people_amount), numPeopleString));
+                Spannable countSpannable = new SpannableString(String.format(getString(R.string.people_amount), getPeopleCount()));
 
                 countSpannable.setSpan(new TextAppearanceSpan(SignUpActivity.this,
-                                R.style.TextAppearanceLargeBold), 0, numPeopleString.length(),
+                                R.style.TextAppearanceLargeBold), 0, getPeopleCount().length(),
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 countSpannable.setSpan(new TextAppearanceSpan(SignUpActivity.this,
                                 R.style.TextAppearanceLargeBold), countSpannable.length() - 24,

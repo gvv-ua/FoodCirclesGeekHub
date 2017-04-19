@@ -1,12 +1,20 @@
 package co.foodcircles.util;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import co.foodcircles.R;
 
 public class FoodCirclesUtils {
 	public static final String TAG = "foodcircles";
@@ -104,5 +112,29 @@ public class FoodCirclesUtils {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(date);
 		return calendar.getTime();
+	}
+
+	public static Uri getLogoUri(Context context) {
+        File dir = new File(context.getFilesDir().getPath() + "/images");
+
+        if (dir.exists() || dir.mkdir()) {
+            File file = new File(dir.getPath(), "logo.png");
+            if (!file.exists()) {
+                Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.logo);
+                try {
+                    FileOutputStream fos = null;
+                    try {
+                        fos = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                    } finally {
+                        if (fos != null) fos.close();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return FileProvider.getUriForFile(context, "co.foodcircles.fileprovider", file);
+        }
+        return null;
 	}
 }

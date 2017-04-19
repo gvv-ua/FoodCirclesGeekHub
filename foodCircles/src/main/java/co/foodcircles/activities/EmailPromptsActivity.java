@@ -28,9 +28,6 @@ import co.foodcircles.util.FontSetter;
 import co.foodcircles.util.FoodCirclesApplication;
 import co.foodcircles.util.FoodCirclesUtils;
 
-//import com.sromku.simple.fb.SimpleFacebook;
-
-
 public class EmailPromptsActivity extends Activity {
     private EditText email;
     private MixpanelAPI mixpanel;
@@ -179,12 +176,4 @@ public class EmailPromptsActivity extends Activity {
         startActivity(intent);
         EmailPromptsActivity.this.finish();
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //SimpleFacebook.getInstance().onActivityResult(this, requestCode, resultCode, data);
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-
 }

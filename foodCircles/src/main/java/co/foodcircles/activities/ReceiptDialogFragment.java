@@ -40,6 +40,7 @@ import co.foodcircles.util.AndroidUtils;
 import co.foodcircles.util.FacebookShare;
 import co.foodcircles.util.FontSetter;
 import co.foodcircles.util.FoodCirclesApplication;
+import co.foodcircles.util.FoodCirclesUtils;
 
 public class ReceiptDialogFragment extends DialogFragment {
     private static final String TAG = "ReceiptDialogFragment";
@@ -161,9 +162,12 @@ public class ReceiptDialogFragment extends DialogFragment {
                     String shareText = (reservation.getKidsFed() > 1)
                             ? String.format(getString(R.string.reservation_feed_msg), reservation.getKidsFed(), "children", reservation.getVenue().getName())
                             : String.format(getString(R.string.reservation_feed_msg), reservation.getKidsFed(), "child", reservation.getVenue().getName());
+                    final Uri uri = FoodCirclesUtils.getLogoUri(getActivity());
                     TweetComposer.Builder builder = new TweetComposer.Builder(getActivity())
-                            .text(shareText + "#bofo: http://www.joinfoodcircles.org� @foodcircles ")
-                            .image(Uri.parse(Net.logo));
+                            .text(shareText + "#bofo: http://www.joinfoodcircles.org� @foodcircles");
+                    if (uri != null) {
+                        builder.image(uri);
+                    }
                     builder.show();
                 }
             }

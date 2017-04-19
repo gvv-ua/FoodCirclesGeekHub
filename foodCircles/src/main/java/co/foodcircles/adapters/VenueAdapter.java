@@ -93,7 +93,7 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHol
 
         void bind(Venue item) {
             this.item = item;
-            Glide.with(itemView.getContext()).load(Net.HOST + item.getImageUrl()).into(logo);
+            Glide.with(itemView.getContext()).load(Net.HOST + item.getImageUrl()).placeholder(R.drawable.fries).into(logo);
             name.setText(item.getName());
             cuisine.setText(item.getFirstTag());
             distance.setText(item.getDistance());
