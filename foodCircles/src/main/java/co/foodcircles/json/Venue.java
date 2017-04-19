@@ -11,7 +11,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import co.foodcircles.util.AndroidUtils;
 
@@ -40,6 +39,7 @@ public class Venue implements Parcelable {
     private int totalPeopleAided;
     private int peopleAided;
     private int weeklyGoal;
+	private int charityId = -1;
 
 	public static List<Venue> parseVenues(String jsonString) throws JSONException
 	{
@@ -84,6 +84,9 @@ public class Venue implements Parcelable {
 		vouchersAvailable=AndroidUtils.safelyGetJsonInt(json, "vouchers_available");
 //        final Random random = new Random();
 //        vouchersAvailable = random.nextInt(2);
+//        charityId = 1;
+		//charityId = AndroidUtils.safelyGetJsonInt(json, "charity_id");
+
 
 		openTimes = AndroidUtils.safelyGetJsonString(json,"open_times");
 		tags = new ArrayList<>();
@@ -175,6 +178,7 @@ public class Venue implements Parcelable {
 		this.openTimes = "8:00AM - 10:00PM";
 		this.imageUrl = "/media/BAhbBlsHOgZmSSIvMjAxMi8wNS8yNC8xM180N181MF81OTRfR29qb19FdGhpb3BpYW4ucG5nBjoGRVQ";
 		this.largeImageUrl = "/media/BAhbBlsHOgZmSSIvMjAxMi8wNS8yNC8xM180N181MF81OTRfR29qb19FdGhpb3BpYW4ucG5nBjoGRVQ";
+		this.charityId = 0;
 	}
 
 	public long getId()
@@ -411,6 +415,9 @@ public class Venue implements Parcelable {
         this.weeklyGoal = weekly_goal;
     }
 
+	public int getCharityId() { return charityId; }
+
+	public void setCharityId(int charityId) { this.charityId = charityId; }
 
 	@Override
 	public int describeContents() {
@@ -442,6 +449,7 @@ public class Venue implements Parcelable {
 		dest.writeInt(this.totalPeopleAided);
 		dest.writeInt(this.peopleAided);
 		dest.writeInt(this.weeklyGoal);
+		dest.writeInt(this.charityId);
 	}
 
 	protected Venue(Parcel in) {
@@ -470,6 +478,7 @@ public class Venue implements Parcelable {
 		this.totalPeopleAided = in.readInt();
 		this.peopleAided = in.readInt();
 		this.weeklyGoal = in.readInt();
+		this.charityId = in.readInt();
 	}
 
 	public static final Parcelable.Creator<Venue> CREATOR = new Parcelable.Creator<Venue>() {

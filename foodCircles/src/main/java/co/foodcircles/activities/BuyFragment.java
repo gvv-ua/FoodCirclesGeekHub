@@ -189,26 +189,35 @@ public class BuyFragment extends Fragment {
         });
 
         Spinner donateTo = (Spinner) view.findViewById(R.id.spinnerDonateTo);
-        @SuppressWarnings("serial")
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getActivity(), R.layout.spinner_text, new ArrayList<String>() {
-            {
-                for (Charity charity : CharityList.getInstance().getCharities())
-                    add(charity.getName());
-            }
-        });
-        adapter2.setDropDownViewResource(R.layout.spinner_content_text);
-        donateTo.setAdapter(adapter2);
-        donateTo.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                selectedDifferentCharity = true;
-                selectedCharity = CharityList.getInstance().getCharities().get(position);
-            }
+        TextView tvDonateTo = (TextView) view.findViewById(R.id.tvDonateTo);
+        selectedCharity = CharityList.getInstance().getById(venue.getCharityId());
+        if (selectedCharity != null) {
+            tvDonateTo.setText(selectedCharity.getName());
+            donateTo.setVisibility(View.GONE);
+        } else {
+            tvDonateTo.setVisibility(View.GONE);
+            @SuppressWarnings("serial")
+            ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getActivity(), R.layout.spinner_text, new ArrayList<String>() {
+                {
+                    for (Charity charity : CharityList.getInstance().getCharities())
+                        add(charity.getName());
+                }
+            });
+            adapter2.setDropDownViewResource(R.layout.spinner_content_text);
+            donateTo.setAdapter(adapter2);
+            donateTo.setOnItemSelectedListener(new OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                    selectedDifferentCharity = true;
+                    selectedCharity = CharityList.getInstance().getCharities().get(position);
+                }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-            }
-        });
+                @Override
+                public void onNothingSelected(AdapterView<?> parentView) {
+                }
+            });
+        }
+
 
         price = (TextView) view.findViewById(R.id.textViewTotalPrice);
         meals = (TextView) view.findViewById(R.id.textViewDonated);

@@ -33,6 +33,15 @@ public class CharityList {
         return charities;
     }
 
+    public Charity getById(long id) {
+        for (Charity charity: charities) {
+            if (charity.getId() == id) {
+                return charity;
+            }
+        }
+        return null;
+    }
+
     public void updateData() {
         new AsyncTask<Object, Void, Void>() {
 
